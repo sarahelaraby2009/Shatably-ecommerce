@@ -1,10 +1,7 @@
 <template>
-  <nuxt-layout>
-    <NuxtPage/>
-  </nuxt-layout>
-  <Footer/>
+  <NuxtPage/>
+  <Header></Header>
+  <div class="font-poppins">
+    <NuxtPage />
+  </div>
 </template>
-
-<script>
-
-</script>
