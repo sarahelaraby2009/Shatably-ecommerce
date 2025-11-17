@@ -1,8 +1,5 @@
 <template>
-  <NuxtPage/>
-  
+  <div class="font-poppins">
+    <NuxtPage />
+  </div>
 </template>
-
-<script>
-
-</script>

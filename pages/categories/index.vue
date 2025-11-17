@@ -1,0 +1,1 @@
+<template>categories</template>
