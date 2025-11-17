@@ -6,6 +6,7 @@
 //     plugins: ['~/plugins/firebase.client.js']
 // })
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -13,7 +14,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/tailwindcss'],
 
   plugins: [
-     '~/plugins/firebase.client.js',
+    '~/plugins/firebase.client.js',
     '~/plugins/fontawesome.js'
   ],
 
