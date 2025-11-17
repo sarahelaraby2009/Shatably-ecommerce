@@ -1,4 +1,5 @@
 <template>
+
    <div>
    <NuxtLink v-for="product in products":key="product.id":to="`/categories/${categoryId}/${subId}/${product.id}`">
        <h1>{{ product.name }}</h1>

@@ -39,4 +39,9 @@ onMounted(async () => {
   console.log("✅ categories:", categories.value);
 });
 
+
 </script>
+
+
+
+

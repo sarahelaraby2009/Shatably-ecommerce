@@ -1,3 +1,4 @@
+
 <template>
  <div>
  <NuxtLink v-for="category in categories":key="category.id":to="`/categories/${category.id}`">
@@ -30,3 +31,5 @@ onMounted(async()=>{
 
 
 </script>
+
+

@@ -1,4 +1,5 @@
 <template>
+
    <div>
    <NuxtLink v-for="subCat in subCategories":key="subCat.id":to="`/categories/${categoryId}/${subCat.id}`">
        <h1>{{ subCat.name }}</h1>
@@ -30,3 +31,4 @@ onMounted(async()=>{
 })
 
 </script>
+
