@@ -1,0 +1,3 @@
+
+<template>product details</template>
+
