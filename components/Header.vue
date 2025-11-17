@@ -89,21 +89,21 @@
   
   <!-- مربع البحث -->
   <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
-    <FontAwesomeIcon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
+    <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
     <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
-    <FontAwesomeIcon :icon="['fas', 'sliders']" class="text-[#000000] w-5 h-5" />
+    <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
   </div>
 
   <!-- أيقونات الهارت + الكارت -->
   <div class="flex items-center  gap-2  ml-60 ">
     <!-- Heart -->
     <div class="w-10 h-10 flex  items-center justify-center rounded-full bg-white shadow cursor-pointer hover:bg-gray-100 transition">
-      <FontAwesomeIcon :icon="['fas', 'heart']" class="text-black text-xl" />
+      <font-awesome-icon :icon="['fas', 'heart']" class="text-black text-xl" />
     </div>
 
     <!-- Cart -->
     <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
-      <FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
+      <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
     </div>
   </div>
   </div>
