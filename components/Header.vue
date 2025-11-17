@@ -1,5 +1,5 @@
-  <template>
-    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col">
+<template>
+    <header class="w-full bg-gray-100 px-[90px] py-2 flex flex-col">
       
    <nav class="flex items-center justify-between">
       <div class="flex items-center space-x-2">
@@ -7,7 +7,7 @@
       </img> -->
 <!-- <img src="/logo1.png" class="h-[90px] w-[70px]" alt="logo"></img> -->
  
-<img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo"></img>
+<img src="/logo1.png" class="h-[220px] w-[180px] -my-6" alt="logo"></img>
       </div>
      <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
   <!-- Home -->
@@ -84,18 +84,18 @@
 </div>
 </nav>
 <!--------------------------row 2 ------------>
-<div class="flex  pl-32 "> 
-  <div class="flex -mt-12 pl-32 pr-6 items-center">
+
+  <div class="flex -mt-10 pl-72 pr-6 items-center">
   
   <!-- مربع البحث -->
-  <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+  <div class="flex items-center justify-between w-[600px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <FontAwesomeIcon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
     <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
     <FontAwesomeIcon :icon="['fas', 'sliders']" class="text-[#000000] w-5 h-5" />
   </div>
 
   <!-- أيقونات الهارت + الكارت -->
-  <div class="flex items-center  gap-2  ml-60 ">
+  <div class="flex items-center  gap-4  ml-auto ">
     <!-- Heart -->
     <div class="w-10 h-10 flex  items-center justify-center rounded-full bg-white shadow cursor-pointer hover:bg-gray-100 transition">
       <FontAwesomeIcon :icon="['fas', 'heart']" class="text-black text-xl" />
@@ -105,7 +105,6 @@
     <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
       <FontAwesomeIcon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
     </div>
-  </div>
   </div>
 
 </div>
