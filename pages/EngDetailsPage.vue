@@ -1,28 +1,23 @@
 <template>
 <div class="w-full max-w-[1240px] bg-white shadow rounded-2xl p-6 flex gap-6 items-start relative">
 
-  <!-- الصورة -->
   <img 
     src="/13.jpg" 
     class="w-[260px] h-[260px] object-cover rounded-xl"
   >
 
-  <!-- النصوص -->
   <div class="flex flex-col gap-2 flex-1">
 
-    <!-- الاسم + المكان -->
     <div class="pb-5">
       <h2 class="text-[24px] font-semibold text-[#1E1E1E]">Eng. Omar Khaled</h2>
       <p class="text-[#8E8D8D] text-[15px]">Cairo, Egypt</p>
     </div>
 
-    <!-- Position -->
     <p class="text-[15px] text-gray-700">
       <span class="font-semibold">Position: </span>
       Finishing & Interior Engineer
     </p>
 
-    <!-- Experience -->
     <p class="text-[15px] text-gray-700">
       <span class="font-semibold">Experience: </span>
       10+ Years in Residential and Commercial Finishing
@@ -39,12 +34,10 @@
 <font-awesome-icon :icon="['fab', 'whatsapp']" class="text-xl" />
     </button>
 </div>
-    <!-- زرار الواتساب -->
    
 
   </div>
 
-  <!-- الريتنج فوق يمين -->
   <div class="absolute top-4 right-4 bg-[#F5F5F5] px-4 py-1 rounded-full flex items-center gap-1 text-[15px]">
     <span>4.8</span>
     <span class="text-yellow-400">★</span>
