@@ -1,23 +1,31 @@
 <template>
-<!-- <div class="w-[300px] p-4 shadow-lg bg-white m-5 rounded">
-    <div class="w-[300px] rounded pb-6">
-        <img class="w-full" src="/assets/light.jpeg">
-    </div>
-    <div class="w-[300px]">
-        <h4 class="pb-3 font-bold">Product Name</h4>
-        <p class="pb-3 text-gray-400">Brand: brand</p>
-        <h5 class="font-bold">Price</h5>
-    </div>
-</div> -->
 
 <div class="card">
     <div class="image">
+        <div class="absolute left-[250px] top-[200px] bg-[#D9D9D9] w-[35px] h-[35px] rounded-[50px] flex justify-center items-center">
+            <font-awesome-icon :icon="['far','heart']" class="text-[#C76950] text-lg"/>
+        </div>
         <img src="/assets/Lighting.jpeg">
     </div>
     <div class="para">
-        <h3>Product Name</h3>
+        <div class="flex justify-between">
+            <h3>Product Name</h3>
+            <div>
+                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
+                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
+                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
+                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
+
+            </div>
+        </div>
         <p>Brand: brand</p>
-        <h5>Price</h5>
+        <div class="flex justify-between items-center">
+            <h5>Price</h5>
+            <div class="flex justify-center items-center rounded-[50px] bg-[#C76950] p-[10px] w-[40px] h-[40px]">
+                <font-awesome-icon :icon="['fas','cart-shopping']" class="text-white text-s" />
+            </div>
+
+        </div>
     </div>
     
     

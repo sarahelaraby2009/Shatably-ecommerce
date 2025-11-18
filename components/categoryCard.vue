@@ -23,11 +23,14 @@ defineProps({
 .card {
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   width: 402px;
-  height: 551px;
+  height: 500px;
   background-color: white;
   padding: 10px;
   border-radius: 12px;
   transition: transform .2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .card:hover {
@@ -35,7 +38,7 @@ defineProps({
 }
 
 .image {
-  width: 370px;
+  width: 100%;
   padding-bottom: 16px;
   height: 451px;
 }
