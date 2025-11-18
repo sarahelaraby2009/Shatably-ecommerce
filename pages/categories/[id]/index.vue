@@ -1,18 +1,10 @@
 <template>
-
-   <div>
+ <div>
    <NuxtLink v-for="subCat in subCategories":key="subCat.id":to="`/categories/${categoryId}/${subCat.id}`">
        <h1>{{ subCat.name }}</h1>
  <img :src="subCat.image"></img>
-
-
-
    </NuxtLink>
-
-    
- 
-
-   </div>
+</div>
     </template>
     <script setup>
 import{ref,onMounted}from 'vue'
