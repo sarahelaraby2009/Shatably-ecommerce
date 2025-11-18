@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 bg-white shadow rounded-[24px] w-[407px] h-[560px] border border-[#F2F2F2] hover:border-[#C76950] cursor-pointer" >
+  <div class="p-4 bg-white shadow rounded-[24px] w-[407px] h-[auto] border border-[#F2F2F2] hover:border-[#C76950] cursor-pointer" >
     <div >
         <img src="/1.jpg" class="rounded-[24px] w-[403px] h-[306px]" >
     </div>
