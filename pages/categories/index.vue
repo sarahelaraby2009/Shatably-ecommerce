@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { collection, getDocs } from "firebase/firestore";
-import CategoryCard from "~/components/CategoryCard.vue"; // تأكدي المسار لو مختلف
+import CategoryCard from "~/components/categoryCard.vue"; // تأكدي المسار لو مختلف
 
 const { $db } = useNuxtApp();
 
