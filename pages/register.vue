@@ -2,13 +2,15 @@
   <div>
     <div class="relative min-h-screen w-full">
       <div class="blur-[2px] absolute bg-center inset-0 bg-cover" style="background-image: url('/sign.jpg');">
-
+ <div class="absolute inset-0 flex justify-center pointer-events-none">
+                        <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
+                    </div>
       </div>
-      <div class=" relative z-10 flex min-h-screen items-center gap-[200px] pl-[80px] ">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe]  w-[500px] p-6 shadow-lg rounded-[24px] gap-[6px]">
-          <form class="flex flex-col gap-2 w-full " @submit.prevent="handleSignUp">
-            <h2 class="font-bold text-2xl">Welcome to Shatably</h2>
-            <h3 class="font-semibold   text-xl">sign up as :</h3>
+      <div class="relative z-10 flex min-h-screen items-center gap-[120px] pl-[60px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[420px] p-5 shadow-lg rounded-[20px] gap-[5px]">
+          <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
+            <h2 class="font-bold text-xl">Welcome to Shatably</h2>
+            <h3 class="font-semibold text-base">sign up as :</h3>
             <div class="flex gap-2 justify-center items-center">
               <div class="options" @click="userRole = 'client'"
                 :class="userRole === 'client' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">Client
@@ -22,59 +24,59 @@
             </div>
 
 
-            <div class="flex flex-col gap-3">
-              <label class="font-semibold   text-md">Your name</label>
+            <div class="flex flex-col gap-2 mb-2">
+              <label class="font-semibold text-sm">Your name</label>
               <input required
-                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[24px] w-full h-12 px-4"
+                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 v-model="name" placeholder="enter Your full name"></input>
             </div>
 
-            <div class="flex flex-col gap-3 ">
-              <label class="font-semibold   text-md">Email</label>
+            <div class="flex flex-col gap-2 mb-2">
+              <label class="font-semibold text-sm">Email</label>
               <input required
-                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[24px] w-full h-12 px-4"
+                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="email" v-model="email" placeholder="user@example.com"></input>
             </div>
-            <div class="flex flex-col gap-3">
-              <label class="font-semibold   text-md">Password</label>
+            <div class="flex flex-col gap-2 mb-2">
+              <label class="font-semibold text-sm">Password</label>
               <input required
-                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[24px] w-full h-12 px-4"
+                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="password" v-model="password" placeholder="*****"></input>
             </div>
-            <div class="flex flex-col gap-3">
-              <label class="font-semibold   text-md">confirm Password</label>
+            <div class="flex flex-col gap-2 mb-2">
+              <label class="font-semibold text-sm">confirm Password</label>
               <input @input="matchPass" required
-                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[24px] w-full h-12 px-4"
+                class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="password" v-model="repassword" placeholder="*****"></input>
             </div>
             <div>
-              <input required class="mb-5" type="checkbox">Agree to our <span class="underline cursor-pointer">Terms and
-                conditions</span></input>
+              <input required class="mb-3" type="checkbox"><span class="text-sm"> Agree to our <span class="underline cursor-pointer">Terms and
+                conditions</span></span></input>
             </div>
-            <span class="text-red-400">{{ errorMessage }}</span>
-            <div class="flex items-center gap-4 my-6">
+            <span class="text-red-400 text-sm">{{ errorMessage }}</span>
+            <div class="flex items-center gap-3 my-3">
               <div class="flex-1 h-px bg-gray-300"></div>
-              <span class="text-gray-500 font-medium text-sm">OR</span>
+              <span class="text-gray-500 font-medium text-xs">OR</span>
               <div class="flex-1 h-px bg-gray-300"></div>
             </div>
             <div @click="googleSignUp"
-              class="mb-5 flex cursor-pointer border border-gray-300 rounded-[24px] h-[50px] justify-center items-center text-center gap-5">
+              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[42px] justify-center items-center text-center gap-3">
               <div>
-                <img src="/google.svg" class="w-6 h-6 " alt="Google" />
+                <img src="/google.svg" class="w-5 h-5" alt="Google" />
               </div>
-              <p>Sign Up With Your Google Account</p>
+              <p class="text-sm">Sign Up With Your Google Account</p>
             </div>
 
             <div>
               <button type="submit"
-                class="text-[#fefefe] w-full h-12 text-center p-5 bg-[#C76950] rounded-[24px] flex justify-center items-center">Register</button>
+                class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center">Register</button>
             </div>
           </form>
 
         </div>
-        <div class="leading-[50px]">
-          <p class="font-semibold text-3xl text-[#fefefe]">Shatably</p>
-          <p class="text-[#fefefe]">Make Your Dream Home A Reality with Shatbly</p>
+        <div class="leading-[40px]">
+          <p class="font-semibold text-2xl text-[#fefefe]">Shatably</p>
+          <p class="text-[#fefefe] text-base">Make Your Dream Home A Reality with Shatbly</p>
         </div>
 
       </div>
@@ -275,15 +277,15 @@ const handleSignUp = async () => {
 
 <style scoped>
 .options {
-  border-radius: 24px;
+  border-radius: 20px;
   border: 1px solid #612B1F;
   cursor: pointer;
-  /* width: 110px; */
   text-align: center;
-  height: 40px;
-  padding: 16px 12px;
+  height: 34px;
+  padding: 12px 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 0.875rem;
 }
 </style>
