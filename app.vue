@@ -2,8 +2,8 @@
   
  
   <div class="font-poppins">  
-    <NuxtLayout/>
+    <NuxtLayout>
     <NuxtPage />
-  
+    </NuxtLayout>  
   </div>
 </template>
