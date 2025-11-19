@@ -1,37 +1,50 @@
 <template>
 
 
-<!-- Grid -->
-<div class="w-full max-w-7xl mx-auto px-6 py-10 ">
-</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-10 pr-20 pb-10">
 
+  <!-- LEFT SIDE  -->
+  <div class="lg:col-span-2">
 
+  </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8  ">
-    <div>
-<h2 class="font-bold pb-5 text-xl"> Order Summary</h2>
+  <!-- RIGHT -->
+  <div class="lg:col-span-1">
+    
+    <h2 class="font-bold pb-5 text-xl">Order Summary</h2>
 
-<div class="bg-white shadow rounded-2xl p-6 ">
-   
+    <div class="bg-white shadow rounded-2xl p-6">
 
-    <div class=" space-y-4 ">
-        <div class="flex justify-between "> <p> subtotal</p> <p> 200 LE</p> </div>
-<div class="flex justify-between"> <p> shipping</p><p> 200 LE</p></div>
-<div class="flex justify-between"> <p> Discount</p><p> 200 LE</p></div>
-<hr></hr>
-<div class="flex justify-between font-bold"> <p> Total </p><p> 200 LE</p></div>
-    </div>
+      <div class="space-y-4">
+        <div class="flex justify-between">
+          <p>Subtotal</p> <p>200 LE</p>
+        </div>
 
-<button class="w-full mt-5 py-3 rounded-xl bg-[#C76950] text-white">
+        <div class="flex justify-between">
+          <p>Shipping</p><p>200 LE</p>
+        </div>
+
+        
+
+        <hr />
+
+        <div class="flex justify-between font-bold">
+          <p>Total</p><p>200 LE</p>
+        </div>
+      </div>
+
+      <button class="w-full mt-5 py-3 rounded-xl bg-[#C76950] text-white">
         Continue shopping
       </button>
 
       <button class="w-full mt-3 py-3 rounded-xl border">
         Check out
       </button>
-</div>
+
     </div>
   </div>
+
+</div>
 
 
 <div class="contanier m-auto">
