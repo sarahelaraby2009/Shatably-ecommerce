@@ -1,5 +1,5 @@
   <template>
-    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col">
+    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col z-100 ">
       
    <nav class="flex items-center justify-between">
       <div class="flex items-center space-x-2">
@@ -9,7 +9,7 @@
  
 <img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo"></img>
       </div>
-     <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
+     <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium ">
   <!-- Home -->
   <li>
   <NuxtLink 
@@ -40,7 +40,7 @@
   </NuxtLink>
 
   <!-- Dropdown Menu -->
-  <ul v-if="open" class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg">
+  <ul v-if="open" class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
     <li>
       <NuxtLink to="/categorie500s" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500 " exact-active-class="font-medium  bg-gray-100">
       Electrical
@@ -88,8 +88,10 @@
   <div class="flex -mt-12 pl-32 pr-6 items-center">
   
   <!-- مربع البحث -->
-  <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+  <div class="flex items-center justify- w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
+  </div>
+    <div>
     <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
     <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
   </div>

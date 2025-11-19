@@ -23,8 +23,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex justify-center">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <Image/>
+  <div class="flex justify-center mt-[40px]">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6">
       <CategoryCard
         v-for="cat in categories"
         :key="cat.id"
