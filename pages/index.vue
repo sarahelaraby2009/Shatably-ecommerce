@@ -17,6 +17,7 @@
     </div>
 
   </div>
+  <productCard></productCard>
 </template>
 
 <script setup>
@@ -36,7 +37,7 @@ onMounted(async () => {
     ...doc.data(),
   }));
 
-  console.log("✅ categories:", categories.value);
+  console.log("categories:", categories.value);
 });
 
 

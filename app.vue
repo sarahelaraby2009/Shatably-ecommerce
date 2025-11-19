@@ -1,6 +1,9 @@
 <template>
-  <Header />
-  <div class="font-poppins">
-    <NuxtPage />
-  </div>
+
+<NuxtLayout>
+   <NuxtPage/>
+</NuxtLayout>
+ 
+
+ 
 </template>

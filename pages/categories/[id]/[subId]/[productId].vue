@@ -1,3 +1,2 @@
-
-<template>product details</template>
-
+<template>
+</template>

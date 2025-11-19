@@ -25,4 +25,4 @@ export default defineNuxtConfig({
       firebaseMeasurementId: process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     }
   }
-})
+});
