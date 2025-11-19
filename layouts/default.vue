@@ -1,9 +1,8 @@
-<script>
-import Header from '~/components/Header.vue';
-
-</script>
 <template>
-    <Header/>
-    <slot></slot>
-    <Footer/>
+  <Header />
+  <slot />
+  <footer></footer>
 </template>
+
+<script setup>
+</script>
