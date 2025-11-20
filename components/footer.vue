@@ -4,7 +4,7 @@
 
 <template>
   <div class="bg-[#4C261C] ">
-    <div class="flex justify-between items-center py-10 px-10">
+    <div class="flex justify-between items-center py-8 px-10">
       <div class="text-white flex-col items-center justify-center gap-3">
         <div>
           <img src="/assets/HomeLogo.png" />
@@ -13,8 +13,8 @@
         <h3>support@Shatably.com</h3>
       </div>
       <div class="text-white">
-        <h3 class="mb-[24px]">Quick Links</h3>
-        <div class="flex justify-between w-[325px] h-[140px]">
+        <h3>Quick Links</h3>
+        <div class="flex justify-between items-center w-[325px] h-[140px]">
           <div class="text-gray-400">
            <nuxt-link>
             <p class="mb-[24px]">About us</p>

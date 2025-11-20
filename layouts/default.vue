@@ -1,7 +1,9 @@
+<script>
+</script>
 <template>
-  <Header />
-  <slot />
-  <footer></footer>
+    <Header />
+    <slot></slot>
+    <Footer/>
 </template>
 
 <script setup>
