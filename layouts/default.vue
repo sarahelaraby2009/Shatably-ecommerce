@@ -5,3 +5,6 @@
     <slot></slot>
     <Footer/>
 </template>
+
+<script setup>
+</script>

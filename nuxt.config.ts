@@ -1,6 +1,20 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    runtimeConfig: {
+  compatibilityDate: '2025-07-15',
+  devtools: { enabled: true },
+
+  modules: ['@nuxtjs/tailwindcss'],
+
+  plugins: [
+    '~/plugins/firebase.client.js',
+    '~/plugins/fontawesome.js'
+  ],
+
+  css: [
+    '@fortawesome/fontawesome-svg-core/styles.css'
+  ],
+
+  runtimeConfig: {
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -8,11 +22,7 @@ export default defineNuxtConfig({
       firebaseStorageBucket: process.env.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
       firebaseMessagingSenderId: process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
       firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID,
-      firebaseMeasurementId: process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
+      firebaseMeasurementId: process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     }
-  },
-  compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
-   modules: ['@nuxtjs/tailwindcss'],
-    plugins: ['~/plugins/firebase.client.js']
-})
+  }
+});
