@@ -1,5 +1,5 @@
-  <template>
-    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col z-100 ">
+<template>
+    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col">
       
    <nav class="flex items-center justify-between">
       <div class="flex items-center space-x-2">
@@ -9,14 +9,10 @@
  
 <img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo"></img>
       </div>
-     <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium ">
+     <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
   <!-- Home -->
   <li>
-  <NuxtLink 
-    to="/" 
-    exact-active-class="  text-[20px] font-medium text-[#C76950]"
-    class="text-[18px] font-normal hover:text-[#C76950]"
-  >
+  <NuxtLink to="/" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
     Home
   </NuxtLink>
 </li>
@@ -24,15 +20,23 @@
 
   <!-- Pricing -->
   <li>
-    <NuxtLink 
-      to="/pricing" 
-      exact-active-class="text-[#C76950] text-xl font-medium"
-      class=" text-[18px] font-normal hover:text-[#C76950]"
-    >
+    <NuxtLink to="/pricing" exact-active-class="text-[#C76950] text-xl font-medium"class=" text-[18px] font-normal hover:text-[#C76950]">
       Pricing
     </NuxtLink>
   </li>
-  
+    <li>
+      
+  <NuxtLink to="/engineerpage" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+    Professionals
+  </NuxtLink>
+</li>
+
+    <li>   
+  <NuxtLink to="/favourite" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+    WishList
+  </NuxtLink>
+</li>
+
 <li class="relative" @click="open = !open">
   <!-- Link الرئيسي -->
   <NuxtLink to="#" class="flex items-center hover:text-[#C76950]">
@@ -40,9 +44,9 @@
   </NuxtLink>
 
   <!-- Dropdown Menu -->
-  <ul v-if="open" class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
+  <ul v-if="open" class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg">
     <li>
-      <NuxtLink to="/categorie500s" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500 " exact-active-class="font-medium  bg-gray-100">
+      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500 " exact-active-class="font-medium  bg-gray-100">
       Electrical
       </NuxtLink>
     </li>
@@ -76,7 +80,7 @@
 </ul>
 <div class="flex gap-3"> <!-- اضبط القيمة حسب المسافة المطلوبة -->
   <button class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] bg-[#C76950] text-white hover:bg-[#AD563F]">
-    Sign in C76950
+    Sign in
   </button>
   <button class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] border border-[#612B1F] text-[#612B1F] hover:text-[#C76950] hover:border-[#C76950]">
     Sign up
@@ -88,20 +92,15 @@
   <div class="flex -mt-12 pl-32 pr-6 items-center">
   
   <!-- مربع البحث -->
-  <div class="flex items-center justify- w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+  <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
-  </div>
-    <div>
     <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
     <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
   </div>
 
   <!-- أيقونات الهارت + الكارت -->
   <div class="flex items-center  gap-2  ml-60 ">
-    <!-- Heart -->
-    <div class="w-10 h-10 flex  items-center justify-center rounded-full bg-white shadow cursor-pointer hover:bg-gray-100 transition">
-      <font-awesome-icon :icon="['fas', 'heart']" class="text-black text-xl" />
-    </div>
+ 
 
     <!-- Cart -->
     <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
