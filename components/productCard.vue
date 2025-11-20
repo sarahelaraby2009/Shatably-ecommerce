@@ -1,3 +1,11 @@
+<script setup>
+defineProps({
+    product:{
+        type:Object,
+    default: () => ({})
+    }
+});
+</script>
 <template>
 
 <div class="card">
@@ -5,11 +13,11 @@
         <div class="absolute left-[250px] top-[200px] bg-[#D9D9D9] w-[35px] h-[35px] rounded-[50px] flex justify-center items-center">
             <font-awesome-icon :icon="['far','heart']" class="text-[#C76950] text-lg"/>
         </div>
-        <img src="/assets/Lighting.jpeg">
+        <img :src="product.image" alt="product.name">
     </div>
     <div class="para">
         <div class="flex justify-between">
-            <h3>Product Name</h3>
+            <h3>{{product.name }}</h3>
             <div>
                 <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
                 <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
@@ -18,9 +26,10 @@
 
             </div>
         </div>
-        <p>Brand: brand</p>
+         <p>{{product.description }}</p>
+        <p>Brand:{{ product.brand }}</p>
         <div class="flex justify-between items-center">
-            <h5>Price</h5>
+            <h5>{{  product.price}}</h5>
             <div class="flex justify-center items-center rounded-[50px] bg-[#C76950] p-[10px] w-[40px] h-[40px]">
                 <font-awesome-icon :icon="['fas','cart-shopping']" class="text-white text-s" />
             </div>

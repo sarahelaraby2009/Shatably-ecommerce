@@ -1,15 +1,18 @@
 <template>
 
 
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 pt-10 pr-20 pb-10">
+<div class="contanier m-auto">
+<div class="flex justify-center gap-20">
 
   <!-- LEFT SIDE  -->
-  <div class="lg:col-span-2">
-
+  <div class="w-[530px] h-auto pt-10">
+<Checkcard/>
+<Checkcard/>
+<Checkcard/>
   </div>
 
   <!-- RIGHT -->
-  <div class="lg:col-span-1">
+  <div class="lg:col-span-1 w-[430px] pt-10">
     
     <h2 class="font-bold pb-5 text-xl">Order Summary</h2>
 
@@ -47,10 +50,10 @@
 </div>
 
 
-<div class="contanier m-auto">
+<div >
 <div class="flex justify-between items-center px-60 py-7 ">
     
-    <h1 class="font-bold text-[20px]">You may also like</h1>
+    <h1 class="font-bold text-[20px] text-[#3E3E3E]">You may also like</h1>
     <p class="text-gray-500 flex items-center gap-1 cursor-pointer">
         See more 
         <font-awesome-icon :icon="['fas', 'angle-right']" class="text-sm" />
@@ -67,6 +70,11 @@
 
 
 </div>
+
+</div>
+
+
+
 
 
 </template>
