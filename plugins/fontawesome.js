@@ -2,53 +2,14 @@ import { library, config } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 
-// منع إضافة CSS تلقائي
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+
 config.autoAddCss = false
 
-// Solid icons (الصح هنا)
-import { 
-  faMagnifyingGlass,
-  faSliders,
-  faCartShopping,
-  faStar,
-  faArrowRight,
-  faHeart,
-  faStore,
-  faBriefcase,      // ← هنا الصح
-  faCalculator,
-    faRobot       // ← هنا الصح
-} from '@fortawesome/free-solid-svg-icons'
-
-// Regular icons
-import { 
-  faHeart as faHeartRegular 
-} from '@fortawesome/free-regular-svg-icons'
-
-// Brands icons
-import { 
-  faFacebookF,
-  faLinkedinIn,
-  faTwitter
-} from '@fortawesome/free-brands-svg-icons'
-
-// Add icons
-library.add(
-  faMagnifyingGlass,
-  faSliders,
-  faCartShopping,
-  faStar,
-  faArrowRight,
-  faHeart,
-  faStore,
-  faBriefcase,   
-    faRobot ,
-  faCalculator,
-  faHeartRegular,
-  faFacebookF,
-  faLinkedinIn,
-  faTwitter
-)
+library.add(fas, far, fab)
 
 export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.vueApp.component('FontAwesomeIcon', FontAwesomeIcon)
+  nuxtApp.vueApp.component('font-awesome-icon', FontAwesomeIcon)
 })
