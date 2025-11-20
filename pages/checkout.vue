@@ -66,52 +66,7 @@
         <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
           <h2 class="text-[20px] font-semibold mb-4">Order Summary</h2>
 
-          <!-- Delete Icon -->
-          <button class="absolute top-4 right-4 text-gray-600 hover:text-red-500 z-7">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-          </button>
-
-          <div class="flex gap-3 items-start mb-4">
-            <!-- Product Image -->
-            <div class="relative flex-shrink-0">
-              <img src="/1.jpg" class="rounded-[12px] w-[120px] h-[100px] object-cover" />
-              <button 
-                @click="liked = !liked"
-                class="absolute top-0 right-2 text-xl cursor-pointer select-none transition"
-                :class="liked ? 'text-red-500' : 'text-black'"
-              >
-                {{ liked ? '♥' : '♡' }}
-              </button>
-            </div>
-
-            <!-- Product Info -->
-            <div class="flex-1">
-              <h3 class="text-[20px] font-med mb-1">lorem lorem</h3>
-              <p class="text-[16px] font-bold text-gray-900 mb-1">100 EGP</p>
-              <p class="text-[12px] text-gray-600 mb-2">
-                Brand: <span class="font-medium text-gray-900">Brand Name</span>
-              </p>
-              
-              <!-- Stars -->
-              <div class="flex gap-0.5 mb-3">
-                <span v-for="i in 5" :key="i" class="text-gray-300 text-sm">☆</span>
-              </div>
-
-              <!-- Quantity Controls -->
-              <div class="flex items-center gap-2">
-                <button @click="decrease" class="w-7 h-7 rounded-full bg-[#C76950] text-white flex items-center justify-center hover:bg-[#AD563F] text-lg">
-                  −
-                </button>
-                <span class="text-[14px] font-medium min-w-[20px] text-center">{{ count }}</span>
-                <button @click="increase" class="w-7 h-7 rounded-full bg-[#C76950] text-white flex items-center justify-center hover:bg-[#AD563F] text-lg">
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-
+         <Checkcard></Checkcard>
           <!-- Discount Code Section -->
           <div class="mb-4 pb-4 border-b border-gray-200">
             <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
@@ -171,15 +126,5 @@ const payment =ref("")
 const cardNumber=ref("")
 const expirydate=ref("")
 const CVV=ref("")
-const count=ref(1)
-const liked = ref(false)
-const increase = () => {
-  count.value++
-}
 
-const decrease = () => {
-  if (count.value > 1) {
-    count.value--
-  }
-}
 </script>
