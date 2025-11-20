@@ -88,13 +88,11 @@
   <div class="flex -mt-12 pl-32 pr-6 items-center">
   
   <!-- مربع البحث -->
-  <div class="flex items-center justify- w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
-    <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
-  </div>
-    <div>
-    <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
-    <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
-  </div>
+<div class="flex items-center w-[700px] h-[45px] px-4 rounded-[24px] bg-white shadow">
+  <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="text-gray-500 mr-3" />
+  <input type="text" placeholder="Search" class="flex-1 outline-none text-gray-600" />
+  <font-awesome-icon :icon="['fas', 'sliders']" class="text-black" />
+</div>
 
   <!-- أيقونات الهارت + الكارت -->
   <div class="flex items-center  gap-2  ml-60 ">
