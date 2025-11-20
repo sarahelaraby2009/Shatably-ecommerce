@@ -9,13 +9,12 @@ const loading = ref(true);
 const error = ref(null);
 
 onMounted(async () => {
-  loading.value = true;
-  error.value = null;
   try {
     const snap = await getDocs(collection($db, "categories"));
     categories.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
   } catch (err) {
     console.error("Error fetching categories:", err);
+    error.value = "fall";
   } finally {
     loading.value = false;
   }
@@ -24,16 +23,17 @@ onMounted(async () => {
 
 <template>
   <Image/>
-  <div class="flex justify-center mt-[40px]">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6">
-      <CategoryCard
-        v-for="cat in categories"
-        :key="cat.id"
-        :id="cat.id"
-        :name="cat.name"
-        :image="cat.image"
-        :to="`/categories/${cat.id}`"
-      />
-    </div>
-  </div>
+<div class="flex justify-center items-center mt-[40px] mb-[40px]">
+   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <CategoryCard
+    v-for="cat in categories"
+    :key="cat.id"
+    :id="cat.id"
+    :name="cat.name"
+    :image="cat.image"
+    :to="`/categories/${cat.id}`"
+  />
+</div>
+</div>
+
 </template>

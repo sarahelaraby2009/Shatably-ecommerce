@@ -91,10 +91,10 @@
   <div class="flex items-center justify- w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
   </div>
-    <div>
-    <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
-    <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
-  </div>
+
+  <!-- <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" /> -->
+  <font-awesome-icon :icon="['fas', 'search']" class="text-[#000] w-5 h-5"/>
+
 
   <!-- أيقونات الهارت + الكارت -->
   <div class="flex items-center  gap-2  ml-60 ">
