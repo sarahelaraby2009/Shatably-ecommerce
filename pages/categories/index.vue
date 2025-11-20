@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { collection, getDocs } from "firebase/firestore";
+import Default from "~/layouts/default.vue";
 
 const { $db } = useNuxtApp();
 

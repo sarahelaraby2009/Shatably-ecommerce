@@ -1,18 +1,15 @@
 <template>
+ <nuxt-link :to="to || '#'" class="block">
   <div class="card">
-     <nuxt-link>
        <div class="image">
          <img :src="image" :alt="name" />
        </div>
-     </nuxt-link>
-    <nuxt-link
-      :to="to">
     <div
       class="font-bold block text-center text-lg hover:text-orange-600 transition hover:cursor-pointer">
       {{ name }}
     </div>
-    </nuxt-link>
   </div>
+  </nuxt-link>
 </template>
 
 <script setup>
@@ -20,7 +17,7 @@ defineProps({
   id: String,
   name: String,
   image: String,
-  to: String, 
+  to: { type: String, default: '#' }, 
 });
 </script>
 
