@@ -1,5 +1,7 @@
 <template>
-  
+
+ 
+
  
   <div class="font-poppins">  
     <NuxtLayout>

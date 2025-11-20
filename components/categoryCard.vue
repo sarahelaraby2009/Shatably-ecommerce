@@ -1,12 +1,16 @@
 <template>
   <div class="card">
-    <div class="image">
-      <img :src="image" :alt="name" />
-    </div>
-
+     <nuxt-link>
+       <div class="image">
+         <img :src="image" :alt="name" />
+       </div>
+     </nuxt-link>
     <nuxt-link
-      :to="to" class="font-bold block text-lg hover:text-blue-600 transition">
+      :to="to">
+    <div
+      class="font-bold block text-center text-lg hover:text-orange-600 transition hover:cursor-pointer">
       {{ name }}
+    </div>
     </nuxt-link>
   </div>
 </template>
@@ -15,22 +19,23 @@
 defineProps({
   id: String,
   name: String,
-  image: String,   
-})
+  image: String,
+  to: String, 
+});
 </script>
 
 <style scoped>
 .card {
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   width: 402px;
   height: 500px;
   background-color: white;
   padding: 10px;
   border-radius: 12px;
-  transition: transform .2s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  transition: transform 0.2s ease;
+  /* display: flex; */
+  /* flex-direction: column;
+  align-items: center; */
 }
 
 .card:hover {
@@ -42,11 +47,14 @@ defineProps({
   padding-bottom: 16px;
   height: 451px;
 }
+.image:hover {
+  cursor: pointer;
+}
 
 img {
   width: 100%;
   border-radius: 8px;
-  object-fit: cover;
-  height: 100%; 
+  /* object-fit: cover; */
+  height: 100%;
 }
 </style>

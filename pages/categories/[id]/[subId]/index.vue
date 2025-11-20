@@ -1,3 +1,3 @@
 <template>
-      <ProductCard/>
+  <ProductCard/>
 </template>

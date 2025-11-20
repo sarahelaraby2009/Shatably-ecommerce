@@ -104,14 +104,17 @@ import { collection, getDocs,ref } from 'firebase/firestore';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-const product=ref([])
+const product=ref({})
 const {$db}=useNuxtApp()
 const route=useRoute()
+const catId=route.params.id
+const subId=route.params.subId
+
 
 const modules = [Autoplay, Navigation];
 
 onMounted(async()=>{
-  snapshot=await getDocs(collection($db,`categories/${subId}/'products'/${product.id}`))
+  snapshot=await getDocs(collection($db,`categories/${catId}/'subcategories/${subId}/'products'/${productId}`))
   product.value=snapshot.docs.map(doc=>({
     id:doc.id,
     ...doc.data()
