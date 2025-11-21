@@ -38,4 +38,8 @@ onMounted(async () => {
 
 });
 
+definePageMeta({
+  layout: "default"
+
+})
 </script>

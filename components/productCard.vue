@@ -2,7 +2,7 @@
 defineProps({
     product:{
         type:Object,
-        required:true,
+    default: () => ({})
     }
 });
 </script>
