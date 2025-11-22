@@ -1,34 +1,42 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { collection, getDocs } from "firebase/firestore";
+import { ref, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { doc, collection, getDocs } from 'firebase/firestore';
 
 const route = useRoute();
+const router = useRouter();
 const { $db } = useNuxtApp();
-
 const categoryId = route.params.id;
-const subId = route.params.subid;
+const subId = route.params.subId;
 
 const products = ref([]);
 const loading = ref(true);
+const error = ref(null);
 
 onMounted(async () => {
-  console.log("categoryId:", categoryId, "subId:", subId);
+  if (!categoryId || !subId) {
+    error.value = 'Missing category or subcategory id in route params.';
+    loading.value = false;
+    return;
+  }
+
   try {
-    const productsRef = collection($db, "categories", categoryId, "subcategories", subId, "products");
-    console.log("productsRef path:", productsRef.path);
-
+    const productsRef = collection(
+      doc(collection($db, 'categories'), categoryId),
+      'subcategories',
+      subId,
+      'products'
+    );
     const snap = await getDocs(productsRef);
-    console.log("snapshot empty:", snap.empty);
 
-    snap.docs.forEach(doc => console.log("product doc:", doc.id, doc.data()));
-
-    products.value = snap.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    if (snap.empty) {
+      products.value = [];
+    } else {
+      products.value = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching products:', err);
+    error.value = 'خطأ في تحميل المنتجات';
   } finally {
     loading.value = false;
   }
@@ -36,19 +44,26 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center mt-10 mb-10">
-    <div v-if="loading">Loading...</div>
-    <div v-else-if="products.length === 0">No products found</div>
-    <client-only>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
-        <div v-for="p in products" :key="p.id" class="border p-4 rounded">
-          <img :src="p.image" class="w-full h-48 object-cover mb-2"/>
-          <h3>{{ p.name }}</h3>
-          <p>{{ p.price }}</p>
-          <p v-if="p.brand">Brand: {{ p.brand }}</p>
-          <p>{{ p.description }}</p>
+  <div class="px-6 py-8">
+    <div v-if="loading" class="text-center">Loading products...</div>
+
+    <div v-else-if="error" class="text-center text-red-500">{{ error }}</div>
+
+    <div v-else>
+      <div v-if="products.length === 0" class="text-center text-gray-500">
+        لا توجد منتجات في هذه الفئة حالياً.
+      </div>
+
+      <div v-else class="flex justify-center items-start mt-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <ProductCard
+            v-for="p in products"
+            :key="p.id"
+            :product="p"
+            v-on:click.native.prevent="goToProduct(p.id)"
+          />
         </div>
       </div>
-    </client-only>
+    </div>
   </div>
 </template>

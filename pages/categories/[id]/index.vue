@@ -23,7 +23,7 @@ onMounted(async () => {
         id: d.id,
         name: d.data().name,
         image: d.data().image,
-        to: `/categories/${categoryId}/subcategories/${d.id}` 
+        to: `/categories/${categoryId}/${d.id}` 
       }));
     }
   } catch (err) {

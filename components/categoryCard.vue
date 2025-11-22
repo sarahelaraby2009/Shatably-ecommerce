@@ -30,9 +30,6 @@ defineProps({
   padding: 10px;
   border-radius: 12px;
   transition: transform 0.2s ease;
-  /* display: flex; */
-  /* flex-direction: column;
-  align-items: center; */
 }
 
 .card:hover {
@@ -51,7 +48,7 @@ defineProps({
 img {
   width: 100%;
   border-radius: 8px;
-  /* object-fit: cover; */
+  object-fit: cover;
   height: 100%;
 }
 </style>
