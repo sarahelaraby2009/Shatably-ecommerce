@@ -61,11 +61,11 @@
 
 </div>
 
-<div class="flex justify-center gap-10">
+<!-- <div class="flex justify-center gap-10">
     <ProductCard/>
      <ProductCard/>
       <ProductCard/>
-</div>
+</div> -->
 
 
 

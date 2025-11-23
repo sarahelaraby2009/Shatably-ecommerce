@@ -7,7 +7,7 @@
       </img> -->
 <!-- <img src="/logo1.png" class="h-[90px] w-[70px]" alt="logo"></img> -->
  
-<img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo"></img>
+<img src="/logo1.png" class="h-[auto] w-[200px] -my-6" alt="logo"></img>
       </div>
      <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
   <!-- Home -->
@@ -97,7 +97,7 @@
   </div>
 
   <!-- <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" /> -->
-  <font-awesome-icon :icon="['fas', 'search']" class="text-[#000] w-5 h-5"/>
+  <!-- <font-awesome-icon :icon="['fas', 'search']" class="text-[#000] w-5 h-5"/> -->
 
 
   <!-- أيقونات الهارت + الكارت -->

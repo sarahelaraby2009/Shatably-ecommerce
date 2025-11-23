@@ -52,7 +52,7 @@ defineProps({
       <p>Brand: {{ product.brand }}</p>
 
       <div class="flex justify-between items-center">
-        <h5>{{ product.price }}</h5>
+        <h5>{{ product.price }} </h5>
         <nuxt-link class="cursor-pointer">
           <div
             class="flex justify-center items-center rounded-full bg-[#C76950] p-[10px] w-[40px] h-[40px]"
