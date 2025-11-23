@@ -1,0 +1,74 @@
+<template> 
+
+<div class="container m-auto">
+
+
+<div class="grid grid-cols-[300px_1fr] pt-10 gap-10 pb-10">
+
+ <!-- Sidebar -->
+ <aside class="space-y-1 shadow rounded-2xl h-[600px]">
+    <!-- image+name -->
+    <div class="flex gap-4 pt-5">
+
+        <img src="/13.jpg" class="w-14 h-14 rounded-full object-cover ml-5 ">
+        <div class="grid">
+        <h3 class="pt-1 font-bold text-xl"> Hello nano! </h3>
+        <p class="text-sm text-gray-500 pb-5"> nano@gmail.com</p>
+        </div>
+    </div>
+
+    <hr/>
+    <!-- info -->
+    <div class="space-y-5 pl-5 pr-2 h-[800px] ">
+
+<h3 class="font-bold pt-5 text-2xl pb-5"> My Account</h3>
+
+    <NuxtLink to="/userprofile">
+          <div class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
+  <font-awesome-icon :icon="['fas', 'user']" class="text-[20px]" />
+  <p class="text-lg font-medium">Profile</p>
+</div>
+        </NuxtLink>
+
+
+
+<NuxtLink to="/userprofile/address">
+<div class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
+  <font-awesome-icon :icon="['fas', 'location-dot']" class="text-[20px]" />
+  <p class="text-lg font-medium">Address </p>
+</div>
+</NuxtLink>
+
+
+<NuxtLink to="/userprofile/orders">
+<div class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
+  <font-awesome-icon :icon="['fas', 'bookmark']" class="text-[20px]" />
+  <p class="text-lg font-medium">Orders</p>
+</div>
+</NuxtLink>
+
+
+ <hr/> 
+<div class="flex items-center gap-3 p-1 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
+  <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-[20px]" />
+  <p class="text-lg font-medium">log out</p>
+</div>
+    </div>
+
+ </aside>
+
+  
+
+    <!-- البروفايل -->
+    <div class="bg-white p-4 rounded-2xl shadow">
+
+        <NuxtPage />
+
+  
+    </div>
+
+
+</div>
+</div> 
+
+</template>
