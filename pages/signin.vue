@@ -120,6 +120,10 @@ const resetEmail = ref('')
 const resetError = ref('')
 const showModal=ref(false)
 
+definePageMeta({
+  layout:'withOutNavFoot'
+})
+
 const googleSignIn = async () => {
   try {
     const provider = new GoogleAuthProvider()
@@ -156,8 +160,12 @@ const handleSignIn = async () => {
     if (role === "engineer") { navigateTo('/engineer/complete-profile') }
     if (role === "supplier") { navigateTo('/supplier') }
   }
-  catch (err) { console.log(err) }
-}
+catch (err) {
+  if (err.code === "auth/invalid-credential") {
+    errorMessage.value = "Wrong email or password";
+    return;
+  }
+}}
 
 const handleReset = async () => {
   if (!resetEmail.value) {

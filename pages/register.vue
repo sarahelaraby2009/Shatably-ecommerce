@@ -95,7 +95,9 @@ const repassword = ref('')
 const errorMessage = ref('')
 const userRole = ref('')
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-
+definePageMeta({
+  layout:'withOutNavFoot'
+})
 const { $auth } = useNuxtApp()
 const { $db } = useNuxtApp()
 const matchPass = () => {
@@ -267,9 +269,12 @@ const handleSignUp = async () => {
 
   }
   catch (err) {
-    console.log(err)
-    errorMessage.value = "invalid data"
+  if (err.code === 'auth/email-already-in-use') {
+    errorMessage.value = "This email is already registered. Please sign in instead."
+    return
   }
+  errorMessage.value = "Something went wrong. Try again."
+}
 }
 
 
