@@ -1,18 +1,15 @@
 <template>
+ <nuxt-link :to="to || '#'" class="block">
   <div class="card">
-     <nuxt-link>
        <div class="image">
          <img :src="image" :alt="name" />
        </div>
-     </nuxt-link>
-    <nuxt-link
-      :to="to">
     <div
       class="font-bold block text-center text-lg hover:text-orange-600 transition hover:cursor-pointer">
       {{ name }}
     </div>
-    </nuxt-link>
   </div>
+  </nuxt-link>
 </template>
 
 <script setup>
@@ -20,7 +17,7 @@ defineProps({
   id: String,
   name: String,
   image: String,
-  to: String, 
+  to: { type: String, default: '#' }, 
 });
 </script>
 
@@ -33,9 +30,6 @@ defineProps({
   padding: 10px;
   border-radius: 12px;
   transition: transform 0.2s ease;
-  /* display: flex; */
-  /* flex-direction: column;
-  align-items: center; */
 }
 
 .card:hover {
@@ -54,7 +48,7 @@ defineProps({
 img {
   width: 100%;
   border-radius: 8px;
-  /* object-fit: cover; */
+  object-fit: cover;
   height: 100%;
 }
 </style>

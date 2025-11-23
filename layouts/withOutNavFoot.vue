@@ -1,7 +1,5 @@
 <script setup>
 </script>
 <template>
-    <Header/>
     <slot></slot>
-    <Footer/>
 </template>
