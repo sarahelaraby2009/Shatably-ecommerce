@@ -4,15 +4,15 @@
             <!-- part1 -->
             <div class="mb-4">
                 <div class="w-full h-[400px] flex justify-center mt-2 relative">
-                    <img class="w-full h-full rounded-[16px] object-cover" src="/pricingBaner.png" />
+                    <img class="w-full h-full rounded-[16px] object-cover" src="/calc.avif" />
                     <div class="absolute inset-0 flex justify-center pointer-events-none">
-                        <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
+                        <div class="w-full h-full bg-black/70 rounded-[16px]"></div>
                     </div>
                     <div class="absolute inset-0 flex flex-col justify-center items-center gap-3 px-4">
                         <h2 class="text-[#fefefe] font-bold text-[28px] max-w-[700px] text-center">Calculate Your
                             Apartment
                             Finishing Cost Easily</h2>
-                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] text-center">A space where
+                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] text-left">A space where
                             creativity meets
                             craftsmanship find your engineer, view their work, and bring your dream
                             apartment to life.</p>
