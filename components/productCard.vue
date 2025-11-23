@@ -1,14 +1,27 @@
 <script setup>
-defineProps({
+const props= defineProps({
     product:{
         type:Object,
         required:true,
-    }
+    },
+    categoryId: {
+    type: String,
+    required: false   // خليها false عشان الهوم بيچ لسه مش فيها IDs
+  },
+  subId: {
+    type: String,
+    required: false
+  }
 });
+const router=useRouter()
+const goToDetails=()=>{
+     router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
+
+}
 </script>
 <template>
 
-<div class="card">
+<div class="card" @click="goToDetails">
     <div class="image">
         <div class="absolute left-[250px] top-[200px] bg-[#D9D9D9] w-[35px] h-[35px] rounded-[50px] flex justify-center items-center">
             <font-awesome-icon :icon="['far','heart']" class="text-[#C76950] text-lg"/>
@@ -26,7 +39,7 @@ defineProps({
 
             </div>
         </div>
-         <p>{{product.description }}</p>
+       
         <p>Brand:{{ product.brand }}</p>
         <div class="flex justify-between items-center">
             <h5>{{  product.price}}</h5>
@@ -47,6 +60,7 @@ defineProps({
     background-color: white;
     padding: 10px;
     border-radius: 12px;
+    cursor: pointer;
 }
 .image{
     width: 100%;
