@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-4 py-10">
+  <div class="container mx-auto px-4 py-10 relative">
    
     <h2 class="text-[36px] font-bold mb-5">Checkout</h2>
 
