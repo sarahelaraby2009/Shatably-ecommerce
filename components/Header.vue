@@ -7,7 +7,7 @@
       </img> -->
 <!-- <img src="/logo1.png" class="h-[90px] w-[70px]" alt="logo"></img> -->
  
-<img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo"></img>
+<img src="/logo1.png" class="h-[auto] w-[200px] -my-6" alt="logo"></img>
       </div>
      <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
   <!-- Home -->
@@ -37,54 +37,49 @@
   </NuxtLink>
 </li>
 
+
 <li class="relative" @click="open = !open">
-  <!-- Link الرئيسي -->
+
+  <!-- Main link -->
   <NuxtLink to="#" class="flex items-center hover:text-[#C76950]">
     Categories <span class="ml-1">▼</span>
   </NuxtLink>
 
-  <!-- Dropdown Menu -->
-  <ul v-if="open" class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg">
-    <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500 " exact-active-class="font-medium  bg-gray-100">
-      Electrical
-      </NuxtLink>
-    </li>
-    <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium text-orange-500 bg-gray-100">
-      Plumbing
-      </NuxtLink>
-    </li>
-    <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium text-orange-500 bg-gray-100">
-        flooring&cladding
-      </NuxtLink>
-    </li>
-     <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium text-orange-500 bg-gray-100">
-        Doors
-      </NuxtLink>
-    </li>
-     <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium text-orange-500 bg-gray-100">
-        Paints
-      </NuxtLink>
-    </li>
-    <li>
-      <NuxtLink to="/categories" class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium  text-orange-500 bg-gray-100">
-        Constuction chemicals
+  <!-- Dropdown -->
+  <ul
+    v-if="open"
+    class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg"
+  >
+    <li v-for="cat in categories" :key="cat.id">
+      <NuxtLink class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium  text-orange-500 bg-gray-100"
+        :to="`/categories/${cat.id}`"
+        
+        
+      >
+        {{ cat.name }}
       </NuxtLink>
     </li>
   </ul>
+
 </li>
 </ul>
-<div class="flex gap-3"> <!-- اضبط القيمة حسب المسافة المطلوبة -->
-  <button class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] bg-[#C76950] text-white hover:bg-[#AD563F]">
+
+<div class="flex gap-3"> <!-- sigin in -->
+   <div v-if="!user" class="flex gap-3">
+  <button   @click="signIN" class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] bg-[#C76950] text-white hover:bg-[#AD563F]">
     Sign in
   </button>
-  <button class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] border border-[#612B1F] text-[#612B1F] hover:text-[#C76950] hover:border-[#C76950]">
+  <button @click="signUP" class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] border border-[#612B1F] text-[#612B1F] hover:text-[#C76950] hover:border-[#C76950]">
     Sign up
   </button>
+   </div>
+   <!--user show -->
+     <div v-else class="flex items-center">
+    <img 
+      :src="user.photoURL || defaultAvatar"
+      class="w-10 h-10 rounded-full object-cover border cursor-pointer"
+    />
+  </div>
 </div>
 </nav>
 <!--------------------------row 2 ------------>
@@ -94,11 +89,9 @@
   <!-- مربع البحث -->
   <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
+    <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
+    <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
   </div>
-
-  <!-- <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" /> -->
-  <font-awesome-icon :icon="['fas', 'search']" class="text-[#000] w-5 h-5"/>
-
 
   <!-- أيقونات الهارت + الكارت -->
   <div class="flex items-center  gap-2  ml-60 ">
@@ -118,6 +111,27 @@
   
   </template>
   <script setup>
-import { ref } from 'vue'
+import { ref ,onMounted} from 'vue'
+import { useAuth } from '~/composables/useAuth'
+import{ collection,getDocs}from 'firebase/firestore'
+const categories=ref([])
+const {$db}=useNuxtApp()
 const open = ref(false)
+const { user } = useAuth()
+const defaultAvatar = "/default.png"
+const signIN = () => {
+  navigateTo('/signin')
+} 
+
+const signUP = () => {
+  navigateTo('/register')
+}
+onMounted(async()=>{
+  const categoryRef=collection($db,"categories")
+  const snapshot=await getDocs(categoryRef)
+  categories.value=snapshot.docs.map(doc=>({
+    id:doc.id,
+    ...doc.data()
+  }))
+})
 </script>
