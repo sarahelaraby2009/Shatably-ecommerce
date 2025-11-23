@@ -1,120 +1,137 @@
 <template>
-  <header class="w-full bg-gray-100 px-[80px] pb-3 flex flex-col">
-
-    <!-- Row 1 -->
-    <nav class="flex items-center justify-between">
-
-      <!-- Logo -->
-      <div>
-        <img src="/logo1.png" class="h-[220px] w-[200px] -my-6" alt="logo" />
+    <header class="w-full bg-gray-100 px-[80px] pb-2 flex flex-col">
+      
+   <nav class="flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <!-- <img src="/logo1.png" class="h-[131px] w-[107px]" alt="logo">
+      </img> -->
+<!-- <img src="/logo1.png" class="h-[90px] w-[70px]" alt="logo"></img> -->
+ 
+<img src="/logo1.png" class="h-[auto] w-[200px] -my-6" alt="logo"></img>
       </div>
+     <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
+  <!-- Home -->
+  <li>
+  <NuxtLink to="/" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+    Home
+  </NuxtLink>
+</li>
 
-      <!-- Links -->
-      <ul class="hidden md:flex items-center space-x-10 text-gray-700 font-medium">
 
-        <li>
-          <NuxtLink to="/" exact-active-class="text-[#C76950] text-[20px] font-medium"
-            class="text-[18px] hover:text-[#C76950]">
-            Home
-          </NuxtLink>
-        </li>
+  <!-- Pricing -->
+  <li>
+    <NuxtLink to="/pricing" exact-active-class="text-[#C76950] text-xl font-medium"class=" text-[18px] font-normal hover:text-[#C76950]">
+      Pricing
+    </NuxtLink>
+  </li>
+    <li>
+      
+  <NuxtLink to="/engineerpage" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+    Professionals
+  </NuxtLink>
+</li>
 
-        <li>
-          <NuxtLink to="/pricing" exact-active-class="text-[#C76950] text-[20px] font-medium"
-            class="text-[18px] hover:text-[#C76950]">
-            Pricing
-          </NuxtLink>
-        </li>
+    <li>   
+  <NuxtLink to="/favourite" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+    WishList
+  </NuxtLink>
+</li>
 
-        <li>
-          <NuxtLink to="/engineerpage" exact-active-class="text-[#C76950] text-[20px] font-medium"
-            class="text-[18px] hover:text-[#C76950]">
-            Professionals
-          </NuxtLink>
-        </li>
 
-        <li>
-          <NuxtLink to="/favourite" exact-active-class="text-[#C76950] text-[20px] font-medium"
-            class="text-[18px] hover:text-[#C76950]">
-            WishList
-          </NuxtLink>
-        </li>
+<li class="relative" @click="open = !open">
 
-        <!-- Categories Dropdown -->
-        <li class="relative">
-          <button @click="open = !open" class="flex items-center hover:text-[#C76950]">
-            Categories <span class="ml-1">▼</span>
-          </button>
+  <!-- Main link -->
+  <NuxtLink to="#" class="flex items-center hover:text-[#C76950]">
+    Categories <span class="ml-1">▼</span>
+  </NuxtLink>
 
-          <ul v-if="open" class="absolute top-full left-0 mt-2 w-44 bg-white border rounded shadow-lg z-50">
-            <li v-for="category in categories" :key="category.id">
-              <NuxtLink :to="`/categories/${category.id}`" class="block px-4 py-2 hover:bg-gray-100">
-                {{ category.name }}
-              </NuxtLink>
-            </li>
-          </ul>
-        </li>
+  <!-- Dropdown -->
+  <ul
+    v-if="open"
+    class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg"
+  >
+    <li v-for="cat in categories" :key="cat.id">
+      <NuxtLink class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500" exact-active-class="font-medium  text-orange-500 bg-gray-100"
+        :to="`/categories/${cat.id}`"
+        
+        
+      >
+        {{ cat.name }}
+      </NuxtLink>
+    </li>
+  </ul>
 
-      </ul>
+</li>
+</ul>
 
-      <!-- Auth Buttons -->
-      <div class="flex gap-3">
-        <button class="px-5 py-2 rounded-[22px] w-[121px] bg-[#C76950] text-white hover:bg-[#AD563F]">
-          Sign in
-        </button>
+<div class="flex gap-3"> <!-- sigin in -->
+   <div v-if="!user" class="flex gap-3">
+  <button   @click="signIN" class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] bg-[#C76950] text-white hover:bg-[#AD563F]">
+    Sign in
+  </button>
+  <button @click="signUP" class="px-5 py-2 rounded-[22px] w-[121px] h-[36px] border border-[#612B1F] text-[#612B1F] hover:text-[#C76950] hover:border-[#C76950]">
+    Sign up
+  </button>
+   </div>
+   <!--user show -->
+     <div v-else class="flex items-center">
+    <img 
+      :src="user.photoURL || defaultAvatar"
+      class="w-10 h-10 rounded-full object-cover border cursor-pointer"
+    />
+  </div>
+</div>
+</nav>
+<!--------------------------row 2 ------------>
+<div class="flex  pl-32 "> 
+  <div class="flex -mt-12 pl-32 pr-6 items-center">
+  
+  <!-- مربع البحث -->
+  <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
+    <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
+    <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
+    <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
+  </div>
 
-        <button
-          class="px-5 py-2 rounded-[22px] w-[121px] border border-[#612B1F] text-[#612B1F] hover:text-[#C76950] hover:border-[#C76950]">
-          Sign up
-        </button>
-      </div>
+  <!-- أيقونات الهارت + الكارت -->
+  <div class="flex items-center  gap-2  ml-60 ">
+ 
 
-    </nav>
-
-    <!-- Row 2 -->
-    <div class="flex px-32 -mt-10">
-
-      <!-- Search -->
-      <div class="flex items-center w-[700px] h-[45px] px-4 rounded-[24px] bg-white shadow">
-        <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="text-gray-500 mr-3" />
-        <input type="text" placeholder="Search" class="flex-1 outline-none text-gray-600" />
-        <font-awesome-icon :icon="['fas', 'sliders']" />
-      </div>
-
-      <!-- Cart -->
-      <div class="flex items-center gap-2 ml-60">
-        <div
-          class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
-          <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
-        </div>
-      </div>
-
+    <!-- Cart -->
+    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
+      <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
     </div>
+  </div>
+  </div>
 
-  </header>
-</template>
+</div>
 
-<script setup>
 
-import { ref, onMounted } from 'vue';
-import { collection, getDocs } from 'firebase/firestore';
-
-const { $db } = useNuxtApp()
+    </header>
+  
+  </template>
+  <script setup>
+import { ref ,onMounted} from 'vue'
+import { useAuth } from '~/composables/useAuth'
+import{ collection,getDocs}from 'firebase/firestore'
+const categories=ref([])
+const {$db}=useNuxtApp()
 const open = ref(false)
-const categories = ref([])
+const { user } = useAuth()
+const defaultAvatar = "/default.png"
+const signIN = () => {
+  navigateTo('/signin')
+} 
 
-onMounted(async () => {
-  const catRef = collection($db, "categories");
-  const snapShot = await getDocs(catRef);
-  console.log(" Snapshot size:", snapShot.size);
-
-  categories.value = snapShot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-
-  console.log(" categories:", categories.value);
-});
-
-
+const signUP = () => {
+  navigateTo('/register')
+}
+onMounted(async()=>{
+  const categoryRef=collection($db,"categories")
+  const snapshot=await getDocs(categoryRef)
+  categories.value=snapshot.docs.map(doc=>({
+    id:doc.id,
+    ...doc.data()
+  }))
+})
 </script>
