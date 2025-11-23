@@ -5,7 +5,7 @@
 
 <div class="grid grid-cols-[300px_1fr] pt-10 gap-10 pb-10">
 
- <!-- Sidebar -->
+ <!-- Sidebar left -->
  <aside class="space-y-1 shadow rounded-2xl h-[600px]">
     <!-- image+name -->
     <div class="flex gap-4 pt-5">
@@ -59,7 +59,7 @@
 
   
 
-    <!-- البروفايل -->
+    <!-- right -->
     <div class="bg-white p-4 rounded-2xl shadow">
 
         <NuxtPage />
