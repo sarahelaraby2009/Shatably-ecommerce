@@ -60,6 +60,7 @@ onMounted(async () => {
             v-for="p in products"
             :key="p.id"
             :product="p"
+            :to="p.to"
             v-on:click.native.prevent="goToProduct(p.id)"
           />
         </div>

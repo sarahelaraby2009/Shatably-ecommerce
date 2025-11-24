@@ -1,6 +1,7 @@
 <script>
 import { icon } from "@fortawesome/fontawesome-svg-core";
 import Default from "~/layouts/default.vue";
+
 </script>
 <template>
   <div class="flex justify-start items-center m-10">
