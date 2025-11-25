@@ -15,7 +15,7 @@ const props= defineProps({
 });
 const router=useRouter()
 const goToDetails=()=>{
-router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
+     router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
 
 }
 </script>

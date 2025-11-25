@@ -58,7 +58,7 @@
 </div>
 
 
-<div class="bg-[#C76950] p-3 rounded-3xl text-center mt-10">
+<div class="bg-[#C76950] p-3 rounded-3xl text-center mt-10 cursor-pointer">
     <button> Update Profile </button>
 </div>   
 </template>

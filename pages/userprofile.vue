@@ -10,7 +10,12 @@
     <!-- image+name -->
     <div class="flex gap-4 pt-5">
 
-        <img src="/13.jpg" class="w-14 h-14 rounded-full object-cover ml-5 ">
+      <div class="relative">
+                <img src="/13.jpg" class="w-14 h-14 rounded-full object-cover ml-5 ">
+<label for="upload" class="absolute bottom-0 right-0 bg-white border rounded-full object-cover pr-1 pl-1 shadow cursor-pointer">
+  <font-awesome-icon :icon="['fas','edit']" class="text-gray-700 text-xs" />
+</label>
+      </div>
         <div class="grid">
         <h3 class="pt-1 font-bold text-xl"> Hello nano! </h3>
         <p class="text-sm text-gray-500 pb-5"> nano@gmail.com</p>
@@ -49,7 +54,7 @@
 
 
  <hr/> 
-<div class="flex items-center gap-3 p-1 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
+<div class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
   <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-[20px]" />
   <p class="text-lg font-medium">log out</p>
 </div>
