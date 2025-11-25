@@ -1,10 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { doc, collection, getDocs } from 'firebase/firestore';
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { doc, collection, getDocs } from "firebase/firestore";
 
 const route = useRoute();
-const router = useRouter();
 const { $db } = useNuxtApp();
 const categoryId = route.params.id;
 const subId = route.params.subId;
@@ -15,28 +14,28 @@ const error = ref(null);
 
 onMounted(async () => {
   if (!categoryId || !subId) {
-    error.value = 'Missing category or subcategory id in route params.';
+    error.value = "Missing category or subcategory id in route params.";
     loading.value = false;
     return;
   }
 
   try {
     const productsRef = collection(
-      doc(collection($db, 'categories'), categoryId),
-      'subcategories',
+      doc(collection($db, "categories"), categoryId),
+      "subcategories",
       subId,
-      'products'
+      "products"
     );
     const snap = await getDocs(productsRef);
 
     if (snap.empty) {
       products.value = [];
     } else {
-      products.value = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      products.value = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
     }
   } catch (err) {
-    console.error('Error fetching products:', err);
-    error.value = 'خطأ في تحميل المنتجات';
+    console.error("Error fetching products:", err);
+    error.value = "Fall";
   } finally {
     loading.value = false;
   }
@@ -55,13 +54,14 @@ onMounted(async () => {
       </div>
 
       <div v-else class="flex justify-center items-start mt-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+        >
           <ProductCard
             v-for="p in products"
             :key="p.id"
             :product="p"
             :to="p.to"
-            v-on:click.native.prevent="goToProduct(p.id)"
           />
         </div>
       </div>
