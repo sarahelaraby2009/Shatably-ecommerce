@@ -141,7 +141,7 @@ onMounted(async () => {
     console.warn("cart check failed", e);
   }
 });
-const router=useRouter()
+
 const goToDetails=()=>{
      router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
 

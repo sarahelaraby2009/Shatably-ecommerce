@@ -13,7 +13,7 @@
       <div class="relative">
                 <img src="/13.jpg" class="w-14 h-14 rounded-full object-cover ml-5 ">
 <label for="upload" class="absolute bottom-0 right-0 bg-white border rounded-full object-cover pr-1 pl-1 shadow cursor-pointer">
-  <font-awesome-icon :icon="['fas','edit']" class="text-gray-700 text-xs" />
+  <font-awesome-icon :icon="['fas','edit']" class="text-gray-700 text-xs"  />
 </label>
       </div>
         <div class="grid">
