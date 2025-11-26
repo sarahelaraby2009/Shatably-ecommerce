@@ -1,16 +1,144 @@
 <script setup>
-const props= defineProps({
-    product:{
-        type:Object,
-        required:true,
-    },
-    categoryId: {
-    type: String,
-    required: false   // خليها false عشان الهوم بيچ لسه مش فيها IDs
+import { ref, onMounted } from "vue";
+import { useNuxtApp, useRouter } from "#app";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+// -------------------------------------------------
+const props = defineProps({
+  product: {
+    type: Object,
+    required: true,
   },
-  subId: {
-    type: String,
-    required: false
+});
+// ---------------------------------------------------
+const nuxtApp = useNuxtApp();
+const db = nuxtApp.$db;
+const auth = nuxtApp.$auth;
+const router = useRouter();
+// ------------------------------------------------
+const isInWishlist = ref(false);
+const isLoading = ref(false);
+const isInCart = ref(false);
+const cartQuantity = ref(0);
+const isCartLoading = ref(false);
+// ----------------------------------------------
+async function addToWishlist() {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please sign in to save to wishlist");
+    return;
+  }
+  const wishlistDocId = `${user.uid}_${props.product.id}`;
+  const wishlistDocRef = doc(db, "wishlists", wishlistDocId);
+  
+  isInWishlist.value = !isInWishlist.value;
+  isLoading.value = true;
+  try {
+    const snap = await getDoc(wishlistDocRef);
+    if (snap.exists()) {
+      await deleteDoc(wishlistDocRef);
+      isInWishlist.value = false;
+    } else {
+      await setDoc(wishlistDocRef, {
+        userId: user.uid,
+        productId: props.product.id,
+        createdAt: serverTimestamp(),
+        productSnapshot: {
+          id: props.product.id,
+          name: props.product.name,
+          price: props.product.price,
+          image: props.product.image,
+          brand: props.product.brand,
+        },
+      });
+      isInWishlist.value = true;
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoading.value = false;
+  }
+}
+// ---------------------------------------------------------
+async function addToCart() {
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Please sign in to add to cart");
+    return;
+  }
+  const cartDocId = `${user.uid}_${props.product.id}`;
+  const cartRef = doc(db, "carts", cartDocId);
+  isCartLoading.value = true;
+
+  try {
+    const snap = await getDoc(cartRef);
+    if (snap.exists()) {
+      const currentQty = snap.data().quantity || 1;
+      const nweQty = currentQty + 1;
+      await setDoc(
+        cartRef,
+        {
+          quantity: nweQty,
+          updatedAt: serverTimestamp(),
+        },
+        { merge: true }
+      );
+      cartQuantity.value = nweQty;
+      isInCart.value = true;
+    } else {
+      await setDoc(cartRef, {
+        userId: user.uid,
+        productId: props.product.id,
+        quantity: 1,
+        createdAt: serverTimestamp(),
+        productSnapshot: {
+          id: props.product.id,
+          name: props.product.name,
+          image: props.product.image,
+          price: props.product.price,
+          brand: props.product.brand,
+        },
+      });
+      cartQuantity.value = 1;
+      isInCart.value = true;
+    }
+  } catch (err) {
+    console.error("addToCart error", err);
+  } finally {
+    isCartLoading.value = false;
+  }
+}
+// ---------------------------------------------------------
+onMounted(async () => {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  // wishlist check
+  try {
+    const wishlistDocId = `${user.uid}_${props.product.id}`;
+    const wishlistRef = doc(db, "wishlists", wishlistDocId);
+    const snapW = await getDoc(wishlistRef);
+    isInWishlist.value = snapW.exists();
+  } catch (e) {
+    console.warn("wishlist check failed", e);
+  }
+
+  // cart check
+  try {
+    const user = auth.currentUser;
+    if (!user) return;
+    const cartDocId = `${user.uid}_${props.product.id}`;
+    const cartRef = doc(db, "carts", cartDocId);
+    const snap = await getDoc(cartRef);
+    isInCart.value = snap.exists();
+    if (snap.exists()) cartQuantity.value = snap.data().quantity || 1;
+  } catch (e) {
+    console.warn("cart check failed", e);
   }
 });
 const router=useRouter()
@@ -20,38 +148,64 @@ const goToDetails=()=>{
 }
 </script>
 <template>
-
-<div class="card" @click="goToDetails">
-    <div class="image">
-        <div class="absolute left-[250px] top-[200px] bg-[#D9D9D9] w-[35px] h-[35px] rounded-[50px] flex justify-center items-center">
-            <font-awesome-icon :icon="['far','heart']" class="text-[#C76950] text-lg"/>
+  <nuxt-link :to="`/product/${product.id}`">
+    <div class="card">
+      <div class="image relative">
+        <div
+          @click.stop="addToWishlist"
+          class="heart absolute top-3 right-3 bg-[#D9D9D9] w-[35px] h-[35px] rounded-full flex justify-center items-center z-10"
+        >
+          <font-awesome-icon
+            :icon="[isInWishlist ? 'fas' : 'far', 'heart']"
+            class="text-[#C76950] text-lg"
+          />
         </div>
-        <img :src="product.image" alt="product.name">
-    </div>
-    <div class="para">
-        <div class="flex justify-between">
-            <h3>{{product.name }}</h3>
-            <div>
-                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
-                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
-                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
-                <font-awesome-icon :icon="['fas','star']"  class="text-yellow-200 text-s"/>
 
-            </div>
-        </div>
-       
-        <p>Brand:{{ product.brand }}</p>
+        <img :src="product.image" :alt="product.name" />
+      </div>
+
+      <div class="para">
         <div class="flex justify-between items-center">
-            <h5>{{  product.price}}</h5>
-            <div class="flex justify-center items-center rounded-[50px] bg-[#C76950] p-[10px] w-[40px] h-[40px]">
-                <font-awesome-icon :icon="['fas','cart-shopping']" class="text-white text-s" />
-            </div>
-
+          <h3>{{ product.name }}</h3>
+          <div class="flex justify-center items-center">
+            <font-awesome-icon
+              :icon="['fas', 'star']"
+              class="text-yellow-200 text-s"
+            />
+            <p>4.0</p>
+            <!-- <font-awesome-icon
+              :icon="['fas', 'star']"
+              class="text-yellow-200 text-s"
+            />
+            <font-awesome-icon
+              :icon="['fas', 'star']"
+              class="text-yellow-200 text-s"
+            />
+            <font-awesome-icon
+              :icon="['fas', 'star']"
+              class="text-yellow-200 text-s"
+            /> -->
+          </div>
         </div>
+
+        <p>{{ product.description }}</p>
+        <p>Brand: {{ product.brand }}</p>
+
+        <div class="flex justify-between items-center">
+          <h5>{{ product.price }}</h5>
+          <div
+            @click.stop="addToCart"
+            class="flex justify-center items-center rounded-full bg-[#C76950] p-[10px] w-[40px] h-[40px] cursor-pointer transform transition-transform duration-150 active:scale-90"
+          >
+            <font-awesome-icon
+              :icon="['fas', 'cart-shopping']"
+              class="text-white text-s"
+            />
+          </div>
+        </div>
+      </div>
     </div>
-    
-    
-</div>
+  </nuxt-link>
 </template>
 <style scoped>
 .card{
