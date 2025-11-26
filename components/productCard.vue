@@ -20,8 +20,8 @@ const props = defineProps({
 const nuxtApp = useNuxtApp();
 const db = nuxtApp.$db;
 const auth = nuxtApp.$auth;
-const router = useRouter();
 
+// ------------------------------------------------
 const isInWishlist = ref(false);
 const isLoading = ref(false);
 const isInCart = ref(false);

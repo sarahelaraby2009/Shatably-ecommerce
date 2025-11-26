@@ -74,12 +74,30 @@
   </button>
    </div>
    <!--user show -->
-     <div v-else class="flex items-center">
-    <img 
+     <div v-else class="relative">
+     <img @click.stop="showMenu = !showMenu"
       :src="user.photoURL || defaultAvatar"
       class="w-10 h-10 rounded-full object-cover border cursor-pointer"
-    />
-  </div>
+     />
+     <!--dropdown-->
+     <div v-if="showMenu"  @click.stop class="absolute right-0 mt-3 w-40 bg-slate-50 rounded shadow-lg py-2 z-50">
+     <p class="px-4 py-2 text-sm text-gray-600 border-b">
+     {{ user.displayName || user.email }}
+      </p>
+      <!--to profile page -->
+     <NuxtLink
+     to="/userprofile"
+     class="block w-full px-4 py-2 text-sm hover:bg-[#EBCDC5] text-gray-600"
+     >
+     Profile
+     </NuxtLink>
+      <button
+     @click="logout"
+      class="block text-left w-full font-semibold px-4 py-2 text-sm text-[#C76950] hover:text-orange-500">
+       Logout
+       </button>
+       </div>
+     </div>
 </div>
 </nav>
 <!--------------------------row 2 ------------>
@@ -89,7 +107,7 @@
   <!-- مربع البحث -->
   <div class="flex items-center justify-between w-[700px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white" style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
     <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
-    <input type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
+    <input  v-model ="searchQuery"  @keyup.enter="goSearch"  type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
     <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#000] w-5 h-5" />
   </div>
 
@@ -116,10 +134,14 @@
 import { ref ,onMounted} from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import{ collection,getDocs}from 'firebase/firestore'
+import { signOut } from "firebase/auth"
+const { $auth } = useNuxtApp()
 const categories=ref([])
 const {$db}=useNuxtApp()
 const open = ref(false)
+const showMenu=ref(false)//to show dropdownlist user
 const { user } = useAuth()
+const searchQuery=ref("")
 const defaultAvatar = "/default.png"
 const signIN = () => {
   navigateTo('/signin')
@@ -127,6 +149,14 @@ const signIN = () => {
 
 const signUP = () => {
   navigateTo('/register')
+}
+const logout = async () => {
+  await signOut($auth)
+}
+const goSearch=()=>{
+  if(searchQuery.value.trim() !== ""){
+    navigateTo(`/search?query=${searchQuery.value}`)
+  }
 }
 onMounted(async()=>{
   const categoryRef=collection($db,"categories")
