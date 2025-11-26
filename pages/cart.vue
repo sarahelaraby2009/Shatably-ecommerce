@@ -62,9 +62,10 @@
 </div>
 
 <div class="flex justify-center gap-10">
-    <ProductCard/>
-     <ProductCard/>
-      <ProductCard/>
+    <!-- <ProductCard 
+    
+    /> -->
+    
 </div>
 
 
@@ -78,3 +79,5 @@
 
 
 </template>
+
+
