@@ -32,7 +32,7 @@
 </li>
 
     <li>   
-  <NuxtLink to="/favourite" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
+  <NuxtLink to="/wishlist" exact-active-class="  text-[20px] font-medium text-[#C76950]" class="text-[18px] font-normal hover:text-[#C76950]">
     WishList
   </NuxtLink>
 </li>
@@ -41,7 +41,7 @@
 <li class="relative" @click="open = !open">
 
   <!-- Main link -->
-  <NuxtLink to="#" class="flex items-center hover:text-[#C76950]">
+  <NuxtLink to="/categories" class="flex items-center hover:text-[#C76950]">
     Categories <span class="ml-1">▼</span>
   </NuxtLink>
 
@@ -98,9 +98,11 @@
  
 
     <!-- Cart -->
-    <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
-      <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
-    </div>
+     <nuxt-link to="/cart">
+       <div class="w-10 h-10 flex items-center justify-center rounded-full bg-[#C76950] shadow cursor-pointer hover:bg-orange-600 transition">
+         <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white text-xl" />
+       </div>
+     </nuxt-link>
   </div>
   </div>
 
