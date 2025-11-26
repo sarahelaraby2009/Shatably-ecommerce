@@ -210,7 +210,6 @@ async function addToCart(event) {
     </div>
   </div>
 </template>
-
 <style scoped>
 .card {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
