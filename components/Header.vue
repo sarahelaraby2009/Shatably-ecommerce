@@ -86,7 +86,7 @@
       </p>
       <!--to profile page -->
      <NuxtLink
-     to="/profile"
+     to="/userprofile"
      class="block w-full px-4 py-2 text-sm hover:bg-[#EBCDC5] text-gray-600"
      >
      Profile
