@@ -80,7 +80,7 @@
     <div class="m-5">
       <p class="font-bold text-[25px]">New Arrivals</p>
       <div class="flex gap-2 cursor-pointer overflow-x-auto scrollbar-hide pb-2">
-        <div class="border border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
+        <div class="border w-[70px] text-center border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
           :class="activeSelection === 'all' ? ' bg-[#C76950] text-[#fefe]' : ''" @click="showAll">All</div>
         <div class="border border-[#C76950] outline-none rounded-full p-2 text-[#3E3E3E] whitespace-nowrap"
           :class="activeSelection === category.id ? 'bg-[#C76950] text-[#fefe]' : ''"
@@ -100,7 +100,7 @@
     <div class="m-5">
       <p class="font-bold text-[25px]">Best Selling Products</p>
       <div class="flex gap-2 cursor-pointer overflow-x-auto scrollbar-hide pb-2">
-        <div class="border border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
+        <div class="border w-[70px] text-center border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
           :class="activeSelectionBest === 'all' ? ' bg-[#C76950] text-[#fefe]' : ''" @click="showAllBest">All</div>
         <div class="border border-[#C76950] outline-none rounded-full p-2 text-[#3E3E3E] whitespace-nowrap"
           :class="activeSelectionBest === category.id ? 'bg-[#C76950] text-[#fefe]' : ''"
