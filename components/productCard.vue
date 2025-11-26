@@ -141,8 +141,12 @@ onMounted(async () => {
     console.warn("cart check failed", e);
   }
 });
-</script>
+const router=useRouter()
+const goToDetails=()=>{
+     router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
 
+}
+</script>
 <template>
   <nuxt-link :to="`/product/${product.id}`">
     <div class="card">
@@ -203,45 +207,32 @@ onMounted(async () => {
     </div>
   </nuxt-link>
 </template>
-
 <style scoped>
-.card {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  border-radius: 12px;
-  transition: 0.2s ease;
+.card{
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    width: 307px;
+    background-color: white;
+    padding: 10px;
+    border-radius: 12px;
+    cursor: pointer;
 }
-
-.card:hover {
-  transform: translateY(-3px);
+.image{
+    width: 100%;
+    height: 300px;
+    padding-bottom: 16px;
 }
-
-.image {
-  width: 100%;
-  height: 260px;
-  position: relative;
+img{
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
 }
-
-.image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  object-fit: cover;
+.para :nth-child(1){
+    font-weight: 600;
 }
-
-.para :nth-child(1) {
-  font-weight: 600;
+.para :nth-child(2){
+    color: rgb(94, 91, 91);;
 }
-.para :nth-child(2) {
-  color: rgb(94, 91, 91);
-}
-.para :nth-child(3) {
-  font-weight: bold;
-}
-
-.heart {
-  cursor: pointer;
+.para :nth-child(3){
+    font-weight: bold;
 }
 </style>
