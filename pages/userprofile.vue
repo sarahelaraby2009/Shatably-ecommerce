@@ -17,8 +17,8 @@
 </label>
       </div>
         <div class="grid">
-        <h3 class="pt-1 font-bold text-xl"> Hello nano! </h3>
-        <p class="text-sm text-gray-500 pb-5"> nano@gmail.com</p>
+        <h3 class="pt-1 font-bold text-xl"> Hello {{ profile.name }} </h3>
+        <p class="text-sm text-gray-500 pb-5"> {{profile.email}}</p>
         </div>
     </div>
 
@@ -51,13 +51,16 @@
   <p class="text-lg font-medium">Orders</p>
 </div>
 </NuxtLink>
+<hr/>
+<NuxtLink to="/signin">
 
-
- <hr/> 
 <div class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer">
   <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="text-[20px]" />
   <p class="text-lg font-medium">log out</p>
 </div>
+</NuxtLink>
+  
+
     </div>
 
  </aside>
@@ -77,3 +80,61 @@
 </div> 
 
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+
+// 🟩 ناخد auth و db من Nuxt plugin
+const { $auth, $db } = useNuxtApp();
+
+const profile = ref({
+  email: "",
+  // phone: "",
+  // firstName: "",
+  // lastName: "",
+  // gender: "",
+  name:"",
+  // image:""
+});
+
+// 🟩 Fetch user data
+const fetchProfile = async (uid) => {
+  const snap = await getDoc(doc($db, "users", uid));
+  if (snap.exists()) {
+    profile.value = snap.data();
+  }
+};
+
+// // 🟩 Update user data
+// const updateProfile = async () => {
+//   const user = $auth.currentUser;
+//   if (!user) return;
+
+//   await updateDoc(doc($db, "users", user.uid), profile.value);
+//   alert("تم تحديث البيانات ✔");
+// };
+
+// provide("profilee", profile);
+// provide("updateProfilee", updateProfile);
+
+// 🟩 أول ما الصفحة تفتح
+onMounted(() => {
+  onAuthStateChanged($auth, (user) => {
+    if (user) fetchProfile(user.uid);
+  });
+});
+
+
+
+definePageMeta({
+  layout: "default",
+  // middleware: (to, from) => {
+  //   if (to.path === '/userprofile') {
+  //     return navigateTo('/userprofile/profile')
+  //   }
+  // }
+})
+
+</script>

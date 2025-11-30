@@ -1,64 +1,189 @@
 <template>
  <div class="p-3 pb-5">
         <h3 class="font-bold text-xl"> Profile </h3>
-<p> View & Update Your Personal and Contact Information</p>    
-        </div>
+        <p> View & Update Your Personal and Contact Information</p>    
+ </div>
 
-
-<div class="p-5  shadow rounded-3xl mt-4">
+<div class="p-5 shadow rounded-3xl mt-4">
      <h3 class="font-bold text-xl "> Contact information </h3>
 
-     <div class="flex gap-4  p-3">
-<div class="grid gap-2 ">
-        <h1> Email </h1>
- <input
-      type="email"
-      placeholder="Example@gmail.com"
-      class="w-xl border border-gray-300 rounded-full p-3 outline-none"
-    />     </div>
-     <div class="grid gap-2">
-        <h1> Phone Number </h1>
- <input
-      type="number"
-      placeholder=" Phone number"
-      class="w-xl border border-gray-300 rounded-full p-3 outline-none"
-    />     </div>
+     <div class="flex gap-4 p-3">
+        <div class="grid gap-2 ">
+            <h1> Email </h1>
+            <div   class="w-[240px] border border-gray-300 rounded-full p-3 outline-none  ">
+              {{ profile.email }}
+
+            </div>
+            <!-- <input
+              v-model="profile.email"
+              type="email"
+              placeholder="Example@gmail.com"
+              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+            />      -->
+        </div>
+        <div class="grid gap-2">
+            <h1> Phone Number </h1>
+            <input
+              v-model="profile.phone"
+              type="tel"
+              placeholder="Phone number"
+              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+            />     
+        </div>
      </div>
-     
 </div>
 
-  <div class="p-5 shadow rounded-3xl mt-10">
+<div class="p-5 shadow rounded-3xl mt-10">
      <h3 class="font-bold text-xl "> Personal information </h3>
 
-     <div class="flex gap-4  p-3">
-<div class="grid gap-2 ">
-        <h1> First Name </h1>
- <input
-      type="text"
-      placeholder="First Name"
-      class="w-xl border border-gray-300 rounded-full p-3 outline-none"
-    />     </div>
-     <div class="grid gap-2">
-        <h1> Last Name </h1>
- <input
-      type="text"
-      placeholder=" Last Name"
-      class="w-xl border border-gray-300 rounded-full p-3 outline-none"
-    />     </div>
+     <div class="flex gap-4 p-3">
+        <div class="grid gap-2 ">
+            <h1> First Name </h1>
+            <input
+              v-model="profile.firstName"
+              type="text"
+              placeholder="First Name"
+              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+            />     
+        </div>
+        <div class="grid gap-2">
+            <h1> Last Name </h1>
+            <input
+              v-model="profile.lastName"
+              type="text"
+              placeholder="Last Name"
+              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+            />     
+        </div>
      </div>
      
-     <div class="flex gap-4">
-           <input  type="radio"  name="Gender" value="male" /> 
+     <div class="flex gap-4 p-3">
+           <input v-model="profile.gender" type="radio" name="Gender" value="Male" /> 
           <label> Male </label>
-          <input  type="radio"  name="Gender" value="Female" />  
-<label> Female </label>
-     
+          <input v-model="profile.gender" type="radio" name="Gender" value="Female" />  
+          <label> Female </label>
      </div>
-  
 </div>
 
+<div class="bg-[#C76950] hover:bg-[#B55F47] p-3 rounded-3xl text-center mt-10 cursor-pointer transition-colors">
+    <button 
+      @click="updateProfile" 
+      :disabled="loading"
+      class="w-full text-white font-semibold disabled:opacity-50"
+    > 
+      {{ loading ? "Updating..." : "Update Profile" }}
+    </button>
+</div>
 
-<div class="bg-[#C76950] p-3 rounded-3xl text-center mt-10 cursor-pointer">
-    <button> Update Profile </button>
-</div>   
+<!-- Success Message -->
+<div
+  v-if="successMessage"
+  class="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-3xl text-center"
+>
+  {{ successMessage }}
+</div>
+
+<!-- Error Message -->
+<div
+  v-if="errorMessage"
+  class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-3xl text-center"
+>
+  {{ errorMessage }}
+</div>
 </template>
+
+<script setup>
+import { ref, onMounted } from "vue";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+
+// 🟩 ناخد auth و db من Nuxt plugin
+const { $auth, $db } = useNuxtApp();
+
+// 🟩 البيانات
+const profile = ref({
+  email: "",
+  phone: "",
+  firstName: "",
+  lastName: "",
+  gender: "",
+  name: ""
+});
+
+const loading = ref(false);
+const successMessage = ref("");
+const errorMessage = ref("");
+
+// 🟩 جلب بيانات المستخدم
+const fetchProfile = async (uid) => {
+  try {
+    const docSnap = await getDoc(doc($db, "users", uid));
+    if (docSnap.exists()) {
+      profile.value = { ...profile.value, ...docSnap.data() };
+    }
+  } catch (error) {
+    console.error("Error fetching profile:", error);
+    errorMessage.value = "فشل تحميل البيانات";
+  }
+};
+
+//   update information functionت
+const updateProfile = async () => {
+  const user = $auth.currentUser;
+
+  if (!user) {
+    errorMessage.value = "you should sign in first";
+    return;
+  }
+
+  loading.value = true;
+  successMessage.value = "";
+  errorMessage.value = "";
+
+  try {
+    const updatedData = {
+      email: profile.value.email,
+      phone: profile.value.phone,
+      firstName: profile.value.firstName,
+      lastName: profile.value.lastName,
+      gender: profile.value.gender,
+      name: `${profile.value.firstName} ${profile.value.lastName}`.trim()
+    };
+
+    await updateDoc(doc($db, "users", user.uid), updatedData);
+
+    profile.value.name = updatedData.name;
+    successMessage.value = "Profile updated sucessfully";
+
+    setTimeout(() => {
+      successMessage.value = "";
+    }, 3000);
+
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    errorMessage.value = "حدث خطأ أثناء التحديث. حاول مرة أخرى";
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  onAuthStateChanged($auth, (user) => {
+    if (user) {
+      fetchProfile(user.uid);
+    } else {
+      errorMessage.value = "يرجى تسجيل الدخول أولاً";
+    }
+  });
+});
+
+
+// import { inject } from "vue";
+
+// const profilee = inject("profile");
+// const updateProfilee = inject("updateProfile");
+definePageMeta({
+  layout: "default"
+});
+
+</script>

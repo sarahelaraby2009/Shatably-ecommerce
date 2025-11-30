@@ -76,24 +76,33 @@ onMounted(async () => {
 
 
 <div class="pt-8 pb-10 container mx-40 ">
-     <button class="  w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
+  <a href="#profile">
+<button id="profile" class="  w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
       Profile 
     </button>
-     <button class=" ml-3 w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
+  </a>
+     
+    <a href="#project">
+       <button class=" ml-3 w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
     Projects 
     </button>
-     <button class=" ml-3 w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
+    </a>
+    
+    <a href="#rating">
+       <button class=" ml-3 w-[135px]  mt-3 border text-black px-6 py-2 rounded-[24px]  hover:bg-[#C76950] hover:text-white transition">
       Rating 
     </button>
+    </a>
+    
 </div>
   
-  <div class="w-[1240px] h-[200px] bg-[#F9EEEC] shadow rounded-2xl  container mx-auto">
+  <div id="profile" class="w-[1240px] h-[200px] bg-[#F9EEEC] shadow rounded-2xl  container mx-auto">
 <h6 class="font-bold pb-7 pt-7 pl-10 text-[30px]"> Profile</h6>
 <p class=" pb-7  pl-10">{{ engineer.bio }}
 </p>
   </div>
 
-  <div class="container mx-auto pt-10">
+  <div class="container mx-auto pt-10" id="project">
     <h1 class="font-bold pb-7 pt-7 pl-10 text-[30px]"> Projects </h1>
    <div class="overflow-x-auto scrollbar-none">
 
@@ -148,7 +157,7 @@ onMounted(async () => {
     </div>
 </div>
 
-<div class="container mx-auto pt-10">
+<div id="rating" class="container mx-auto pt-10">
     <h1 class="font-bold pb-7 pt-7 pl-10 text-[30px]"> what customer Says? </h1>
     <div class="flex gap-8">
      <reviewCard class="ml-10"
