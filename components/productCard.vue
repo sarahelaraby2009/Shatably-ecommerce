@@ -10,6 +10,9 @@ const props = defineProps({
   product: { type: Object, required: true },
   categoryId: { type: String, required: true },
   subId: { type: String, required: true },
+  product: { type: Object, required: true },
+  categoryId: { type: String, required: true },
+  subId: { type: String, required: true },
 });
 
 const router = useRouter();
@@ -18,7 +21,6 @@ const db = nuxtApp.$db;
 const auth = nuxtApp.$auth;
 
 const isInWishlist = ref(false);
-const isLoading = ref(false);
 const isInCart = ref(false);
 const cartQuantity = ref(0);
 const currentUser = ref(null);
@@ -32,9 +34,9 @@ const goToDetails = () => {
 // -------------------------
 onMounted(() => {
   if (!auth) return;
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     currentUser.value = user;
-    if (user) checkWishlistAndCart();
+    if (user) await checkWishlistAndCart();
   });
 });
 
@@ -93,6 +95,7 @@ async function addToCart(event) {
   isInCart.value = true;
 }
 </script>
+
 
 <template>
   <div class="card cursor-pointer" @click="goToDetails">
