@@ -36,6 +36,26 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="flex items-center gap-2 text-sm m-10">
+          <NuxtLink to="/" class="text-gray-600 hover:text-[#C76950]"
+            >Home
+            <font-awesome-icon
+              :icon="['fas', 'chevron-right']"
+              class="text-[12px]"
+            />
+          </NuxtLink>
+          <NuxtLink to="/" class="text-gray-600 hover:text-[#C76950]"
+            >Categories
+            <font-awesome-icon
+              :icon="['fas', 'chevron-right']"
+              class="text-[12px]"
+            />
+          </NuxtLink>
+          <NuxtLink to="/categories" class="text-[#C76950] font-semibold"
+            >SubCategories
+          </NuxtLink>
+      
+        </div>
   <div class="flex justify-center items-center mt-[40px] mb-[40px]">
    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <CategoryCard
