@@ -1,240 +1,165 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { useNuxtApp, useRouter } from "#app";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  deleteDoc,
-  serverTimestamp,
-} from "firebase/firestore";
+import { useRouter } from "vue-router";
+import { doc, getDoc, setDoc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-// --------------------------------------------------
+// ----------------------------------------------------
 const props = defineProps({
-  product: {
-    type: Object,
-    required: true,
-  },
+  product: { type: Object, required: true },
+  categoryId: { type: String, required: true },
+  subId: { type: String, required: true },
 });
-// --------------------------------
+// -----------------------------------------------------
+const router = useRouter();
 const nuxtApp = useNuxtApp();
 const db = nuxtApp.$db;
 const auth = nuxtApp.$auth;
 
-// ------------------------------------------------
 const isInWishlist = ref(false);
-const isLoading = ref(false);
 const isInCart = ref(false);
-const cartQuantity = ref(0);
-const isCartLoading = ref(false);
-
 const currentUser = ref(null);
-// --------------------------------------
+// ------------------------------------------------------
 const goToDetails = () => {
-  router.push(`/category/${props.categoryId}/${props.subcategoryId}/${props.product.id}`);
+  router.push({
+    path: `/categories/${props.categoryId}/${props.subId}/${props.product.id}`
+  });
 };
-// -----------------------------------------
+
+// ---------------------------------------------------------
 onMounted(() => {
   if (!auth) return;
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     currentUser.value = user;
-    if (user) checkWishlistAndCart();
+    if (user) await checkWishlistAndCart();
   });
 });
-// ------------------------------------------
+// ---------------------------------------------------------
 async function checkWishlistAndCart() {
+  if (!currentUser.value) return;
+
   try {
-    const wishlistDocId = `${currentUser.value.uid}_${props.product.id}`;
-    const wishlistRef = doc(db, "wishlists", wishlistDocId);
+    const wishlistRef = doc(db, "wishlists", `${currentUser.value.uid}_${props.product.id}`);
     const snapW = await getDoc(wishlistRef);
     isInWishlist.value = snapW.exists();
-  } catch (e) {
-    console.warn("wishlist check failed", e);
-  }
 
-  try {
-    const cartDocId = `${currentUser.value.uid}_${props.product.id}`;
-    const cartRef = doc(db, "carts", cartDocId);
-    const snap = await getDoc(cartRef);
-    isInCart.value = snap.exists();
-    if (snap.exists()) cartQuantity.value = snap.data().quantity || 1;
-  } catch (e) {
-    console.warn("cart check failed", e);
+    const cartRef = doc(db, "carts", `${currentUser.value.uid}_${props.product.id}`);
+    const snapC = await getDoc(cartRef);
+    isInCart.value = snapC.exists();
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
-// -------------------------------------------
-async function addToWishlist(event) {
-  event.stopPropagation(); // extra safety
-  const user = currentUser.value;
-  if (!user) {
-    alert("Please sign in to save to wishlist");
+
+// ---------------------------------------------------------
+async function toggleWishlist(event) {
+  event.stopPropagation();
+  if (!currentUser.value) {
+    router.push("/auth/login");
     return;
   }
-  const wishlistDocId = `${user.uid}_${props.product.id}`;
-  const wishlistDocRef = doc(db, "wishlists", wishlistDocId);
 
-  isLoading.value = true;
   try {
-    const snap = await getDoc(wishlistDocRef);
+    const wishlistRef = doc(db, "wishlists", `${currentUser.value.uid}_${props.product.id}`);
+    const snap = await getDoc(wishlistRef);
+
     if (snap.exists()) {
-      await deleteDoc(wishlistDocRef);
+      await deleteDoc(wishlistRef);
       isInWishlist.value = false;
     } else {
-      await setDoc(wishlistDocRef, {
-        userId: user.uid,
+      await setDoc(wishlistRef, {
+        userId: currentUser.value.uid,
         productId: props.product.id,
         createdAt: serverTimestamp(),
-        productSnapshot: {
-          id: props.product.id,
-          name: props.product.name,
-          price: props.product.price,
-          image: props.product.image,
-          brand: props.product.brand,
-        },
+        productSnapshot: props.product
       });
       isInWishlist.value = true;
     }
-  } catch (err) {
-    console.log(err);
-  } finally {
-    isLoading.value = false;
+  } catch (error) {
+    console.error("Error updating wishlist:", error);
   }
 }
-// -------------------------------------------
+
+// ---------------------------------------------------------
 async function addToCart(event) {
-  event.stopPropagation(); // extra safety
-  const user = currentUser.value;
-  if (!user) {
-    alert("Please sign in to add to cart");
+  event.stopPropagation();
+  if (!currentUser.value) {
+    router.push("/auth/login");
     return;
   }
-  const cartDocId = `${user.uid}_${props.product.id}`;
-  const cartRef = doc(db, "carts", cartDocId);
-  isCartLoading.value = true;
 
   try {
+    const cartRef = doc(db, "carts", `${currentUser.value.uid}_${props.product.id}`);
     const snap = await getDoc(cartRef);
+
     if (snap.exists()) {
-      const currentQty = snap.data().quantity || 1;
-      const newQty = currentQty + 1;
-      await setDoc(
-        cartRef,
-        {
-          quantity: newQty,
-          updatedAt: serverTimestamp(),
-        },
-        { merge: true }
-      );
-      cartQuantity.value = newQty;
-      isInCart.value = true;
+      const newQty = (snap.data().quantity || 1) + 1;
+      await setDoc(cartRef, { quantity: newQty, updatedAt: serverTimestamp() }, { merge: true });
     } else {
       await setDoc(cartRef, {
-        userId: user.uid,
+        userId: currentUser.value.uid,
         productId: props.product.id,
         quantity: 1,
         createdAt: serverTimestamp(),
-        productSnapshot: {
-          id: props.product.id,
-          name: props.product.name,
-          image: props.product.image,
-          price: props.product.price,
-          brand: props.product.brand,
-        },
+        productSnapshot: props.product
       });
-      cartQuantity.value = 1;
-      isInCart.value = true;
     }
-  } catch (err) {
-    console.error("addToCart error", err);
-  } finally {
-    isCartLoading.value = false;
+    isInCart.value = true;
+  } catch (error) {
+    console.error("Error adding to cart:", error);
   }
 }
-// ------------------------------------------------
-// const goToDetails = function(){
-//   router.push({
-//     name: 'category-id-subtId-productId', // Nuxt يولد الاسم تلقائياً حسب ترتيب الصفحات
-//     params: {
-//       id: props.product.categoryId,       // لازم يكون موجود في البيانات
-//       subtId: props.product.subcategoryId, 
-//       productId: props.product.id
-//     }
-//   });
-// };
-
 </script>
-<!------------------------------------------------- -->
+
 <template>
-  <div class="card cursor-pointer" @click="goToDetails">
-    <div class="image relative">
-      <div
-        @click.stop="addToWishlist"
-        class="heart absolute top-3 right-3 bg-[#D9D9D9] w-[35px] h-[35px] rounded-full flex justify-center items-center z-10"
+  <div
+    class="bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200 overflow-hidden cursor-pointer group"
+    @click="goToDetails"
+  >
+    <div class="relative overflow-hidden bg-gray-100 aspect-square">
+      <img
+        :src="product.image"
+        :alt="product.name"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+
+      <button
+        @click.stop="toggleWishlist"
+        class="absolute top-3 right-3 bg-white rounded-[50px] p-2 shadow hover:shadow-md transition z-10"
       >
         <font-awesome-icon
           :icon="[isInWishlist ? 'fas' : 'far', 'heart']"
-          class="text-[#C76950] text-lg"
+          :class="isInWishlist ? 'text-orange-500' : 'text-gray-400'"
+          class="text-lg "
         />
-      </div>
+      </button>
 
-      <img :src="product.image" :alt="product.name" />
+      <div v-if="product.bestSelling" class="absolute top-3 left-3 bg-orange-500 text-white px-3 py-1 rounded-full text-xs font-semibold">
+      Best Selling
+      </div>
     </div>
 
-    <div class="para">
-      <div class="flex justify-between items-center">
-        <h3>{{ product.name }}</h3>
-        <div class="flex justify-center items-center">
-          <font-awesome-icon
-            :icon="['fas', 'star']"
-            class="text-yellow-200 text-s"
-          />
-          <p>4.0</p>
+    <div class="p-4">
+      <div class="flex items-start justify-between gap-2 mb-2">
+        <h3 class="font-semibold text-gray-900 line-clamp-2 text-sm flex-1">{{ product.name }}</h3>
+        <div class="flex items-center gap-1 flex-shrink-0">
+          <font-awesome-icon :icon="['fas', 'star']" class="text-yellow-400" />
+          <span class="text-xs font-semibold">4.0</span>
         </div>
       </div>
 
-      <p>{{ product.description }}</p>
-      <p>Brand: {{ product.brand }}</p>
+      <p class="text-gray-600 text-xs line-clamp-2 mb-2">{{ product.description }}</p>
 
-      <div class="flex justify-between items-center">
-        <h5>{{ product.price }}</h5>
-        <div
+      <p class="text-gray-500 text-xs mb-3">{{ product.brand }}</p>
+
+      <div class="flex items-center justify-between">
+        <p class="text-lg font-bold text-[#C76950]">{{ product.price }} EGP</p>
+        <button
           @click.stop="addToCart"
-          class="flex justify-center items-center rounded-full bg-[#C76950] p-[10px] w-[40px] h-[40px] cursor-pointer transform transition-transform duration-150 active:scale-90"
+          class="bg-[#C76950] text-white w-[40px] h-[40px] p-2 rounded-[50px] hover:bg-[#b85840] transition-colors"
         >
-          <font-awesome-icon
-            :icon="['fas', 'cart-shopping']"
-            class="text-white text-s"
-          />
-        </div>
+          <font-awesome-icon :icon="['fas', 'cart-plus']" class="text-sm" />
+        </button>
       </div>
     </div>
   </div>
 </template>
-<style scoped>
-.card {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  width: 100%;
-  background-color: white;
-  padding: 10px;
-  border-radius: 12px;
-  transition: 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-}
-.image {
-  width: 100%;
-  height: 260px;
-  position: relative;
-}
-.image img {
-  width: 100%;
-  height: 100%;
-  border-radius: 8px;
-  object-fit: cover;
-}
-.para :nth-child(1) { font-weight: 600; }
-.para :nth-child(2) { color: rgb(94, 91, 91); }
-.para :nth-child(3) { font-weight: bold; }
-.heart { cursor: pointer; }
-</style>
