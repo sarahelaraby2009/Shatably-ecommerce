@@ -30,8 +30,8 @@
               <FormInput label="Address" placeholder="Enter your Address" v-model="address" />
             </div>
 
-            <FormInput label="City" placeholder="City" v-model="city" />
-            <FormInput label="Governorate" placeholder="Governorate" v-model="governorate" />
+            <FormInput label="Governorate" placeholder="governorate" v-model="governorate" />
+          <FormInput label="City" type="select" v-model="selectedGov" :options="city"/>
           </div>
         </section>
         <!--payment methods-->
@@ -65,8 +65,7 @@
   <div class="lg:col-span-1">
         <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
           <h2 class="text-[20px] font-semibold mb-4">Order Summary</h2>
-
-         <Checkcard></Checkcard>
+         <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
           <!-- Discount Code Section -->
           <div class="mb-4 pb-4 border-b border-gray-200">
             <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
@@ -82,28 +81,39 @@
           </div>
 
           <!-- Price Summary -->
-          <div class="space-y-2 mb-4">
-            <div class="flex justify-between text-[14px]">
-              <span class="text-gray-900">Subtotal</span>
-              <span class="font-semibold text-gray-900">200 LE</span>
-            </div>
-            <div class="flex justify-between text-[14px]">
-              <span class="text-gray-900">Shipping</span>
-              <span class="font-semibold text-gray-900">65 LE</span>
-            </div>
-            <div class="flex justify-between text-[14px]">
-              <span class="text-gray-900">Discount</span>
-              <span class="font-semibold text-gray-900">20 LE</span>
-            </div>
+         <div class="bg-white shadow rounded-2xl p-6">
+        <div class="space-y-4">
+        <div class="flex justify-between">
+          <p>Subtotal:</p>
+          <p>{{ subtotal }} LE</p>
+        </div>
+        <div class="flex justify-between">
+          <p>Discount (5%):</p>
+           <p>-{{ discount }} LE</p>
+        </div>
+
+        <div class="flex justify-between ">
+          <p>Shipping:</p>
+          <p>{{ shipping }} LE</p>
+        </div>
+
+           
             
-            <div class="border-t border-gray-300 pt-2 flex justify-between text-[16px]">
-              <span class="font-bold text-gray-900">Total</span>
-              <span class="font-bold text-gray-900">235 LE</span>
-            </div>
           </div>
 
+
+          <hr class="mt-5"/>
+
+
+           <!---مجموع-->   
+          <div class="flex justify-between font-bold mt-3">
+            <p>Total</p>
+            <p> {{  total}} LE</p>
+          </div>
+        </div>
+
           <!-- Place Order Button -->
-          <button class="w-full py-3 bg-[#C76950] text-white rounded-[10px] hover:bg-[#AD563F] text-[15px] font-medium">
+          <button @click="order" class="w-full py-3 bg-[#C76950] text-white rounded-[10px] hover:bg-[#AD563F] text-[15px] font-medium">
             Place order
           </button>
         </div>
@@ -114,17 +124,229 @@
 </template>
 
 <script setup>
+import {ref,onMounted,onUnmounted,computed} from "vue";
+import { useNuxtApp } from "#app";
+import { collection, query, onSnapshot, getDocs, writeBatch, addDoc, serverTimestamp, where, doc} from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+
+
+const { $db: db, $auth: auth } = useNuxtApp();
+const userId=ref(null);
+const cartItems=ref([]);
+const isLoading = ref(true);
+
+let unsubAuth = null;
+let unsubCart = null;
 const firstName = ref("");
 const lastName = ref("");
 const email = ref("");
 const phone = ref("");
 
 const address = ref("");
-const city = ref("");
-const governorate = ref("");
+const governorate = ref("Egypt");
+const city = [
+  "Cairo",
+  "Alexandria",
+  "Giza",
+  "Luxor",
+  "Aswan",
+  "Suez",
+  "Port Said",
+  "Ismailia",
+  "Dakahlia",
+  "Sharqia",
+  "Kafr El Sheikh",
+  "Gharbia",
+  "Menoufia",
+  "Beni Suef",
+  "Faiyum",
+  "Qena",
+  "Sohag",
+  "Asyut",
+  "Minya",
+  "New Valley",
+  "Matrouh",
+  "North Sinai",
+  "South Sinai",
+  "Red Sea",
+  "Damietta",
+  "Ain Sokhna",
+  "6th of October",
+  "10th of Ramadan",
+  "October 6 City"
+];
+const selectedGov=ref("")
 const payment =ref("")
 const cardNumber=ref("")
 const expirydate=ref("")
 const CVV=ref("")
+function round3(num) {
+  return Number(num.toFixed(3));
+}
+const subtotal = computed(() => {
+  const sum = cartItems.value.reduce((sum, item) => {
+    return sum + (item.productSnapshot.price * item.quantity);
+  }, 0);
+  return round3(sum);
+});
+
+const discountRate = 0.05;
+const discount = computed(() => {
+  return round3(subtotal.value * discountRate);
+});
+
+const shipping = computed(() => {
+  return round3(100);
+});
+
+const total = computed(() => {
+  return round3(subtotal.value - discount.value + shipping.value);
+});
+/////////order colllection
+
+
+function validateCheckout() {
+  const required = [
+    firstName.value.trim(),
+    lastName.value.trim(),
+    email.value.trim(),
+    phone.value.trim(),
+    address.value.trim(),
+    selectedGov.value.trim(),
+    payment.value,
+  ];
+
+  if (payment.value === "card") {
+    required.push(
+      cardNumber.value.trim(),
+      expirydate.value.trim(),
+      CVV.value.trim()
+    );
+  }
+
+  return required.some(field => !field); // true = error
+}
+function cleanData(obj) {
+  if (obj === null || obj === undefined) return null;
+  if (typeof obj !== 'object') return obj;
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => cleanData(item)).filter(item => item !== null);
+  }
+  
+  const cleaned = {};
+  for (const key in obj) {
+    const value = obj[key];
+    if (value !== undefined && value !== null) {
+      cleaned[key] = cleanData(value);
+    } else if (value === null) {
+      cleaned[key] = null;
+    }
+    // تخطي undefined تماماً
+  }
+  return cleaned;
+}
+
+async function order(){
+  const hasError = validateCheckout();
+  if(hasError){
+    alert("Please fill all required fields");
+    return;
+  }
+  
+  if(!userId.value){
+    alert("please log in first");
+    return;
+  }
+  
+  try {
+    const orderData = {
+      userId: userId.value,
+      customerInfo: {
+        firstName: firstName.value.trim(),
+        lastName: lastName.value.trim(),
+        email: email.value.trim(),
+        phone: phone.value.trim(),
+      },
+      shippingInfo: {
+        address: address.value.trim(),
+        city: selectedGov.value.trim(),
+        governorate: governorate.value,
+      },
+      paymentInfo: {
+        method: payment.value,
+        ...(payment.value === "card" && {
+          cardNumber: cardNumber.value.trim(),
+          expirydate: expirydate.value.trim(),
+          CVV: CVV.value.trim(),
+        })
+      },
+      orderItems: cartItems.value.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        price: item.productSnapshot.price,
+        title: item.productSnapshot.title,
+        image: item.productSnapshot.image,
+      })),
+      subtotal: subtotal.value || 0,
+      discount: discount.value || 0,
+      shipping: shipping.value || 0,
+      total: total.value || 0,
+      status: "pending",
+      createdAt: serverTimestamp(),
+    };
+    
+    // تنظيف البيانات
+    const cleanedOrderData = cleanData(orderData);
+    
+    console.log("CLEANED ORDER DATA => ", cleanedOrderData);
+    
+    const orderRef = await addDoc(collection(db, "orders"), cleanedOrderData);
+    console.log("ORDER ID:", orderRef.id);
+    alert("Order placed! Your Order ID is: " + orderRef.id);
+
+    // Clear cart
+    const batch = writeBatch(db);
+    cartItems.value.forEach((item) => {
+      batch.delete(doc(db, "carts", item.id));
+    });
+    await batch.commit();
+
+  } catch (error) {
+    console.error("Order Error:", error);
+    alert("Failed to place order: " + error.message);
+  }
+}
+
+//user
+onMounted(()=>{
+  unsubAuth=onAuthStateChanged(auth,(user)=>{
+    if(user){
+      userId.value=user.uid;
+      subscribeTocart();
+    }
+    else{
+      userId.value=null;
+      cartItems.value=[]
+    }
+  })
+});
+onUnmounted(()=>{ //stop listener
+  if(unsubAuth) unsubAuth();
+   if(unsubCart) unsubCart();
+});
+function subscribeTocart(){
+  const q=query( collection(db, "carts"),
+  where("userId", "==", userId.value));
+  unsubCart=onSnapshot(q,(snapshot)=>{
+    cartItems.value=snapshot.docs.map((doc)=>({ 
+      id:doc.id,
+      ...doc.data()
+    }));
+    isLoading.value= false;
+  })
+}
+
 
 </script>

@@ -1,10 +1,10 @@
 <template>
   <div class="w-full bg-white p-5 rounded-2xl shadow mb-5">
-
+       
     <div class="flex gap-4 items-start relative w-full">
 
       <!-- Delete button -->
-      <button class="absolute top-4 right-4 text-gray-600 hover:text-red-500 z-10">
+      <button  @click="handleDelete" class="absolute top-4 right-4 text-gray-600 hover:text-red-500 z-10">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -20,6 +20,7 @@
           :class="liked ? 'text-red-500' : 'text-black'">
           {{ liked ? '♥' : '♡' }}
         </button>
+      
       </div>
 
       <!-- Product Info -->
@@ -48,7 +49,7 @@
           </button>
 
           <span class="w-8 h-8 flex items-center justify-center bg-white rounded-full text-[14px] font-medium shadow">
-            {{ count }}
+            {{ localQuantity }}
           </span>
 
           <button @click="increase"
@@ -65,6 +66,8 @@
 
 
 <script setup>
+
+import { ref } from 'vue'
 const props = defineProps({
   product: {
     type: Object,
@@ -75,18 +78,40 @@ const props = defineProps({
       image: '/1.jpg'
     })
   },
-
+ cartId: String,
+ quantity: {
+    type: Number,
+    default: 1
+  }
 })
-const liked = ref(false)
-const count=ref(1)
-const increase = () => {
-  count.value++
+const emit = defineEmits(["update-quantity",'remove'])
+
+
+const handleDelete = () => {
+  emit('remove', props.cartId)
 }
+const localQuantity = ref(props.quantity);
+const liked = ref(false)
+
+const increase = () => {
+  localQuantity.value++;
+  emit("update-quantity", { id: props.cartId, quantity: localQuantity.value });
+};
 
 const decrease = () => {
-  if (count.value > 1) {
-    count.value--
+  if (localQuantity.value > 1) {
+    localQuantity.value--;
+    emit("update-quantity", { id: props.cartId, quantity: localQuantity.value });
   }
-}
+};
+
+
+// لو البارنت حدث الكمية → نحدث المحلي كمان
+watch(
+  () => props.quantity,
+  (newVal) => {
+    localQuantity.value = newVal;
+  }
+);
 
 </script>
