@@ -1,0 +1,104 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useNuxtApp } from '#app'
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
+import { onAuthStateChanged } from 'firebase/auth'
+import { useRouter } from 'vue-router'
+
+const { $auth, $db } = useNuxtApp()
+const router = useRouter()
+
+const uid = ref('')
+const name = ref('')
+const phone = ref('')
+const Category = ref('')
+const Tax = ref('')
+const Bank = ref('')
+const errorMessages = ref('')
+
+// تأكيد تسجيل الدخول
+onMounted(() => {
+  onAuthStateChanged($auth, (user) => {
+    if (user) uid.value = user.uid
+    else router.push('/register') // لو مش مسجل يدخل صفحة التسجيل
+  })
+})
+
+const saveData = async () => {
+  if (!name.value || !phone.value || !Category.value || !Tax.value || !Bank.value) {
+    errorMessages.value = 'Please fill all the fields'
+    return
+  }
+
+  try {
+    await setDoc(
+      doc($db, 'suppliers', uid.value),
+      {
+        companyName: name.value,
+        phone: phone.value,
+        category: Category.value,
+        taxId: Tax.value,
+        bankAccount: Bank.value,
+        profileComplete: false, // هنا مازال false لحد اختيار العضوية
+        updatedAt: serverTimestamp()
+      },
+      { merge: true }
+    )
+
+    router.push('/supplier/membership') // التوجّه لصفحة العضوية بعد حفظ البيانات
+  } catch (err) {
+    console.error(err)
+    errorMessages.value = 'Failed to save profile. Try again.'
+  }
+}
+</script>
+
+<template>
+  <div class="flex justify-center items-center p-5  bg-[#fafafa] ">
+    <div class="p-5  rounded-[24px] w-[800px] m-3 bg-white shadow-lg flex flex-col gap-5">
+        <div>
+            <h2 class="font-bold text-[25px] text-[#612B1F]">Supplier Information</h2>
+            <p class="text-gr">Complete Your Profile</p>
+        </div>
+      <form @submit.prevent="saveData">
+        <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Company Name</label>
+          <input v-model="name" required
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
+            placeholder="enter company name" />
+        </div>
+        <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Phone Number</label>
+          <input v-model="phone" required
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            placeholder="enter phone number" />
+        </div>
+        <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Business Category</label>
+          <input v-model="Category" required
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
+            placeholder="enter category" />
+        </div>
+        <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Tax Identification Number</label>
+          <input v-model="Tax" required
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            placeholder=" enter tax Identification number" />
+        </div>
+        <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Bank account number</label>
+          <input v-model="Bank" required
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            placeholder="enter bank account number" />
+        </div>
+        <P class="text-red-400">{{ errorMessages }}</P>
+        <div>
+          <button
+            class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed">Save
+            Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</template>
+

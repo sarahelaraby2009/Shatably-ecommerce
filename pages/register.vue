@@ -135,6 +135,7 @@ const googleSignUp = async () => {
     const result = await signInWithPopup($auth, provider)
     const user = result.user
 
+    
     // Check if user already exists
     const userDoc = await getDoc(doc($db, 'users', user.uid))
 
@@ -275,15 +276,18 @@ const handleSignUp = async () => {
       navigateTo('/userEngineer/complete-profile')
       
     } else if (userRole.value === 'supplier') {
+      console.log("set suppliers");
+      
       await setDoc(doc($db, 'suppliers', user.uid), {
         name: name.value,
         email: email.value,
         rating: 0,
         products: [],
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        profileComplete: false,
       })
       console.log('Supplier account created successfully')
-      navigateTo('/supplier')
+      navigateTo('/supplier/compelete-profile')
       
     } else if (userRole.value === 'client') {
       await setDoc(doc($db, 'clients', user.uid), {
