@@ -286,15 +286,16 @@ async function order(){
         productId: item.productId,
         quantity: item.quantity,
         price: item.productSnapshot.price,
-        title: item.productSnapshot.title,
+        title: item.productSnapshot.name,
         image: item.productSnapshot.image,
+        
       })),
       subtotal: subtotal.value || 0,
       discount: discount.value || 0,
       shipping: shipping.value || 0,
       total: total.value || 0,
       status: "pending",
-      createdAt: serverTimestamp(),
+      createdAt: new Date (),
     };
     
     // تنظيف البيانات

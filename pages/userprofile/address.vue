@@ -110,8 +110,8 @@
         :key="index"
         class="p-5 shadow rounded-3xl border-2 border-gray-200 hover:border-[#C76950] transition-all"
       >
-        <!-- عرض العنوان (لو مش في وضع التعديل) -->
-        <div v-if="editIndex !== index">
+<!-- Show title (if not in edit mode) -->
+         <div v-if="editIndex !== index">
           <div class="flex justify-between items-start mb-3">
             <div class="flex-1">
               <div class="flex items-center gap-2 mb-3">
@@ -125,7 +125,7 @@
                    Default
                 </span>
               </div>
-              <p class="text-gray-700 text-base ml-7">📍 {{ address.street }}</p>
+              <p class="text-gray-700 text-base ml-7"> {{ address.street }}</p>
             </div>
             
             <div class="flex gap-2">
@@ -148,8 +148,8 @@
             </div>
           </div>
 
-          <!-- زر اختيار العنوان الافتراضي -->
-          <button 
+<!-- Default Title Selection Button -->
+           <button 
             v-if="!address.isDefault"
             @click="setDefaultAddress(index)"
             class="w-full mt-3 bg-[#C76950] hover:bg-[#B55F47] text-white font-semibold py-2 px-4 rounded-full transition-colors flex items-center justify-center gap-2"
@@ -246,12 +246,12 @@ const editForm = ref({
   street: ""
 });
 
-// 🟩 حالة التحميل والرسائل
+//  Loading and Message Status
 const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
-// 🟩 جلب العناوين المحفوظة
+//  جلب العناوين المحفوظة
 const fetchAddresses = async () => {
   const user = $auth.currentUser;
   if (!user) return;
@@ -266,7 +266,7 @@ const fetchAddresses = async () => {
   }
 };
 
-// 🟩 إضافة عنوان جديد
+// Add new address
 const addAddress = async () => {
   if (!newAddress.value.city || !newAddress.value.street) {
     errorMessage.value = "Please fill all fields";
@@ -285,7 +285,7 @@ const addAddress = async () => {
   errorMessage.value = "";
 
   try {
-    // لو أول عنوان، يبقى default تلقائياً
+    // If it's the first address, it will automatically remain the default.
     const isFirstAddress = addresses.value.length === 0;
     
     addresses.value.push({ 
@@ -381,7 +381,7 @@ const deleteAddress = async (index) => {
   try {
     addresses.value.splice(index, 1);
 
-    // لو كان العنوان المحذوف هو الـ default وفيه عناوين تانية، خلي أول واحد default
+    //  If the deleted address is the default and there are other addresses, make the first one the default.
     if (wasDefault && addresses.value.length > 0) {
       addresses.value[0].isDefault = true;
     }

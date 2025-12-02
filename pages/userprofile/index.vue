@@ -14,12 +14,7 @@
               {{ profile.email }}
 
             </div>
-            <!-- <input
-              v-model="profile.email"
-              type="email"
-              placeholder="Example@gmail.com"
-              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
-            />      -->
+     
         </div>
         <div class="grid gap-2">
             <h1> Phone Number </h1>
@@ -97,10 +92,8 @@ import { ref, onMounted } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
-// 🟩 ناخد auth و db من Nuxt plugin
 const { $auth, $db } = useNuxtApp();
 
-// 🟩 البيانات
 const profile = ref({
   email: "",
   phone: "",
@@ -114,7 +107,7 @@ const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
-// 🟩 جلب بيانات المستخدم
+// import user information
 const fetchProfile = async (uid) => {
   try {
     const docSnap = await getDoc(doc($db, "users", uid));
@@ -123,11 +116,11 @@ const fetchProfile = async (uid) => {
     }
   } catch (error) {
     console.error("Error fetching profile:", error);
-    errorMessage.value = "فشل تحميل البيانات";
+    errorMessage.value = "  Failed Loading Data";
   }
 };
 
-//   update information functionت
+//update information functionت
 const updateProfile = async () => {
   const user = $auth.currentUser;
 
@@ -161,7 +154,8 @@ const updateProfile = async () => {
 
   } catch (error) {
     console.error("Error updating profile:", error);
-    errorMessage.value = "حدث خطأ أثناء التحديث. حاول مرة أخرى";
+    errorMessage.value = " An error occurred during the update. Please try again" ;
+
   } finally {
     loading.value = false;
   }
@@ -172,16 +166,13 @@ onMounted(() => {
     if (user) {
       fetchProfile(user.uid);
     } else {
-      errorMessage.value = "يرجى تسجيل الدخول أولاً";
+      errorMessage.value = "   please , sign in first";
     }
   });
 });
 
 
-// import { inject } from "vue";
 
-// const profilee = inject("profile");
-// const updateProfilee = inject("updateProfile");
 definePageMeta({
   layout: "default"
 });
