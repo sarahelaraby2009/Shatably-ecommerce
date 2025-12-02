@@ -32,7 +32,7 @@
 
             <FormInput label="Governorate" placeholder="governorate" v-model="governorate" />
           <FormInput label="City" type="select" v-model="selectedGov" :options="city"/>
-          </div>
+          </div>ٍ
         </section>
         <!--payment methods-->
        <section class="space-y-3">
@@ -286,7 +286,7 @@ async function order(){
         productId: item.productId,
         quantity: item.quantity,
         price: item.productSnapshot.price,
-        title: item.productSnapshot.title,
+        title: item.productSnapshot.name,
         image: item.productSnapshot.image,
       })),
       subtotal: subtotal.value || 0,
@@ -344,6 +344,7 @@ function subscribeTocart(){
       id:doc.id,
       ...doc.data()
     }));
+    console.log("CHECKOUT CART ITEMS => ", cartItems.value);
     isLoading.value= false;
   })
 }

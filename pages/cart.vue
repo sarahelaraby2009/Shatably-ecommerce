@@ -1,7 +1,10 @@
 <script setup>
 import { useDelete } from "~/composables/useDelete";
 import {computed}from"vue"
+import { updateDoc, doc } from "firebase/firestore";
+import { useNuxtApp } from "#app";
 
+const { $db: db } = useNuxtApp();
 const {
   cartItems,
   localCartItems,
@@ -9,11 +12,13 @@ const {
   error,
   removeFromCart,
 } = useDelete();
-function updateQuantity({ id, quantity }) {
+async function updateQuantity({ id, quantity }) {
   const idx = localCartItems.value.findIndex(i => i.id === id);
   if (idx !== -1) {
     localCartItems.value[idx].quantity = quantity;
   }
+     const cartRef = doc(db, "carts", id);
+  await updateDoc(cartRef, { quantity });
 }
 
 /////////////progressbar 
