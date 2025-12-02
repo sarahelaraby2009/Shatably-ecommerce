@@ -45,12 +45,12 @@ const totalAfterDiscount = computed(() =>
 </script>
 
 <template>
-<div class="container mx-auto p-4">
+<div class="container mx-auto px-4 py-10 relative">
 
-  <div class="flex justify-center gap-20">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
 
     <!-- LEFT SIDE: Cart Products -->
-    <div class="w-[530px] h-auto pt-10">
+    <div class="w-[530px] h-auto pt-10 lg:col-span-2 ">
  
         <!-- Progress Bar Section -->
      <div class="mb-6 relative w-full">
