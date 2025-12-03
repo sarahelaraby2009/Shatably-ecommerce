@@ -1,7 +1,7 @@
 <template>
-  <div class="w-full">
+  <div class="container mx-auto">
     <div>
-      <div>
+      <div class="flex justify-center h-[400px] w-full mt-[20px] relative">
         <Swiper :modules="modules" :slides-per-view="1" :space-between="10" :loop="true"
           :autoplay="{ delay: 3000, disableOnInteraction: false }" :pagination="{ clickable: true }" :navigation="false"
           class="mySwiper h-[400px]">
@@ -13,42 +13,26 @@
       </div>
     </div>
 
-    <div class="mb-16 mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 px-4">
+    <div class="mb-16 mt-8  gap-3 px-4 flex flex-wrap justify-center">
 
-      <div class="relative w-full h-[250px] rounded-[24px] shadow-md overflow-hidden">
-        <img class="w-full h-full object-cover" src="/first.avif" />
-        <div class="absolute inset-0 flex items-end">
-          <p class="bg-black/40 w-full text-center text-white p-3 text-[18px]">
-            Calculate your apartment size and finishing cost easily.
-          </p>
-        </div>
+      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+        <img class="w-[50px]" src="/calculator.png" />
+        <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
       </div>
 
-      <div class="relative w-full h-[250px] rounded-[24px] shadow-md overflow-hidden">
-        <img class="w-full h-full object-cover" src="/2nd.jpg" />
-        <div class="absolute inset-0 flex items-end">
-          <p class="bg-black/40 w-full text-center text-white p-3 text-[18px]">
-            Get your dream home at the best price.
-          </p>
-        </div>
+      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+        <img class="w-[50px]" src="/Home.png" />
+        <p class="text-[#C76950]">Get your dream home at the best price</p>
       </div>
 
-      <div class="relative w-full h-[250px] rounded-[24px] shadow-md overflow-hidden">
-        <img class="w-full h-full object-cover" src="/3rd.jpg" />
-        <div class="absolute inset-0 flex items-end">
-          <p class="bg-black/40 w-full text-center text-white p-3 text-[18px]">
-            Register as an engineer to display your designs, offer your services.
-          </p>
-        </div>
+      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+        <img class="w-[50px]" src="/Engineer.png" />
+        <p class="text-[#C76950]">Register as an engineer to offer your services</p>
       </div>
 
-      <div class="relative w-full h-[250px] rounded-[24px] shadow-md overflow-hidden">
-        <img class="w-full h-full object-cover" src="/4th.jpg" />
-        <div class="absolute inset-0 flex items-end">
-          <p class="bg-black/40 w-full text-center text-white p-3 text-[18px]">
-            Register as a supplier to grow your business, show your Products.
-          </p>
-        </div>
+      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+        <img class="w-[50px]" src="/User.png" />
+        <p class="text-[#C76950]">Register as a supplier to grow your business more</p>
       </div>
 
     </div>
@@ -91,8 +75,10 @@
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
       <div class="flex gap-5 justify-center items-center">
-        <button @click="leftScroll" class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px]">&lt;</button>
-        <button @click="rightScroll" class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px]">&gt;</button>
+        <button @click="leftScroll"
+          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px]">&lt;</button>
+        <button @click="rightScroll"
+          class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px]">&gt;</button>
       </div>
     </div>
 
@@ -104,29 +90,48 @@
           :class="activeSelectionBest === 'all' ? ' bg-[#C76950] text-[#fefe]' : ''" @click="showAllBest">All</div>
         <div class="border border-[#C76950] outline-none rounded-full p-2 text-[#3E3E3E] whitespace-nowrap"
           :class="activeSelectionBest === category.id ? 'bg-[#C76950] text-[#fefe]' : ''"
-          @click="displayProductsBest(category.id)" v-for="category in cats" :key="category.id">{{ category.name }}</div>
+          @click="displayProductsBest(category.id)" v-for="category in cats" :key="category.id">{{ category.name }}
+        </div>
       </div>
       <div ref="productContainerBest" class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in bestSelling" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
       <div class="flex gap-5 justify-center items-center">
-        <button @click="leftScrollBest" class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px]">&lt;</button>
-        <button @click="rightScrollBest" class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px]">&gt;</button>
+        <button @click="leftScrollBest"
+          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px]">&lt;</button>
+        <button @click="rightScrollBest"
+          class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px]">&gt;</button>
       </div>
     </div>
 
     <!-- Electrical Section -->
-    <div class="m-5">
-      <p class="font-bold text-[25px]">Electrical Products</p>
+    <div class="m-5 ">
+      <div class="flex justify-between items-center">
+        <p class="font-bold text-[25px]">Electrical Products</p>
+        <div>
+
+          <NuxtLink to="/categories/qZnJBWo0aLeJQk5W0D6D" class="text-[#8D8D8D] ">See more <font-awesome-icon
+              icon="fa-solid fa-caret-right" /></NuxtLink>
+        </div>
+      </div>
       <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in electericalPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
+
+
+
     </div>
     <!-- Plumbing products -->
     <div class="m-5">
-      <p class="font-bold text-[25px]">Plumbing products</p>
+      <div class="flex justify-between items-center">
+        <p class="font-bold text-[25px]">Plumbing products</p>
+        <NuxtLink to="/categories/0BzHvwuwBw2q5bKSDamR" class="text-[#8D8D8D] ">See more <font-awesome-icon
+            icon="fa-solid fa-caret-right" /></NuxtLink>
+
+
+      </div>
       <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in plumbPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
@@ -134,7 +139,11 @@
     </div>
     <!-- paints -->
     <div class="m-5">
-      <p class="font-bold text-[25px]">Paints & Coatings</p>
+      <div class="flex justify-between items-center">
+        <p class="font-bold text-[25px]">Paints & Coatings</p>
+        <NuxtLink to="/categories/vwmN6jB5dNzfnS5dr4Y6" class="text-[#8D8D8D] ">See more <font-awesome-icon
+            icon="fa-solid fa-caret-right" /></NuxtLink>
+      </div>
       <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in paintPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
@@ -182,7 +191,7 @@ onMounted(async () => {
     id: d.id,
     ...d.data()
   }))
-  
+
   const q2 = query(collection($db, 'products'),
     where('bestSelling', '==', true),
     limit(10))
@@ -223,7 +232,7 @@ onMounted(async () => {
     ...paint.data()
   }))
 
-  
+
 })
 
 const displayProducts = async (catId) => {
