@@ -269,7 +269,8 @@ const handleSignUp = async () => {
         yearsOfExperience: 0,
         bio: '',
         image: '',
-        services: []
+        services: [],
+        mobile:''
       })
       console.log('Engineer account created successfully')
       navigateTo('/userEngineer/complete-profile')

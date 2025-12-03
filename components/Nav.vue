@@ -43,9 +43,9 @@
           <font-awesome-icon :icon="['fas', 'search']" />
         </div>
         <div
-          class="flex justify-center items-center w-[30px] h-[30px] rounded-[50px] relative right-[70px]"
+          class="flex justify-center items-center w-[30px] h-[30px] rounded-[50px] bg-[#F9EEEC] relative right-[70px]"
         >
-          <font-awesome-icon :icon="['fas', 'filter']" />
+          <font-awesome-icon class=" text-[#C76950]" :icon="['fas', 'filter']" />
         </div>
       </div>
       <div class="flex justify-end gap-3">
@@ -55,9 +55,9 @@
           <font-awesome-icon :icon="['fas', 'heart']" />
         </div>
         <div
-          class="flex justify-center items-center w-[40px] h-[40px] rounded-[50px] bg-[#C76950] text-white"
+          class="flex justify-center items-center w-[40px] h-[40px] rounded-[50px] bg-[#F9EEEC] "
         >
-          <font-awesome-icon :icon="['fas', 'cart-shopping']" />
+<font-awesome-icon :icon="['fab','cart-shopping']" class="text-[#C76950]" />
         </div>
       </div>
     </div>

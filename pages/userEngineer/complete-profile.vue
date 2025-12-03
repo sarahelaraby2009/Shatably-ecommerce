@@ -27,6 +27,12 @@
             placeholder="e.g. Finishing - Interior Design" />
         </div>
         <div class="flex gap-2 flex-col mb-5">
+          <label class="font-bold text-m text-[#3E3E3E]">Mobile Number</label>
+          <input v-model="mobile" required 
+            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            placeholder="e.g.01*********" />
+        </div>
+        <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Years Of Experience</label>
           <input v-model="experience"
             class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
@@ -59,6 +65,7 @@ const experience = ref('')
 const bio = ref('')
 const position = ref('')
 const image = ref('')
+const mobile = ref('')
 const { $db } = useNuxtApp()
 const auth = getAuth()
 const errorMessages = ref('')
@@ -77,6 +84,7 @@ onMounted(async () => {
     bio.value = data.bio
     specialization.value = data.specialization
     image.value=data.image
+    mobile.value=data.mobile
   }
 })
 
@@ -93,6 +101,7 @@ const saveData = async () => {
     yearsOfExperience:Number (experience.value),
     bio: bio.value,
     image:image.value,
+    mobile:mobile.value,
     profileComplete: true
 
   })
