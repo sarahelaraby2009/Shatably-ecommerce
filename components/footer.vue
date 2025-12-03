@@ -4,37 +4,39 @@
 
 <template>
   <div class="bg-[#4C261C] ">
-    <div class="flex justify-between items-center py-8 px-10">
+    <div class="flex justify-between items-center py-8 px-8">
       <div class="text-white flex-col items-center justify-center gap-3">
         <div>
-          <img src="/assets/HomeLogo.png" />
+          <img class="w-[200px]" src="/logo mod.png" />
         </div>
+
+        <h3 class="mb-3 font-semibold">Contact Us</h3>
         <h3 class="mb-3">+1 (7635) 547-12-97</h3>
         <h3>support@Shatably.com</h3>
       </div>
       <div class="text-white">
-        <h3>Quick Links</h3>
+        <h3 class="font-semibold">Quick Links</h3>
         <div class="flex justify-between items-center w-[325px] h-[140px]">
           <div class="text-gray-400">
-           <nuxt-link>
+           <nuxt-link :to="'/aboutus'">
             <p class="mb-[24px]">About us</p>
            </nuxt-link> 
-           <nuxt-link>
+           <nuxt-link :to="'/'">
                <p>Home</p>
            </nuxt-link>
           </div>
           <div class="text-gray-400">
-            <nuxt-link>
+            <nuxt-link :to="'/categories'">
                 <p class="mb-[24px]">Categories</p>
             </nuxt-link>
-            <nuxt-link>
+            <nuxt-link :to="'/pricing'">
                 <p>Pricing</p>
             </nuxt-link>
           </div>
         </div>
       </div>
       <div class="mr-10">
-        <p class="text-white mb-10">subscribe</p>
+        <p class="text-white mb-10 font-semibold">subscribe</p>
         <div class="flex">
           <input
             type="text"
@@ -69,8 +71,8 @@
         </div>
         <div class="flex justify-center items-center">
             <h4>A product of</h4>
-            <div class="w-[35px] h-[43px]">
-                <img class="w-full" src="/assets/HomeLogo.png">
+            <div class="w-[50px] h-[43px]">
+                <img class="w-full" src="/logo mod.png" />
             </div>
         </div>
         <h4>© 2025 Shatably. All rights reserved</h4>

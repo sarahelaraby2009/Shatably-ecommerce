@@ -25,7 +25,7 @@ defineProps({
 .card {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   width: 402px;
-  height: 500px;
+  height: 350px;
   background-color: white;
   padding: 10px;
   border-radius: 12px;
@@ -39,7 +39,7 @@ defineProps({
 .image {
   width: 100%;
   padding-bottom: 16px;
-  height: 451px;
+  height: 300px;
 }
 .image:hover {
   cursor: pointer;

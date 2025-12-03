@@ -98,35 +98,36 @@ async function addToCart(event) {
 
 
 <template>
-  <div class="card cursor-pointer" @click="goToDetails">
+  <div class="card cursor-pointer h-[350px] flex flex-col" @click="goToDetails">
     <!-- Image + Wishlist Heart -->
-    <div class="image relative">
+    <div class="image relative flex-shrink-0">
       <div @click.stop="addToWishlist"
-           class="heart absolute top-3 right-3 bg-[#D9D9D9] w-[35px] h-[35px] rounded-full flex justify-center items-center z-10">
-        <font-awesome-icon :icon="[isInWishlist ? 'fas' : 'far', 'heart']"
-                           class="text-[#C76950] text-lg"/>
+        class="heart absolute top-3 right-3 bg-[#D9D9D9] w-8 h-8 rounded-full flex justify-center items-center z-10">
+        <font-awesome-icon :icon="[isInWishlist ? 'fas' : 'far', 'heart']" class="text-[#C76950] text-md" />
       </div>
-      <img :src="product.image" :alt="product.name" class="w-full h-60 object-cover rounded-lg"/>
+      <img :src="product.image" :alt="product.name" class="w-full h-60 object-cover rounded-lg" />
     </div>
 
     <!-- Product Info -->
-    <div class="para mt-2">
+    <div class="para mt-2 flex flex-col flex-grow">
       <div class="flex justify-between items-center">
-        <h3 class="font-semibold">{{ product.name }}</h3>
-        <div class="flex items-center gap-1 text-yellow-400">
-          <font-awesome-icon :icon="['fas','star']"/>
+        <h3 class="font-semibold line-clamp-1">{{ product.name }}</h3>
+        <div class="flex items-center gap-1 text-yellow-400 flex-shrink-0">
+          <font-awesome-icon :icon="['fas', 'star']" />
           <p>4.0</p>
         </div>
       </div>
 
-      <p class="text-gray-600 text-sm">{{ product.description }}</p>
-      <p class="text-gray-500 text-sm mt-1">Brand: {{ product.brand }}</p>
+      <p class="text-gray-500 text-sm mt-1 line-clamp-1">Brand: {{ product.brand }}</p>
+
+      <!-- Spacer to push price & cart to bottom -->
+      <div class="flex-grow"></div>
 
       <div class="flex justify-between items-center mt-2">
         <h5 class="font-bold">{{ product.price }} LE</h5>
         <div @click.stop="addToCart"
-             class="flex justify-center items-center rounded-full bg-[#C76950] p-2 w-10 h-10 cursor-pointer transform transition-transform duration-150 active:scale-90">
-          <font-awesome-icon :icon="['fas','cart-shopping']" class="text-white"/>
+          class="flex justify-center items-center rounded-full bg-[#C76950] p-2 w-8 h-8 cursor-pointer transform transition-transform duration-150 active:scale-90">
+          <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-white" />
         </div>
       </div>
     </div>
@@ -134,7 +135,19 @@ async function addToCart(event) {
 </template>
 
 <style scoped>
-.card { background: white; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); padding: 10px; transition: 0.2s; }
-.card:hover { transform: translateY(-3px); }
-.heart { cursor: pointer; }
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  padding: 10px;
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.heart {
+  cursor: pointer;
+}
 </style>
