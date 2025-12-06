@@ -25,11 +25,11 @@
 
       <!-- Product Info -->
       <div class="flex-1">
-        <h3 class="text-[18px] font-semibold mb-1">{{ product.name }}</h3>
+        <h3 class="text-[14px] lg:text-[18px] font-semibold mb-1">{{ product.name }}</h3>
 
-        <p class="text-[16px] font-bold text-gray-900 mb-1">{{ product.price }} EGP</p>
+        <p class=" text-[14px] lg:text-[16px] font-bold text-gray-900 mb-1">{{ product.price }} EGP</p>
 
-        <p class="text-[12px] text-gray-600 mb-2">
+        <p class=" text-[13px] lg:text-[15px] text-gray-600 mb-2">
           Brand:
           <span class="font-medium text-gray-900">
             {{ product.brand }}
@@ -95,14 +95,13 @@ const liked = ref(false)
 
 const increase = () => {
   localQuantity.value++;
-  emit("update-quantity", { id: props.cartId, quantity: localQuantity.value });
+  emit("update-quantity", props.cartId, localQuantity.value);
 };
 
 const decrease = () => {
   if (localQuantity.value > 1) {
     localQuantity.value--;
-    emit("update-quantity", { id: props.cartId, quantity: localQuantity.value });
-  }
+   emit("update-quantity", props.cartId, localQuantity.value);}
 };
 
 
