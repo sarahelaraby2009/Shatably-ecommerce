@@ -1,6 +1,6 @@
 <template>
 
-      <div class="min-h-screen ">
+      <div class="p-4">
    
 
     <!-- Orders Container -->
@@ -19,7 +19,7 @@
             </div>
             <div>
               <p class="text-white font-semibold"> OrderID {{order.id}}</p>
-              <p class="text-white/70 text-sm">{{ order.createdAt }}</p>
+              <p class="text-white/70 text-sm">{{ formattedDate }}</p>
             </div>
           </div>
           <span class="bg-[#EBCDC5] text-black-700 px-4 py-1.5 rounded-full text-sm font-medium flex items-center gap-1" v-if="order.status==='pending'">
@@ -153,7 +153,7 @@ const props =defineProps({
   }
 });
 
-import { ref } from 'vue';
+import { ref , computed } from 'vue';
 import { useNuxtApp } from '#app';
 import { doc, deleteDoc } from 'firebase/firestore';
 
@@ -187,6 +187,40 @@ const cancelOrder = async () => {
   }
 };
 
+
+
+
+const formattedDate = computed(() => {
+  const createdAt = props.order.createdAt;
+  
+  if (!createdAt) return '';
+  
+  // لو Firestore Timestamp
+  if (typeof createdAt.toDate === 'function') {
+    const date = createdAt.toDate();
+    return date.toLocaleString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+  
+  // لو فيه seconds
+  if (createdAt.seconds) {
+    const date = new Date(createdAt.seconds * 1000);
+    return date.toLocaleString('en-US', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+  
+  return '';
+});
 
 </script>
 
