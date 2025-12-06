@@ -4,10 +4,10 @@
     <p>Manage your addresses for fast and easy checkout</p>    
   </div>
 
-  <div class="p-5 shadow rounded-3xl mt-4">
+  <div class="p-5 shadow rounded-3xl mt-4 ">
     <h3 class="font-bold text-xl">Address information</h3>
 
-    <div class="flex gap-4 p-3">
+    <div class="flex flex-col md:flex-row gap-4 p-3">
       <div class="grid gap-2 flex-1">
         <h1>Governorate</h1>
         <div  class="w-full border border-gray-300 rounded-full p-3 outline-none focus:ring-2 focus:ring-[#C76950]"
@@ -17,7 +17,7 @@
           
              
       </div>
-      <div class="grid gap-2 flex-1">
+      <div class="grid gap-2 w-full md:flex-1">
         <h1>City</h1>
 
         
