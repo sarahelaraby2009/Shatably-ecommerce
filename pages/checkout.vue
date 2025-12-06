@@ -32,7 +32,7 @@
 
             <FormInput label="Governorate" placeholder="governorate" v-model="governorate" />
           <FormInput label="City" type="select" v-model="selectedGov" :options="city"/>
-          </div>
+          </div>ٍ
         </section>
         <!--payment methods-->
        <section class="space-y-3">
@@ -354,6 +354,7 @@ function subscribeTocart(){
       id:doc.id,
       ...doc.data()
     }));
+    console.log("CHECKOUT CART ITEMS => ", cartItems.value);
     isLoading.value= false;
   })
 }

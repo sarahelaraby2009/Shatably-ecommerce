@@ -2,6 +2,11 @@
 import { useDelete } from "~/composables/useDelete";
 import {computed}from"vue"
 
+import { useNuxtApp } from "#app";
+import { collection, query, where, limit, getDocs, } from "firebase/firestore";
+
+import ProductCard from "~/components/productCard.vue";
+const { $db: db } = useNuxtApp();
 const {
   cartItems,
   localCartItems,
@@ -9,13 +14,57 @@ const {
   error,
   removeFromCart,
 } = useDelete();
-function updateQuantity({ id, quantity }) {
+const recommended=ref([])
+const showAll=ref(false)
+const displayProducts = computed(()=>{
+if(showAll.value){
+return recommended.value;
+
+}
+return recommended.value.slice(0,3)
+})
+//update quantity
+async function updateQuantity({ id, quantity }) {
   const idx = localCartItems.value.findIndex(i => i.id === id);
   if (idx !== -1) {
     localCartItems.value[idx].quantity = quantity;
   }
+     const cartRef = doc(db, "carts", id);
+  await updateDoc(cartRef, { quantity });
 }
+///////////////product ////
+watch(
+  ()=>cartItems.value,
+  async (items)=>{
+    if(!items.length)
+    return;
+  const firstItem=items[0].productSnapshot;
+    await loadingProducts(firstItem);
+      
+  },
+  {immediate:true}
+);
+async function  loadingProducts(product){
+   try {
+    const productsRef = collection(db, "products");
 
+    const q = query(
+      productsRef,
+      where("brand", "==", product.brand),
+      limit(6)
+    );
+
+    const snap = await getDocs(q);
+
+    recommended.value = snap.docs
+      .filter((doc) => doc.id !== product.id)
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  } catch (err) {
+    console.log("Error loading recommended:", err);
+  }
+
+}
 /////////////progressbar 
 const progress = computed(() => {
   return Math.min(localCartItems.value.length * 2, 100);
@@ -40,9 +89,9 @@ const totalAfterDiscount = computed(() =>
 </script>
 
 <template>
-<div class="container mx-auto p-4">
+<div class="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
 
-  <div class="flex justify-center gap-20">
+  <div class="lg:col-span-2 justify-center gap-20">
 
     <!-- LEFT SIDE: Cart Products -->
     <div class="w-[530px] h-auto pt-10">
@@ -140,18 +189,30 @@ const totalAfterDiscount = computed(() =>
   </div>
 
   <!-- You may also like -->
-  <div class="mt-10">
-    <div class="flex justify-between items-center px-60 py-7">
+  <div class="mt-10  gap-3 px-10">
+    <div class="flex justify-between items-center px-50 py-7">
       <h1 class="font-bold text-[20px] text-[#3E3E3E]">You may also like</h1>
-      <p class="text-gray-500 flex items-center gap-1 cursor-pointer">
-          See more 
-          <font-awesome-icon :icon="['fas', 'angle-right']" class="text-sm" />
-      </p>
+       <!-- SEE MORE BUTTON -->
+  <div v-if="recommended.length > 3" class="mt-6">
+    <button
+      class="text-[#8D8D8D] font-semibold hover:underline"
+      @click="showAll = !showAll"
+    >
+      {{ showAll ? "See less" : "See More" }}
+    </button>
+    </div>
     </div>
 
-    <div class="flex justify-center gap-10">
-      <!-- هنا ممكن تحطي ProductCard components -->
-    </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 mb-5 place-items-center">
+
+    <ProductCard
+      v-for="item in displayProducts"
+      :key="item.id"
+      :product="item"
+      :categoryId="item.categoryId"
+      :subId="item.subId"
+    />
+</div>
   </div>
 
 
