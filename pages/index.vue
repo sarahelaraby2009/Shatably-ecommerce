@@ -1,38 +1,43 @@
 <template>
-  <div class="container mx-auto">
+  <div class="container lg:mx-auto">
     <div>
       <div class="flex justify-center h-[400px] w-full mt-[20px] relative">
         <Swiper :modules="modules" :slides-per-view="1" :space-between="10" :loop="true"
           :autoplay="{ delay: 3000, disableOnInteraction: false }" :pagination="{ clickable: true }" :navigation="false"
           class="mySwiper h-[400px]">
           <SwiperSlide v-for="n in 7" :key="n">
-            <img class="w-full h-full object-cover" :src="`/pro-${n}.png`" loading="lazy"
+            <img class="lg:w-full lg:h-full lg:object-cover object-contain" :src="`/pro-${n}.png`" loading="lazy"
               style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
           </SwiperSlide>
         </Swiper>
       </div>
     </div>
 
-    <div class="mb-16 mt-8  gap-3 px-4 flex flex-wrap justify-center">
+    <div class="m-5">
+      <p class="font-bold text-[25px]">Our Features</p>
 
-      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-        <img class="w-[50px]" src="/calculator.png" />
-        <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
-      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 mx-5  mb-10">
 
-      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-        <img class="w-[50px]" src="/Home.png" />
-        <p class="text-[#C76950]">Get your dream home at the best price</p>
-      </div>
+        <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+          <img class="w-[50px]" src="/calculator.png" />
+          <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
+        </div>
 
-      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-        <img class="w-[50px]" src="/Engineer.png" />
-        <p class="text-[#C76950]">Register as an engineer to offer your services</p>
-      </div>
+        <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+          <img class="w-[50px]" src="/Home.png" />
+          <p class="text-[#C76950]">Get your dream home at the best price</p>
+        </div>
 
-      <div class="relative w-[300px] h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-        <img class="w-[50px]" src="/User.png" />
-        <p class="text-[#C76950]">Register as a supplier to grow your business more</p>
+        <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+          <img class="w-[50px]" src="/Engineer.png" />
+          <p class="text-[#C76950]">Register as an engineer to offer your services</p>
+        </div>
+
+        <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
+          <img class="w-[50px]" src="/User.png" />
+          <p class="text-[#C76950]">Register as a supplier to grow your business more</p>
+        </div>
+
       </div>
 
     </div>
@@ -115,7 +120,7 @@
               icon="fa-solid fa-caret-right" /></NuxtLink>
         </div>
       </div>
-      <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in electericalPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
@@ -132,7 +137,7 @@
 
 
       </div>
-      <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in plumbPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
@@ -144,7 +149,7 @@
         <NuxtLink to="/categories/vwmN6jB5dNzfnS5dr4Y6" class="text-[#8D8D8D] ">See more <font-awesome-icon
             icon="fa-solid fa-caret-right" /></NuxtLink>
       </div>
-      <div class="flex gap-8 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
+      <div class="grid grid-cols-2 lg:grid-cols-4 m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
         <productCard class="min-w-[250px]" v-for="product in paintPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>

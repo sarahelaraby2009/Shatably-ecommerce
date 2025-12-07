@@ -104,6 +104,9 @@ onMounted(async () => {
         router.push('/signin');
     }
     const docSnap = await getDoc(doc($db, 'engineers', user.uid))
+    if(!docSnap.exists()){
+        router.push('/userEngineer/complete-profile');
+    }   
     if (docSnap.exists()) {
         const d = docSnap.data();
         engineerName.value = d.name;

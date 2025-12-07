@@ -10,9 +10,6 @@ const props = defineProps({
   product: { type: Object, required: true },
   categoryId: { type: String, required: true },
   subId: { type: String, required: true },
-  product: { type: Object, required: true },
-  categoryId: { type: String, required: true },
-  subId: { type: String, required: true },
 });
 
 const router = useRouter();
@@ -28,6 +25,7 @@ const currentUser = ref(null);
 // -------------------------
 const goToDetails = () => {
   router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
+  console.log("category:", props.categoryId, "sub:", props.subId);
 };
 
 

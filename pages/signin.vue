@@ -6,10 +6,9 @@
           <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
         </div>
       </div>
-      <div class="relative z-10 flex min-h-screen items-center gap-[120px] pl-[60px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[420px] p-5 shadow-lg rounded-[20px] gap-[5px]">
+      <div class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center gap-[50px] lg:gap-[120px] px-5 py-10 pl-[60px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[350px] p-5 shadow-lg rounded-[20px] gap-[5px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignIn">
-            <h2 class="font-bold text-xl mb-2">Welcome back to Shatably</h2>
 
             <div class="flex flex-col gap-2">
               <label class="font-semibold text-sm">Email</label>
@@ -69,7 +68,7 @@
                 <div>
                   <img src="/google.svg" class="w-5 h-5" alt="Google" />
                 </div>
-                <p class="text-sm">Sign In With Your Google Account</p>
+                <p class="text-xs">Sign In With Your Google Account</p>
               </div>
               
               <button type="submit" :disabled="isLoading"
@@ -86,7 +85,7 @@
         </div>
         
         <div class="leading-[40px]">
-          <p class="font-semibold text-[50px] text-[#fefefe] leading-30 mb-5">Shatably</p>
+          <p class="font-semibold text-[40px] text-[#fefefe] leading-30 mb-5">Welcome Back to Shatably</p>
           <p class="text-[#fefefe] text-[20px]">Make Your Dream Home A Reality with Shatbly</p>
         </div>
       </div>

@@ -40,32 +40,43 @@ const isInWishlist = ref(false);
 const fetchProduct = async () => {
   loading.value = true;
   error.value = null;
+  
   try {
-    const docRef = doc(
-      db,
-      "categories",
-      categoryId,
-      "subcategories",
-      subId,
-      "products",
-      productId
-    );
-    const docSnap = await getDoc(docRef);
+    // ------- 1) Try Nested Path -------
+    let docRef = doc(db, "categories", categoryId, "subcategories", subId, "products", productId);
+    let docSnap = await getDoc(docRef);
+
     if (docSnap.exists()) {
       product.value = { id: docSnap.id, ...docSnap.data() };
-      console.log("product loaded:", product.value);
-    } else {
-      product.value = null;
-      error.value = "Product not found or has been deleted.";
-      console.warn("Product doc does not exist at expected path.");
+      console.log("Loaded from categories path");
+    } 
+    else {
+      // ------- 2) Try Standalone products -------
+      docRef = doc(db, "products", productId);
+      docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        product.value = { id: docSnap.id, ...docSnap.data() };
+        console.log("Loaded from top-level products collection");
+      } 
+      else {
+        product.value = null;
+        error.value = "Product not found.";
+        console.warn("Product not found in either path.");
+      }
     }
-  } catch (err) {
+  } 
+  
+  catch (err) {
     console.error("Error fetching product:", err);
     error.value = err?.message || "Error loading product";
-  } finally {
+  } 
+  
+  finally {
     loading.value = false;
   }
 };
+
 // ---------------------------------------------------------------
 const fetchRecommendedProducts = async () => {
   try {
