@@ -79,6 +79,10 @@ select option {
   input,
   select {
     font-size: 18px;
+  
+    
+      
+  
   }
     input::placeholder {
     font-size: 16px; /* placeholder */
