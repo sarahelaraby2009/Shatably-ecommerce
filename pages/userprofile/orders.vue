@@ -13,9 +13,13 @@
     </div>
     <h3 class="text-2xl font-bold text-gray-800 mb-2">No Orders Yet</h3>
     <p class="text-gray-500 mb-6">Start shopping to see your orders here</p>
-    <button class="px-8 py-3 bg-[#C76950] text-white rounded-full font-semibold hover:bg-[#B55F47] transition-colors">
+
+    <NuxtLink to="/categories">
+      <button class="px-8 py-3 bg-[#C76950] text-white rounded-full font-semibold hover:bg-[#B55F47] transition-colors">
       Start Shopping
     </button>
+    </NuxtLink>
+    
   </div>
 
   <ordercard 
@@ -47,7 +51,7 @@ const fetchOrders = async (uid) => {
 
   orders.value = snap.docs.map((doc) => ({
     id: doc.id,
-    ...doc.data(),
+   ...doc.data({ serverTimestamps: 'estimate' }),
   }));
 
   loading.value = false;

@@ -4,10 +4,10 @@
     <p>Manage your addresses for fast and easy checkout</p>    
   </div>
 
-  <div class="p-5 shadow rounded-3xl mt-4">
+  <div class="p-5 shadow rounded-3xl mt-4 ">
     <h3 class="font-bold text-xl">Address information</h3>
 
-    <div class="flex gap-4 p-3">
+    <div class="flex flex-col md:flex-row gap-4 p-3">
       <div class="grid gap-2 flex-1">
         <h1>Governorate</h1>
         <div  class="w-full border border-gray-300 rounded-full p-3 outline-none focus:ring-2 focus:ring-[#C76950]"
@@ -17,9 +17,10 @@
           
              
       </div>
-      <div class="grid gap-2 flex-1">
+      <div class="grid gap-2 w-full md:flex-1">
         <h1>City</h1>
 
+        
              <select class="w-full border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950] " 
              v-model="newAddress.city" >
 <option  value="" selected hidden class="text-gray-50"> Choose your City</option>
@@ -170,11 +171,11 @@
           
           <div class="flex gap-4 mb-3">
             <div class="grid gap-2 flex-1">
-              <label class="text-sm font-medium">Governorate</label>
-              <input
-                type="text"
-                class="w-full border border-gray-300 rounded-full p-3 outline-none focus:ring-2 focus:ring-[#C76950]"
-              />
+              <h1>Governorate</h1>
+        <div  class="w-full border border-gray-300 rounded-full p-3 outline-none focus:ring-2 focus:ring-[#C76950]"
+>
+          Egypt
+        </div>
             </div>
             <div class="grid gap-2 flex-1">
               <label class="text-sm font-medium">City</label>
@@ -199,7 +200,7 @@
             <button 
               @click="saveEdit(index)"
               :disabled="loading"
-              class="flex-1 bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-colors disabled:opacity-50"
+              class="flex-1 bg-[#C76950] text-white font-semibold py-2 px-4 rounded-full transition-colors disabled:opacity-50"
             >
               {{ loading ? "Saving..." : "Save Changes" }}
             </button>
@@ -298,8 +299,8 @@ const addAddress = async () => {
     });
 
     successMessage.value = isFirstAddress 
-      ? "Address added successfully as default ✔" 
-      : "Address added successfully ✔";
+      ? "Address added successfully as default " 
+      : "Address added successfully ";
 
     newAddress.value = {
    
@@ -355,7 +356,7 @@ const saveEdit = async (index) => {
       addresses: addresses.value
     });
 
-    successMessage.value = "Address updated successfully ✔";
+    successMessage.value = "Address updated successfully ";
     editIndex.value = null;
 
     setTimeout(() => successMessage.value = "", 3000);

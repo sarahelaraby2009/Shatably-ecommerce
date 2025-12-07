@@ -49,11 +49,16 @@
       <input  type="radio"  name="payment" value="card" v-model="payment"class="w-5 h-5"/>
       <label class="text">Credit Card</label>
     </div>
-              <div class="mt-3 md:col-span-2 pb-4">
+
+    <div v-if="payment === 'card'">
+<div class="mt-3 md:col-span-2 pb-4">
               <FormInput label="Card Number" placeholder="Enter your Card Number"  type="number" v-model="cardNumber" />
             </div>
                   <FormInput label="Expiry Date" placeholder="Expiry Date" type="date" v-model="expirydate" />
                    <FormInput label="CVV" placeholder="CVV"  type="number" v-model="CVV" />
+
+    </div>
+              
            
   </div>
 </section>
@@ -128,7 +133,6 @@ import {ref,onMounted,onUnmounted,computed} from "vue";
 import { useNuxtApp } from "#app";
 import { collection, query, onSnapshot, getDocs, writeBatch, addDoc, serverTimestamp, where, doc} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-
 
 const { $db: db, $auth: auth } = useNuxtApp();
 const userId=ref(null);
@@ -230,6 +234,11 @@ function cleanData(obj) {
   if (obj === null || obj === undefined) return null;
   if (typeof obj !== 'object') return obj;
   
+
+   if (obj._methodName === 'serverTimestamp' || obj.constructor?.name === 'FieldValue') {
+    return obj;
+  }
+  
   if (Array.isArray(obj)) {
     return obj.map(item => cleanData(item)).filter(item => item !== null);
   }
@@ -295,7 +304,7 @@ async function order(){
       shipping: shipping.value || 0,
       total: total.value || 0,
       status: "pending",
-      createdAt: new Date (),
+      createdAt: serverTimestamp(),
     };
     
     // تنظيف البيانات
