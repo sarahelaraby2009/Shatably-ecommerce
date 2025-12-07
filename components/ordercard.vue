@@ -124,7 +124,7 @@
             <p class="text-2xl font-bold text-gray-800">{{order.subtotal}} EGP </p>
           </div>
           <button class="px-5 py-2.5 bg-[#EBCDC5] text-black-300 rounded-full font-medium hover:bg-[#EBCDC5] " v-if="order.status=== 'pending' ||  order.status === 'confirmed'" 
-        @click="cancelOrder"
+@click="confirmCancel"
         :disabled="isDeleting"  >
             
             Cancel Order 
@@ -140,9 +140,15 @@
 
 
  
-    
-
   </div>
+<ConfirmDialog 
+  :show="showConfirmDialog"
+  message="Are you sure you want to Delete this order?"
+  confirm-text="Yes, Cancel"
+  @confirm="cancelOrder"
+  @cancel="showConfirmDialog = false"
+/>
+
 </template>
 
 <script setup>
@@ -163,20 +169,23 @@ const emit = defineEmits(['orderCancelled']);
 const { $db } = useNuxtApp();
 const isDeleting = ref(false);
 const isDeleted = ref(false);
+const showConfirmDialog = ref(false);
+
+
+const confirmCancel = () => {
+  showConfirmDialog.value = true;
+};
 
 const cancelOrder = async () => {
-  if (!confirm('Are you sure you want to cancel this order?')) return;
+  showConfirmDialog.value = false;
   
   try {
     isDeleting.value = true;
     
-    //Delete the order from   Firebase
     await deleteDoc(doc($db, 'orders', props.order.id));
     
-    //  hide the compoennt
     isDeleted.value = true;
     
-    // give the information to the order page
     emit('orderCancelled', props.order.id);
     
   } catch (error) {
