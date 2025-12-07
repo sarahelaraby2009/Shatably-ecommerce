@@ -21,7 +21,7 @@
             </div>
 
             <!-- part2 -->
-            <div class="mt-4 flex flex-col justify-center gap-2 mb-3">
+            <div class="mt-4 flex flex-col justify-center overflow-clip gap-2 mb-3">
                 <h2 class="text-[#262626] font-semibold text-[18px]">
                     Apartment Space (in square meters)
                 </h2>
@@ -33,15 +33,15 @@
             </div>
 
             <!-- part3 -->
-            <div class="flex flex-col justify-center gap-4">
+            <div class="flex flex-col justify-center overflow-hidden gap-4">
                 <div class="mb-2">
                     <h2 class="text-[#262626] font-semibold text-[18px]">Select the finishing level that suits your
                         budget:</h2>
                 </div>
-                <div class="flex gap-10 justify-center flex-wrap">
+                <div class="flex gap-10 overflow-x-auto scrollbar-hide lg:overflow-clip justify-center ">
                     <div v-for="pkg in packages" :key="pkg.id" @click="selectedPkg = pkg"
                         :class="{ 'border-[#C76950] border-2': selectedPkg?.id === pkg.id, 'border-slate-200': selectedPkg?.id !== pkg.id }"
-                        class="w-[260px] overflow-hidden text-left shadow-md rounded-[16px] h-[240px] cursor-pointer transition flex flex-col gap-4">
+                        class="min-w-[260px] lg:w-[260px] overflow-hidden text-left shadow-md rounded-[16px] h-[240px] cursor-pointer transition flex flex-col gap-4">
                         <img class="w-full h-[120px] rounded-t-[16px] object-cover" :src="pkg.image" />
                         <div class="flex flex-col gap-1 px-3">
                             <h2 class="text-[#262626] font-semibold text-[18px]">{{ pkg.name }}</h2>

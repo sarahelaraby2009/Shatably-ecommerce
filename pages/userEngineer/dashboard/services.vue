@@ -1,6 +1,9 @@
 <template>
-    <EngineerSideBar>
-        <div class="p-6 ml-12  flex justify-between">
+    <div class="flex flex-col lg:flex-row  min-h-screen ">
+        <EngineerMobileView class="block lg:hidden" />
+        <EngineerSideBar class="hidden lg:block w-[500px]" />
+        <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
+             <div class="p-6  flex flex-col justify-between">
             <div>
                 <h1 class="text-2xl font-bold mb-4">Services</h1>
             <p>View & Update Your Services</p>
@@ -10,16 +13,20 @@
                     class="bg-[#C76950] w-[150px] text-white px-2 py-1 rounded-xl shadow  transition">
                     Add Services </button>
             </div>
+             <div class="block lg:hidden">
+                    <img :src="engineerImage" class="w-14 h-14 rounded-[22px] mt-5 object-cover ml-5 "/>
+                    <h3 class="pt-1 font-bold text-xl ml-5 mt-5">Hello , {{ engineerName }}</h3>
+                </div>
             
             <!-- Add more dashboard content here -->
         </div>
         <div class="flex flex-col justify-center items-center">
             <div v-if="show"
-                class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6 ml-12 ">
+                class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6 ">
                 <img src="/add image.png" alt="add service" class=" w-12 mb-3" />
                 <p class="text-[18px]">Add your service here</p>
                 <button @click="openModal"
-                    class="bg-[#C76950] w-full text-white px-2 py-1 rounded-xl shadow  transition">
+                    class="bg-[#C76950] w-auto lg:w-full text-white px-2 py-1 rounded-xl shadow  transition">
                     Add Services </button>
             </div>
             <div v-if="showModal"
@@ -82,17 +89,24 @@
             </div>
 
         </div>
-    </EngineerSideBar>
+        </div>
+       
+   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted } from 'vue';
+import { getDoc, doc } from 'firebase/firestore';
 
 const showModal = ref(false);
 const openModal = () => showModal.value = true;
 const services = ref([])
 const show=ref(true)
+const {$db}=useNuxtApp();
 const showButton=ref(false)
+const engineerName = ref('');
+const engineerImage = ref(''); 
+const router = useRouter(); 
 const newService = ref({
     title: '',
     description: '',
@@ -100,6 +114,29 @@ const newService = ref({
     preview: ''
 })
 const editIndex = ref(null)
+
+onMounted(async()=>{
+    const { getAuth } = await import('firebase/auth');
+    const auth = getAuth();
+    const user = auth.currentUser;
+  if(!user){
+    router.push('/signin')
+  }
+  const docSnap=await getDoc(doc($db,'engineers',user.uid))
+  if(!docSnap.exists()){
+    router.push('/userEngineer/complete-profile')
+
+  }
+  if(docSnap.exists()){
+    const d=docSnap.data()
+    engineerName.value=d.name;
+    engineerImage.value=d.image;
+    if(d.profileComplete===false){
+        router.push('/userEngineer/complete-profile')
+
+  }
+}
+})
 const openEditModal = (index) => {
     editIndex.value = index
     newService.value = { ...services.value[index] }

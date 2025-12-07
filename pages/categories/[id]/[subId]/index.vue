@@ -102,14 +102,18 @@ const goBack = () => {
 
 <template>
   <div class="px-6 py-8">
+    <div class="flex items-center mb-6">
+      <button @click="goBack" class="mr-4 text-gray-600 hover:text-gray-800">
+        <font-awesome-icon :icon="['fas', 'arrow-left']" />
+      </button>
+     
+    </div>
     <!-- //Search bar and filters -->
     <div class="flex items-center justify-between w-[600px] h-[45px] px-3 py-2 rounded-[24px] text-[#4B5563] bg-white"
       style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
       <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
       <input v-model="searchQuery" type="text" placeholder="Search" class="outline-none text-[#4B5563] w-full" />
-      <button @click="toggleFilters" class="focus:outline-none">
-        <font-awesome-icon :icon="['fas', 'sliders']" class="text-[#C76950] w-5 h-5 transition-transform"
-          :class="{ 'scale-110': showFilters }" /></button>
+     
     </div>
     <div class="mt-4 mb-4">
       <div class="mt-4 mb-4 flex items-center justify-between">
