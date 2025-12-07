@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto px-4 py-10 relative">
+  <div class="container mx-auto px-4 py-10 relative ">
    
-    <h2 class="text-[36px] font-bold mb-5">Checkout</h2>
+    <h2 class="text-[18px] lg:text-[36px] font-bold mb-5">Checkout</h2>
 
     <!-- Grid page -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
@@ -10,7 +10,7 @@
       <div class="lg:col-span-2 space-y-3">
         <!-- Customer Info -->
         <section class="space-y-3">
-          <h2 class="text-[28px] mt-4 mb-5 font-semibold">Customer info</h2>
+          <h2 class="text-[18px] lg:text-[28px] mt-4 mb-5 font-semibold">Customer info</h2>
 
           <!-- left side 2colum-->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
