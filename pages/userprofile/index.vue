@@ -1,90 +1,88 @@
 <template>
- <div class="p-3 pb-5">
-        <h3 class="font-bold text-xl"> Profile </h3>
-        <p> View & Update Your Personal and Contact Information</p>    
- </div>
+  <div class="p-3 pb-5">
+    <h3 class="font-bold text-xl">Profile</h3>
+    <p>View & Update Your Personal and Contact Information</p>
+  </div>
 
-<div class="p-5 shadow rounded-3xl mt-4">
-     <h3 class="font-bold text-xl "> Contact information </h3>
+  <div class="p-5 shadow rounded-3xl mt-4">
+    <h3 class="font-bold text-xl">Contact Information</h3>
 
-     <div class="flex gap-4 p-3">
-        <div class="grid gap-2 ">
-            <h1> Email </h1>
-            <div   class="w-[240px] border border-gray-300 rounded-full p-3 outline-none  ">
-              {{ profile.email }}
-
-            </div>
-     
+    <div class="flex flex-col md:flex-row gap-4 p-3">
+      <div class="grid gap-2 w-full md:w-auto">
+        <h1>Email</h1>
+        <div class="w-full md:w-[240px] border border-gray-300 rounded-full p-3 outline-none">
+          {{ profile.email }}
         </div>
-        <div class="grid gap-2">
-            <h1> Phone Number </h1>
-            <input
-              v-model="profile.phone"
-              type="tel"
-              placeholder="Phone number"
-              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
-            />     
-        </div>
-     </div>
-</div>
+      </div>
+      <div class="grid gap-2 w-full md:w-auto">
+        <h1>Phone Number</h1>
+        <input
+          v-model="profile.phone"
+          type="tel"
+          placeholder="enter your phonenumber"
+          class="w-full md:w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+        />
+      </div>
+    </div>
+  </div>
 
-<div class="p-5 shadow rounded-3xl mt-10">
-     <h3 class="font-bold text-xl "> Personal information </h3>
+  <div class="p-5 shadow rounded-3xl mt-10">
+    <h3 class="font-bold text-xl">Personal Information</h3>
 
-     <div class="flex gap-4 p-3">
-        <div class="grid gap-2 ">
-            <h1> First Name </h1>
-            <input
-              v-model="profile.firstName"
-              type="text"
-              placeholder="First Name"
-              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
-            />     
-        </div>
-        <div class="grid gap-2">
-            <h1> Last Name </h1>
-            <input
-              v-model="profile.lastName"
-              type="text"
-              placeholder="Last Name"
-              class="w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
-            />     
-        </div>
-     </div>
-     
-     <div class="flex gap-4 p-3">
-           <input v-model="profile.gender" type="radio" name="Gender" value="Male" /> 
-          <label> Male </label>
-          <input v-model="profile.gender" type="radio" name="Gender" value="Female" />  
-          <label> Female </label>
-     </div>
-</div>
+    <div class="flex flex-col md:flex-row gap-4 p-3">
+      <div class="grid gap-2 w-full md:w-auto">
+        <h1>First Name</h1>
+        <input
+          v-model="profile.firstName"
+          type="text"
+          placeholder="First Name"
+          class="w-full md:w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+        />
+      </div>
+      <div class="grid gap-2 w-full md:w-auto">
+        <h1>Last Name</h1>
+        <input
+          v-model="profile.lastName"
+          type="text"
+          placeholder="last name"
+          class="w-full md:w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
+        />
+      </div>
+    </div>
 
-<div class="bg-[#C76950] hover:bg-[#B55F47] p-3 rounded-3xl text-center mt-10 cursor-pointer transition-colors">
-    <button 
-      @click="updateProfile" 
+    <div class="flex gap-4 p-3">
+      <input v-model="profile.gender" type="radio" name="Gender" value="Male" />
+      <label>Male</label>
+      <input v-model="profile.gender" type="radio" name="Gender" value="Female" />
+      <label>Female</label>
+    </div>
+  </div>
+
+  <div class="bg-[#C76950] hover:bg-[#B55F47] p-3 rounded-3xl text-center mt-10 cursor-pointer transition-colors">
+    <button
+      @click="updateProfile"
       :disabled="loading"
       class="w-full text-white font-semibold disabled:opacity-50"
-    > 
-      {{ loading ? "Updating..." : "Update Profile" }}
+    >
+      {{ loading ? "Updating..." : "Save profile" }}
     </button>
-</div>
+  </div>
 
-<!-- Success Message -->
-<div
-  v-if="successMessage"
-  class="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-3xl text-center"
->
-  {{ successMessage }}
-</div>
+  <!-- Success Message -->
+  <div
+    v-if="successMessage"
+    class="mt-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded-3xl text-center"
+  >
+    {{ successMessage }}
+  </div>
 
-<!-- Error Message -->
-<div
-  v-if="errorMessage"
-  class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-3xl text-center"
->
-  {{ errorMessage }}
-</div>
+  <!-- Error Message -->
+  <div
+    v-if="errorMessage"
+    class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-3xl text-center"
+  >
+    {{ errorMessage }}
+  </div>
 </template>
 
 <script setup>
