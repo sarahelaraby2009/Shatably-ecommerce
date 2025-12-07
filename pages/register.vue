@@ -6,10 +6,10 @@
           <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
         </div>
       </div>
-      <div class="relative z-10 flex min-h-screen items-center gap-[120px] pl-[60px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[420px] p-5 shadow-lg rounded-[20px] gap-[5px]">
+      <div class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[350px] p-5 shadow-lg rounded-[20px] gap-[5px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
-            <h2 class="font-bold text-xl">Welcome to Shatably</h2>
+           
             <h3 class="font-semibold text-base">sign up as :</h3>
             <div class="flex gap-2 justify-center items-center">
               <div class="options" @click="userRole = 'client'"
@@ -82,7 +82,7 @@
         </div>
         
         <div class="leading-[40px]">
-          <p class="font-semibold text-2xl text-[#fefefe]">Shatably</p>
+          <p class="font-semibold text-[30px] text-[#fefefe] leading-30 mb-5">Welcome to Shatably</p>
           <p class="text-[#fefefe] text-base">Make Your Dream Home A Reality with Shatbly</p>
         </div>
       </div>
@@ -270,7 +270,8 @@ const handleSignUp = async () => {
         yearsOfExperience: 0,
         bio: '',
         image: '',
-        services: []
+        services: [],
+        mobile:''
       })
       console.log('Engineer account created successfully')
       navigateTo('/userEngineer/complete-profile')

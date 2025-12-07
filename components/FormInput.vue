@@ -70,4 +70,27 @@ select option {
 .placeholder-option {
   color: #959494;
 }
+
+@media (max-width: 768px) {
+  .text {
+    font-size: 18px; /* موبايل */
+  }
+
+  input,
+  select {
+    font-size: 18px;
+  
+    
+      
+  
+  }
+    input::placeholder {
+    font-size: 16px; /* placeholder */
+
+  }
+
+  select:invalid {
+    font-size: 16px; /* Select placeholder */
+  }
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto px-4 py-10 relative">
+  <div class="container mx-auto px-4 py-10 relative ">
    
-    <h2 class="text-[36px] font-bold mb-5">Checkout</h2>
+    <h2 class="text-[18px] lg:text-[36px] font-bold mb-[5px] md:mb-5">Checkout</h2>
 
     <!-- Grid page -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
@@ -9,8 +9,8 @@
       <!--left side-->
       <div class="lg:col-span-2 space-y-3">
         <!-- Customer Info -->
-        <section class="space-y-3">
-          <h2 class="text-[28px] mt-4 mb-5 font-semibold">Customer info</h2>
+        <section class="lg:space-y-3">
+          <h2 class="text-[18px] lg:text-[28px] lg:mt-4   lg:mb-5 font-semibold">Customer info</h2>
 
           <!-- left side 2colum-->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -23,7 +23,7 @@
 
         <!-- Shipping details -->
         <section class="space-y-3">
-          <h2 class=" mt-12 text-[28px] font-semibold">Shipping details</h2>
+          <h2 class="lg:mt-12 text-[18px]  lg:text-[28px] font-semibold">Shipping details</h2>
 
           <div class="grid grid-cols-1 md:grid-cols-2 pt-2 gap-4">
             <div class="md:col-span-2">
@@ -36,7 +36,7 @@
         </section>
         <!--payment methods-->
        <section class="space-y-3">
-  <h2 class="mt-12 pb-4 text-[28px] font-semibold">Payment Method</h2>
+  <h2 class="lg:mt-12 lg:pb-4 text-[18px] lg:text-[28px] font-semibold">Payment Method</h2>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
@@ -49,11 +49,16 @@
       <input  type="radio"  name="payment" value="card" v-model="payment"class="w-5 h-5"/>
       <label class="text">Credit Card</label>
     </div>
-              <div class="mt-3 md:col-span-2 pb-4">
+
+    <div v-if="payment === 'card'">
+<div class="mt-3 md:col-span-2 pb-4">
               <FormInput label="Card Number" placeholder="Enter your Card Number"  type="number" v-model="cardNumber" />
             </div>
                   <FormInput label="Expiry Date" placeholder="Expiry Date" type="date" v-model="expirydate" />
                    <FormInput label="CVV" placeholder="CVV"  type="number" v-model="CVV" />
+
+    </div>
+              
            
   </div>
 </section>
@@ -64,7 +69,7 @@
       <!------------------------------right side -------------------------------------------------->
   <div class="lg:col-span-1">
         <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
-          <h2 class="text-[20px] font-semibold mb-4">Order Summary</h2>
+          <h2 class="taxt-[18px] lg:text-[20px] font-semibold mb-4">Order Summary</h2>
          <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
           <!-- Discount Code Section -->
           <div class="mb-4 pb-4 border-b border-gray-200">
@@ -113,7 +118,7 @@
         </div>
 
           <!-- Place Order Button -->
-          <button @click="order" class="w-full py-3 bg-[#C76950] text-white rounded-[10px] hover:bg-[#AD563F] text-[15px] font-medium">
+          <button @click="order" class="w-full   mt-[10px] py-3 border-radius[24px] bg-[#C76950] text-white rounded-[10px] hover:bg-[#AD563F] text-[15px] font-medium">
             Place order
           </button>
         </div>
@@ -128,7 +133,6 @@ import {ref,onMounted,onUnmounted,computed} from "vue";
 import { useNuxtApp } from "#app";
 import { collection, query, onSnapshot, getDocs, writeBatch, addDoc, serverTimestamp, where, doc} from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-
 
 const { $db: db, $auth: auth } = useNuxtApp();
 const userId=ref(null);
@@ -230,6 +234,11 @@ function cleanData(obj) {
   if (obj === null || obj === undefined) return null;
   if (typeof obj !== 'object') return obj;
   
+
+   if (obj._methodName === 'serverTimestamp' || obj.constructor?.name === 'FieldValue') {
+    return obj;
+  }
+  
   if (Array.isArray(obj)) {
     return obj.map(item => cleanData(item)).filter(item => item !== null);
   }
@@ -286,8 +295,9 @@ async function order(){
         productId: item.productId,
         quantity: item.quantity,
         price: item.productSnapshot.price,
-        title: item.productSnapshot.title,
+        title: item.productSnapshot.name,
         image: item.productSnapshot.image,
+        
       })),
       subtotal: subtotal.value || 0,
       discount: discount.value || 0,
@@ -344,6 +354,7 @@ function subscribeTocart(){
       id:doc.id,
       ...doc.data()
     }));
+    console.log("CHECKOUT CART ITEMS => ", cartItems.value);
     isLoading.value= false;
   })
 }

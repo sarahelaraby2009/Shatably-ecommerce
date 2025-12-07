@@ -2,6 +2,11 @@
 import { useDelete } from "~/composables/useDelete";
 import {computed}from"vue"
 
+import { useNuxtApp } from "#app";
+import { collection, query,doc,  updateDoc, where, limit, getDocs, } from "firebase/firestore";
+
+import ProductCard from "~/components/productCard.vue";
+const { $db: db } = useNuxtApp();
 const {
   cartItems,
   localCartItems,
@@ -9,13 +14,60 @@ const {
   error,
   removeFromCart,
 } = useDelete();
-function updateQuantity({ id, quantity }) {
+const recommended=ref([])
+const showAll=ref(false)
+const displayProducts = computed(()=>{
+if(showAll.value){
+return recommended.value;
+
+}
+return recommended.value.slice(0,3)
+})
+//update quantity
+async function updateQuantity(id, quantity) {
+  if (quantity < 1) return;
+
   const idx = localCartItems.value.findIndex(i => i.id === id);
   if (idx !== -1) {
     localCartItems.value[idx].quantity = quantity;
   }
-}
 
+  const cartRef = doc(db, "carts", id);
+  await updateDoc(cartRef, { quantity });
+}
+///////////////product ////
+watch(
+  ()=>cartItems.value,
+  async (items)=>{
+    if(!items.length)
+    return;
+  const firstItem=items[0].productSnapshot;
+    await loadingProducts(firstItem);
+      
+  },
+  {immediate:true}
+);
+async function  loadingProducts(product){
+   try {
+    const productsRef = collection(db, "products");
+
+    const q = query(
+      productsRef,
+      where("brand", "==", product.brand),
+      limit(6)
+    );
+
+    const snap = await getDocs(q);
+
+    recommended.value = snap.docs
+      .filter((doc) => doc.id !== product.id)
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+
+  } catch (err) {
+    console.log("Error loading recommended:", err);
+  }
+
+}
 /////////////progressbar 
 const progress = computed(() => {
   return Math.min(localCartItems.value.length * 2, 100);
@@ -38,15 +90,32 @@ const totalAfterDiscount = computed(() =>
   subtotal.value  + shipping
 );
 </script>
-
+<!------------------------------------------------------------>
 <template>
-<div class="container mx-auto p-4">
-
-  <div class="flex justify-center gap-20">
+<div class="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+  <!--------- no card items ---------------->
+  <div v-if="!loading&&localCartItems.length === 0" class="col-span-full  pt-5 min-h-[70vh]-screen flex items-center justify-center text-gray-600">
+     <div class="text-center"> 
+    <div class="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
+      <svg class="w-12 h-12 text-[#C76950]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+      </svg>
+    </div>
+    <h3 class=" text-[18px] lg:text-2xl font-bold text-gray-800 mb-2">Your Cart is Empty</h3>
+    <p class="text-gray-500 mb-6"> Looks like you haven’t added anything to your cart yet.<br></br>
+      Start shopping to see your orders here</p>
+      <NuxtLink to="/">
+       <button class="px-14 py-3 bg-[#C76950] text-white rounded-full font-semibold hover:bg-[#B55F47] transition-colors">
+      Start Shopping
+    </button>
+  </NuxtLink>
+     </div>
+      </div>
+     <div class="lg:col-span-2 justify-center gap-20">
 
     <!-- LEFT SIDE: Cart Products -->
-    <div class="w-[530px] h-auto pt-10">
- 
+    <div v-if="localCartItems.length > 0" class="w-full max-w-[530px] h-auto pt-10">
+   
         <!-- Progress Bar Section -->
      <div class="mb-6 relative w-full">
 
@@ -69,10 +138,9 @@ const totalAfterDiscount = computed(() =>
             Items: {{ localCartItems.length }}  
           </p>
         </div>
+       <h2 class="font-bold pb-5  text-[18px] lg:text-xl">My cart</h2>
       <div v-if="loading" class="text-center py-10">Loading cart...</div>
-      <div v-else-if="localCartItems.length === 0" class="text-gray-600 mt-8">
-        لا توجد منتجات في السلة حالياً.
-      </div>
+    
 
       <div v-else class="space-y-4">
         <checkcard
@@ -86,16 +154,17 @@ const totalAfterDiscount = computed(() =>
         />
       </div>
     </div>
+    </div>
 
     <!-- RIGHT SIDE: Order Summary -->
-    <div class="lg:col-span-1 w-[430px] pt-10">
-      <h2 class="font-bold pb-5 text-xl">Order Summary</h2>
+    <div   v-if="localCartItems.length > 0" class="lg:col-span-1 w-full pt-[19px] lg:pt-[100px]">
+      <h2 class="font-bold pb-5  text-[18px] lg:text-xl">Order Summary</h2>
 
       <div class="bg-white shadow rounded-2xl p-6">
         <div class="space-y-4">
         <div class="flex justify-between">
-          <p>Subtotal:</p>
-          <p>{{ subtotal }} LE</p>
+          <p class="text-[16px] lg:text-base">Subtotal:</p>
+          <p class="text-[16px] lg:text-base">{{ subtotal }} LE</p>
         </div>
         <!-- <div class="flex justify-between">
           <p>Discount (5%):</p>
@@ -103,8 +172,8 @@ const totalAfterDiscount = computed(() =>
         </div> -->
 
         <div class="flex justify-between ">
-          <p>Shipping:</p>
-          <p>{{ shipping }} LE</p>
+          <p class="text-[16px] lg:text-base">Shipping:</p>
+          <p class="text-[16px] lg:text-base">{{ shipping }} LE</p>
         </div>
 
            
@@ -116,42 +185,54 @@ const totalAfterDiscount = computed(() =>
 
 
            <!---مجموع-->   
-          <div class="flex justify-between font-bold mt-3">
-            <p>Total</p>
-            <p> {{  totalAfterDiscount}} LE</p>
+          <div class="flex justify-between font-bold mt-3 ">
+            <p class="text-[16px] lg:text-base">Total</p>
+            <p class="text-[16px] lg:text-base"> {{  totalAfterDiscount}} LE</p>
           </div>
         </div>
        
         <NuxtLink to="/">
-        <button class="w-full mt-5 py-3 rounded-xl bg-[#C76950] text-white">
+        <button class="w-full mt-5 py-3 rounded-[22px] bg-[#C76950] text-white">
            Continue shopping
         </button>
         </NuxtLink>
         
        <NuxtLink to="/checkout">
-        <button class="w-full mt-3 py-3 rounded-xl border">
+        <button class="w-full mt-3 py-3 rounded-[22px] border">
           Check out
         </button>
         </NuxtLink>
 
       </div>
-    </div>
+
 
   </div>
 
   <!-- You may also like -->
-  <div class="mt-10">
-    <div class="flex justify-between items-center px-60 py-7">
+  <div  v-if="localCartItems.length > 0" class="mt-10  gap-3 px-10">
+    <div class="flex justify-between items-center px-50 py-7">
       <h1 class="font-bold text-[20px] text-[#3E3E3E]">You may also like</h1>
-      <p class="text-gray-500 flex items-center gap-1 cursor-pointer">
-          See more 
-          <font-awesome-icon :icon="['fas', 'angle-right']" class="text-sm" />
-      </p>
+       <!-- SEE MORE BUTTON -->
+  <div v-if="recommended.length > 3" class="mt-6">
+    <button
+      class="text-[#8D8D8D] font-semibold hover:underline"
+      @click="showAll = !showAll"
+    >
+      {{ showAll ? "See less" : "See More" }}
+    </button>
+    </div>
     </div>
 
-    <div class="flex justify-center gap-10">
-      <!-- هنا ممكن تحطي ProductCard components -->
-    </div>
+     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 px-10 mb-5 place-items-center">
+
+    <ProductCard
+      v-for="item in displayProducts"
+      :key="item.id"
+      :product="item"
+      :categoryId="item.categoryId"
+      :subId="item.subId"
+    />
+</div>
   </div>
 
 
