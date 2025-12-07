@@ -118,7 +118,6 @@
               <div class="flex items-center gap-2 mb-3">
                 <font-awesome-icon :icon="['fas', 'location-dot']" class="text-[#C76950] text-xl" />
                 <h4 class="font-bold text-lg"> {{ address.city }}</h4>
-                <!-- Badge للعنوان الافتراضي -->
                 <span 
                   v-if="address.isDefault" 
                   class="bg-green-500 text-white text-xs font-semibold px-3 py-1 rounded-full"
@@ -140,7 +139,8 @@
               </button>
               
               <button 
-                @click="deleteAddress(index)"
+              @click="confirmDelete(index)"
+
                 class="text-[#C76950] hover:text-[#C76950] p-2 rounded-full hover:bg-red-50 transition-colors"
                 title="Delete Address"
               >
@@ -223,6 +223,14 @@
     <p class="text-lg">No addresses saved yet</p>
     <p class="text-sm">Add your first address using the form above!</p>
   </div>
+
+  <!-- Confirm Delete Dialog -->
+<ConfirmDialog 
+  :show="showConfirmDialog"
+  message="Are you sure you want to delete this address?"
+  @confirm="deleteAddress"
+  @cancel="showConfirmDialog = false"
+/>
 </template>
 
 <script setup>
@@ -251,6 +259,8 @@ const editForm = ref({
 const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
+const showConfirmDialog = ref(false);
+const deleteTargetIndex = ref(null);
 
 //  جلب العناوين المحفوظة
 const fetchAddresses = async () => {
@@ -370,19 +380,25 @@ const saveEdit = async (index) => {
 };
 
 // delete address
-const deleteAddress = async (index) => {
-  if (!confirm("Are you sure you want to delete this address?")) return;
+// فتح الـ confirm dialog
+const confirmDelete = (index) => {
+  deleteTargetIndex.value = index;
+  showConfirmDialog.value = true;
+};
 
+// delete address
+const deleteAddress = async () => {
+  const index = deleteTargetIndex.value;
+  showConfirmDialog.value = false;
+  
   const user = $auth.currentUser;
   if (!user) return;
 
-  // if deleted the default address
   const wasDefault = addresses.value[index].isDefault;
 
   try {
     addresses.value.splice(index, 1);
 
-    //  If the deleted address is the default and there are other addresses, make the first one the default.
     if (wasDefault && addresses.value.length > 0) {
       addresses.value[0].isDefault = true;
     }
