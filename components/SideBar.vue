@@ -118,6 +118,7 @@ const isActive = (routeName) => {
 </template>
 
 <style scoped>
+/* smooth transition */
 div {
   transition: background-color 0.3s ease, color 0.3s ease;
 }

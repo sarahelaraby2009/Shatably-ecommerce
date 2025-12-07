@@ -1,3 +1,4 @@
+
 <template>
  <nuxt-link :to="to || '#'" class="block">
   <div class="card">
@@ -24,31 +25,53 @@ defineProps({
 <style scoped>
 .card {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-  width: 402px;
-  height: 500px;
+  width: 100%;
+  max-width: 402px;
+  aspect-ratio: 402 / 500;
   background-color: white;
   padding: 10px;
   border-radius: 12px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .image {
   width: 100%;
+  flex: 1;
   padding-bottom: 16px;
-  height: 451px;
+  overflow: hidden;
 }
+
 .image:hover {
   cursor: pointer;
 }
 
 img {
   width: 100%;
+  height: 100%;
   border-radius: 8px;
   object-fit: cover;
-  height: 100%;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .card {
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  .image {
+    padding-bottom: 8px;
+  }
+  
+  .font-bold {
+    font-size: 0.875rem;
+  }
 }
 </style>
