@@ -7,7 +7,7 @@
         </div>
       </div>
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center gap-[50px] lg:gap-[120px] px-5 py-10 pl-[60px]">
+        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center gap-[50px] lg:gap-[120px] px-5 py-10 pl-[60px] lg:pl-[160px]">
         <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[450px] w-[350px] lg:p-6 p-5 shadow-lg rounded-[20px] gap-[5px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignIn">
 

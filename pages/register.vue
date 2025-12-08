@@ -7,8 +7,8 @@
         </div>
       </div>
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[500px] p-5 shadow-lg rounded-[20px] gap-[10px]">
+        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
 
             <h3 class="font-semibold text-base">sign up as :</h3>
