@@ -48,53 +48,6 @@ onMounted(async () => {
   }
 });
 
-const availableBrands=computed(()=>{
-  const brands=products.value
-  .map(p=>p.brand)
-  .filter(Boolean)
-  .filter((v, i, arr) => arr.indexOf(v) === i);
-  return brands.sort();
-
-})
-
-const filteredProducts=computed(()=>{
-  let result=products.value
-  if(searchQuery.value.trim()!==''){
-    const query=searchQuery.value.trim().toLowerCase()
-    result=result.filter((product)=>{
-      const nameMatch=product.name?.toLowerCase().includes(query)
-      const descMatch=product.description?.toLowerCase().includes(query)
-      const brandMatch=product.brand?.toLowerCase().includes(query)
-      return nameMatch || descMatch || brandMatch
-    })
-  }
-  if(selectedBrand.value){
-    result=result.filter(p=>p.brand===selectedBrand.value)
-  }
-  if(minPrice.value){
-    const min=parseFloat(minPrice.value)
-    result=result.filter(p=>p.price>=min)
-  }
-  if(maxPrice.value){
-    const max=parseFloat(maxPrice.value)
-    result=result.filter(p=>p.price<=max)
-  }
-   return result;
-})
-const hasActiveFilters = computed(() => {
-  return selectedBrand.value || minPrice.value || maxPrice.value;
-});
-
-const clearFilters=()=>{
-  selectedBrand.value=''
-  minPrice.value=''
-  maxPrice.value=''
-}
-const toggleFilters = () => {
-  showFilters.value = !showFilters.value;
-};
-
-// Back button
 const goBack = () => {
   router.back();
 };
@@ -166,10 +119,17 @@ const goBack = () => {
     <div v-else-if="products.length === 0" class="text-center text-gray-500">
       No products in this category.
     </div>
-
+  
     <div v-else class="flex justify-center items-start mt-6">
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        <ProductCard v-for="p in filteredProducts" :key="p.id" :product="p" :categoryId="categoryId" :subId="subId" />
+      
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <ProductCard
+          v-for="p in products"
+          :key="p.id"
+          :product="p"
+          :categoryId="categoryId"
+          :subId="subId"
+        />
       </div>
     </div>
   </div>
