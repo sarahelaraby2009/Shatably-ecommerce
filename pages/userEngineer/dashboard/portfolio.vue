@@ -3,7 +3,7 @@
         <EngineerMobileView class="block lg:hidden" />
         <EngineerSideBar class="hidden lg:block w-[500px]" />
         <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
-            <div class="p-6   flex flex-col justify-between">
+            <div class="p-6 flex flex-col lg:flex-row lg:justify-between">
                 <div>
                     <h1 class="text-2xl font-bold mb-4">Portfolio</h1>
                     <p>View & Update Your Portfolio</p>
@@ -58,7 +58,7 @@
                 </div>
                 <div v-if="services.length > 0" class="w-[600px] mt-10 ">
                     <table
-                        class="table-auto p-5 w-full border-collapse rounded-[12px] overflow-hidden shadow-lg text-center">
+                        class="table-auto p-5 border-collapse rounded-[12px] w-[400px] overflow-hidden shadow-lg text-center">
                         <thead class="bg-[#C76950] text-white rounded-t-[12px] col-span-4 p-3">
                             <tr>
                                 <th>Portfolio Photo</th>
@@ -70,7 +70,7 @@
                         <tbody>
                             <tr v-for="(service, index) in services" :key="index">
                                 <td>
-                                    <img class="w-[50px]" :src="service.preview" />
+                                    <img class="w-[50px] flex flex-col justify-center items-center" :src="service.preview" />
                                 </td>
                                 <td>{{ service.timestamp }}</td>
                                 <td @click="openEditModal(index)"><font-awesome-icon icon="fa-solid fa-pen-to-square" />

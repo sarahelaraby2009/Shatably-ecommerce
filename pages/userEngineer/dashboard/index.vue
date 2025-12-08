@@ -34,6 +34,8 @@
                   class="bg-[#C76950] w-full text-white px-2 py-1 rounded-xl shadow  transition">
                   Save Profile
                 </button>
+                          <p class="text-green-600 text-sm text-center mt-2">{{ successMessage }}</p>
+
               </div>
 
             </div>
@@ -63,6 +65,7 @@ const { $db } = useNuxtApp();
 const engineerName = ref('');
 const engineerImage = ref('');
 const selected = ref('profile')
+const successMessage=ref('')
 const data = ref({
   position: '',
   specialization: '',
@@ -110,7 +113,10 @@ const saveChanges = async () => {
       specialization: data.value.specialization,
       yearsOfExperience: Number(data.value.yearsOfExperience),
       bio: data.value.bio
-    })
+      
+    }
+  ) ;   successMessage.value='Your data has been updated sucessfully'
+
   } catch (e) {
     console.error("Error updating profile:", e)
   }

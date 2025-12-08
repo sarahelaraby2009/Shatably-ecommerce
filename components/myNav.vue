@@ -318,7 +318,7 @@ const links={
     engineer:[{name:'Portfolio',path:'/userEngineer/dashboard/portfolio'},
     {name:'Services',path:'/userEngineer/dashboard/services'}],
 
-    client:[{name:'address', path:'/userprofile/addresses'},
+    client:[{name:'address', path:'/userprofile/address'},
     {name:'orders',path:'/userprofile/orders'}],
 
     supplier:[{name:'products',path:'/supplier/productsUpload'},

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex justify-start mt-5 mx-12">
+  <div class="min-h-screen flex  mt-5 mx-[100px] container">
     <div class="max-w-4xl w-full">
       <div class="flex gap-2">
         <img :src="engineerImage" class="w-20 h-20 rounded-[20px] object-cover shadow-md mb-3" />
@@ -11,7 +11,7 @@
 
       <div class="mb-10">
         <p class="text-left font-bold text-[28px]">Manage your Membership below</p>
-        <p class="text-gray-600 text-md text-center  mx-auto ">
+        <p class="text-gray-600 text-md text-left  mx-auto ">
           Subscribe to the Engineer Membership to showcase your work, unlock your public profile,
           and allow clients to contact you directly.
         </p>

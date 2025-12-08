@@ -6,10 +6,11 @@
           <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
         </div>
       </div>
-      <div class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[350px] p-5 shadow-lg rounded-[20px] gap-[5px]">
+      <div
+        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[400px] p-3 shadow-lg rounded-[20px] gap-[5px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
-           
+
             <h3 class="font-semibold text-base">sign up as :</h3>
             <div class="flex gap-2 justify-center items-center">
               <div class="options" @click="userRole = 'client'"
@@ -36,40 +37,40 @@
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="email" v-model="email" placeholder="user@example.com">
             </div>
-            
+
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Password</label>
               <input required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="password" v-model="password" placeholder="*****">
             </div>
-            
+
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">confirm Password</label>
               <input @input="matchPass" required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
                 type="password" v-model="repassword" placeholder="*****">
             </div>
-            
+
             <div>
-              <input required class="mb-3" type="checkbox"><span class="text-sm"> Agree to our <span
+              <input required  type="checkbox"><span class="text-sm"> Agree to our <span
                   class="underline cursor-pointer">Terms and conditions</span></span>
             </div>
-            
+
             <span class="text-red-400 text-sm">{{ errorMessage }}</span>
-            
+
             <div class="flex items-center gap-3 my-3">
               <div class="flex-1 h-px bg-gray-300"></div>
-              <span class="text-gray-500 font-medium text-xs">OR</span>
+              <span class="text-gray-400 font-medium text-xs">or continue with</span>
               <div class="flex-1 h-px bg-gray-300"></div>
             </div>
-            
+
             <div @click="googleSignUp"
-              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[42px] justify-center items-center text-center gap-3">
+              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[35px] justify-center items-center text-center gap-3">
               <div>
                 <img src="/google.svg" class="w-5 h-5" alt="Google" />
               </div>
-              <p class="text-sm">Sign Up With Your Google Account</p>
+              <p class="text-xs">Sign Up With Your Google Account</p>
             </div>
 
             <div>
@@ -77,14 +78,21 @@
                 class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed">
                 {{ isLoading ? 'Loading...' : 'Register' }}
               </button>
+              <div class="text-center mt-3">
+                <span class="text-sm text-gray-500">Already have an account? </span>
+                <NuxtLink to="/signin" class="text-sm text-[#C76950] font-semibold hover:underline">
+                  Sign In
+                </NuxtLink>
+              </div>
             </div>
           </form>
         </div>
-        
+
         <div class="leading-[40px]">
           <p class="font-semibold text-[30px] text-[#fefefe] leading-30 mb-5">Welcome to Shatably</p>
           <p class="text-[#fefefe] text-base">Make Your Dream Home A Reality with Shatbly</p>
         </div>
+
       </div>
     </div>
   </div>
@@ -135,7 +143,7 @@ const googleSignUp = async () => {
     const result = await signInWithPopup($auth, provider)
     const user = result.user
 
-    
+
     // Check if user already exists
     const userDoc = await getDoc(doc($db, 'users', user.uid))
 
@@ -178,10 +186,11 @@ const googleSignUp = async () => {
         specialization: '',
         yearsOfExperience: 0,
         bio: '',
-        image: user.image || ''
+        image: user.image || '',
+        certificateName:''
       })
       navigateTo('/userEngineer/complete-profile')
-      
+
     } else if (userRole.value === 'supplier') {
       await setDoc(doc($db, 'suppliers', user.uid), {
         name: user.displayName,
@@ -191,7 +200,7 @@ const googleSignUp = async () => {
         createdAt: serverTimestamp()
       })
       navigateTo('/supplier')
-      
+
     } else if (userRole.value === 'client') {
       await setDoc(doc($db, 'clients', user.uid), {
         name: user.displayName,
@@ -271,14 +280,14 @@ const handleSignUp = async () => {
         bio: '',
         image: '',
         services: [],
-        mobile:''
+        mobile: ''
       })
       console.log('Engineer account created successfully')
       navigateTo('/userEngineer/complete-profile')
-      
+
     } else if (userRole.value === 'supplier') {
       console.log("set suppliers");
-      
+
       await setDoc(doc($db, 'suppliers', user.uid), {
         name: name.value,
         email: email.value,
@@ -289,7 +298,7 @@ const handleSignUp = async () => {
       })
       console.log('Supplier account created successfully')
       navigateTo('/supplier/compelete-profile')
-      
+
     } else if (userRole.value === 'client') {
       await setDoc(doc($db, 'clients', user.uid), {
         name: name.value,
@@ -304,7 +313,7 @@ const handleSignUp = async () => {
 
   } catch (err) {
     console.error('Sign up error:', err)
-    
+
     if (err.code === 'auth/email-already-in-use') {
       errorMessage.value = "This email is already registered. Please sign in instead."
     } else if (err.code === 'auth/weak-password') {
