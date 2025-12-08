@@ -36,38 +36,60 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex items-center gap-2 text-sm m-10">
-          <NuxtLink to="/" class="text-gray-600 hover:text-[#C76950]"
-            >Home
-            <font-awesome-icon
-              :icon="['fas', 'chevron-right']"
-              class="text-[12px]"
-            />
-          </NuxtLink>
-          <NuxtLink to="/" class="text-gray-600 hover:text-[#C76950]"
-            >Categories
-            <font-awesome-icon
-              :icon="['fas', 'chevron-right']"
-              class="text-[12px]"
-            />
-          </NuxtLink>
-          <NuxtLink to="/categories" class="text-[#C76950] font-semibold"
-            >SubCategories
-          </NuxtLink>
-      
-        </div>
-  <div class="flex justify-center items-center mt-[40px] mb-[40px]">
-   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <CategoryCard
-        v-for="sub in subcategories"
-        :key="sub.id"
-        :id="sub.id"
-        :name="sub.name"
-        :image="sub.image"
-        :to="sub.to"
+  <div class="min-h-screen bg-white">
+    <div class="flex items-center gap-2 text-sm mx-6 lg:mx-10 mt-10">
+      <NuxtLink to="/" class="text-gray-600 hover:text-[#C76950]">
+        Home
+      </NuxtLink>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-right']"
+        class="text-[12px]"
       />
+      <NuxtLink to="/categories" class="text-gray-600 hover:text-[#C76950]">
+        Categories
+      </NuxtLink>
+      <font-awesome-icon
+        :icon="['fas', 'chevron-right']"
+        class="text-[12px]"
+      />
+      <NuxtLink to="#" class="text-[#C76950] font-semibold">
+        SubCategories
+      </NuxtLink>
+    </div>
+
+    <div class="flex justify-center mt-6 px-6 lg:px-10">
+      <div class="w-full max-w-[1256px] h-auto">
+        <img 
+          src="/assets/image 4.png"
+          alt="subcategories"
+          class="w-full h-full object-cover rounded-2xl" 
+        />
+      </div>
+    </div>
+
+    <div v-if="loading" class="flex justify-center items-center mt-10 mb-10">
+      <div class="text-gray-500">Loading...</div>
+    </div>
+
+    <div v-else-if="error" class="flex justify-center items-center mt-10 mb-10">
+      <div class="text-red-500">Failed to load subcategories</div>
+    </div>
+
+    <div v-else class="flex justify-center items-center mt-10 mb-10 px-4 sm:px-6">
+      <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full max-w-[1256px]">
+        <CategoryCard
+          v-for="sub in subcategories"
+          :key="sub.id"
+          :id="sub.id"
+          :name="sub.name"
+          :image="sub.image"
+          :to="sub.to"
+        />
+      </div>
+    </div>
+
+    <div v-if="!loading && !error && subcategories.length === 0" class="flex justify-center items-center mt-10 mb-10">
+      <div class="text-gray-500">No subcategories found</div>
     </div>
   </div>
 </template>
- 
-
