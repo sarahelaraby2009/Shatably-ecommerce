@@ -13,7 +13,7 @@ import {
   limit,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-
+// -------------------------------------------------------
 const route = useRoute();
 const router = useRouter();
 const nuxtApp = useNuxtApp();
@@ -22,7 +22,6 @@ const auth = nuxtApp.$auth;
 const categoryId = route.params.id;
 const subId = route.params.subId;
 const productId = route.params.productId;
-
 const product = ref(null);
 const loading = ref(true);
 const error = ref(null);
@@ -30,13 +29,12 @@ const recommendedProducts = ref([]);
 const quantity = ref(1);
 const currentUser = ref(null);
 const isInWishlist = ref(false);
-
+// ----------------------------------------------------
 const fetchProduct = async () => {
   loading.value = true;
   error.value = null;
   
   try {
-    // ------- 1) Try Nested Path -------
     let docRef = doc(db, "categories", categoryId, "subcategories", subId, "products", productId);
     let docSnap = await getDoc(docRef);
 
@@ -57,7 +55,7 @@ const fetchProduct = async () => {
     loading.value = false;
   }
 };
-
+// ----------------------------------------------------
 const fetchRecommendedProducts = async () => {
   try {
     const productsCol = collection(
@@ -78,7 +76,7 @@ const fetchRecommendedProducts = async () => {
     console.error("Error loading recommended products:", err);
   }
 };
-
+// ------------------------------------------------------
 const addToCart = async () => {
   if (!currentUser.value) {
     router.push("/auth/login");
