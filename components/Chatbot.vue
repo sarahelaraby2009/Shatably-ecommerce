@@ -9,7 +9,8 @@ const input = ref("");
 const isTyping = ref(false);
 const messagesEndRef = ref(null);
 
-
+const apiKey =
+  "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";
 
 const toggleChat = () => {
   isOpen.value = !isOpen.value;
@@ -61,15 +62,22 @@ const handleSend = async () => {
       content: msg.text,
     }));
 
-    const response = await fetch("/api/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    messages: apiMessages,
-  }),
-});
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "HTTP-Referer": window.location.href,
+          "X-Title": "Finishing Assistant",
+        },
+        body: JSON.stringify({
+          model: "x-ai/grok-4.1-fast:free",
+          messages: apiMessages,
+        }),
+      }
+    );
 
     if (!response.ok) {
       messages.value.push({
@@ -77,13 +85,10 @@ const handleSend = async () => {
         text: language.value === "ar" ? "حدث خطأ في الخادم." : "Server error.",
       });
     } else {
-            const data = await response.json();
-      const botFull = data?.choices?.[0]?.message?.content?.trim() || "";
-      const botClean = botFull
-        .replace(/<think>.*?<\/think>/gis, "")
-        .replace(/<#thinking>.*?<\/#thinking>/gis, "")
-        .trim();
+      const data = await response.json();
 
+      const botFull = data?.choices?.[0]?.message?.content || "";
+      const botClean = botFull.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
       messages.value.push({
         from: "bot",
