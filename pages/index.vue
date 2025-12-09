@@ -154,8 +154,11 @@
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
     </div>
-
+<div class="fixed bottom-4 right-4 z-50">
+  <Chatbot />
+</div>
   </div>
+  
 </template>
 
 <script setup>
@@ -168,7 +171,7 @@ import { collection, getDocs, where, limit, query, orderBy } from 'firebase/fire
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-
+import Chatbot from '@/components/Chatbot.vue';   
 const products = ref([])
 const cats = ref([])
 const { $db } = useNuxtApp()
