@@ -122,7 +122,7 @@ const goBack = () => {
   
     <div v-else class="flex justify-center items-start mt-6">
       
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
         <ProductCard
           v-for="p in products"
           :key="p.id"

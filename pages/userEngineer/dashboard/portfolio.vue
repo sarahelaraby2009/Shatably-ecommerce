@@ -52,30 +52,68 @@
                             <button @click="saveData"
                                 class="bg-[#C76950] w-full text-white px-2 py-1 rounded-xl shadow  transition">
                                 Save </button>
+                                <span class="text-red-400 text-center">{{ errorMessage }}</span>
                         </div>
 
                     </div>
                 </div>
-                <div v-if="services.length > 0" class="w-[600px] mt-10 ">
+                  <div v-if="showSecModal"
+                    class="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+                    <div class="bg-white rounded-[24px] w-full max-w-[400px] p-6 shadow-xl">
+                        <div class="flex flex-col items-center gap-4">
+                            <!-- Warning Icon -->
+                            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                                <font-awesome-icon icon="fa-solid fa-exclamation-triangle"
+                                    class="text-red-500 text-3xl" />
+                            </div>
+
+                            <!-- Message -->
+                            <h3 class="text-xl font-bold text-gray-800">Delete Service?</h3>
+                            <p class="text-gray-600 text-center">
+                                Are you sure you want to delete this service? This action cannot be undone.
+                            </p>
+
+                            <!-- Buttons -->
+                            <div class="flex gap-3 w-full mt-2">
+                                <button @click="showSecModal = false"
+                                    class="flex-1 border-2 border-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-100 transition">
+                                    Cancel
+                                </button>
+                                <button @click="confirmDelete"
+                                    class="flex-1 bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="services.length > 0" class="w-full max-w-[900px] mt-10 overflow-x-auto px-4">
                     <table
-                        class="table-auto p-5 border-collapse rounded-[12px] w-[400px] overflow-hidden shadow-lg text-center">
-                        <thead class="bg-[#C76950] text-white rounded-t-[12px] col-span-4 p-3">
-                            <tr>
-                                <th>Portfolio Photo</th>
-                                <th>Upload Date</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                        class="table-auto w-full border-collapse rounded-[12px] overflow-hidden shadow-lg ">
+                        <thead >
+                            <tr class="bg-[#C76950] text-white">
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Portfolio Photo</th>
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Upload Date</th>
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Actions</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(service, index) in services" :key="index">
-                                <td>
+                            <tr v-for="(service, index) in services" :key="index" 
+                            class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                                <td class="p-4">
                                     <img class="w-[50px] flex flex-col justify-center items-center" :src="service.preview" />
                                 </td>
-                                <td>{{ service.timestamp }}</td>
-                                <td @click="openEditModal(index)"><font-awesome-icon icon="fa-solid fa-pen-to-square" />
-                                </td>
-                                <td @click="deleteService(index)"><font-awesome-icon icon="fa-regular fa-trash-can" />
+                                <td class="p-4">{{ service.timestamp }}</td>
+                                <td class="p-4">
+                                    <button @click="openEditModal(index)"
+                                        class="text-blue-600 hover:text-blue-800 transition text-lg">
+                                        <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+                                    </button>
+                                     <button @click="openDeleteModal(index)"
+                                        class="text-red-600 hover:text-red-800 transition text-lg">
+                                        <font-awesome-icon icon="fa-regular fa-trash-can" />
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -95,10 +133,16 @@ import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 const { $db } = useNuxtApp();
+
+const showSecModal = ref(false);
 const auth = getAuth();
 const router = useRouter();
 const engineerName = ref('');
 const engineerImage = ref('');
+const deleteIndex = ref(null); // Store index to delete
+const editIndex = ref(null);
+const errorMessage=ref('')
+
 
 onMounted(async () => {
     const user = auth.currentUser;
@@ -134,13 +178,32 @@ const newService = ref({
     preview: '',
     timestamp: timestamp
 })
-const editIndex = ref(null)
+
 const openEditModal = (index) => {
     editIndex.value = index
     newService.value = { ...services.value[index] }
     showModal.value = true
 
 }
+const openDeleteModal = (index) => {
+    deleteIndex.value = index;
+    showSecModal.value = true;
+};
+
+const confirmDelete = () => {
+    if (deleteIndex.value !== null) {
+        services.value.splice(deleteIndex.value, 1);
+        deleteIndex.value = null;
+    }
+    
+    showSecModal.value = false;
+    
+    // Show empty state if no services left
+    if (services.value.length === 0) {
+        show.value = true;
+        showButton.value = false;
+    }
+};
 
 const handleUpload = (event) => {
     const file = event.target.files[0];
@@ -150,6 +213,11 @@ const handleUpload = (event) => {
 }
 
 const saveData = () => {
+    const user = auth.currentUser;
+      if (!user) {
+        errorMessage.value='Please sign in';
+        return
+    }
     if (editIndex.value === null) {
         services.value.push({ ...newService.value });
 
@@ -164,12 +232,7 @@ const saveData = () => {
     showButton.value = true
 
 };
-const deleteService = (index) => {
-    services.value.splice(index, 1)
-    if (services.value.length === 0) {
-        editIndex.value = null
-    }
-}
+
 
 
 

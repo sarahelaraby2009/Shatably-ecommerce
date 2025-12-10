@@ -81,7 +81,7 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Specialization</label>
           <input v-model="specialization" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
+            class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="text" placeholder="e.g. Finishing - Interior Design" />
         </div>
 
@@ -89,7 +89,7 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Mobile Number</label>
           <input v-model="mobile" required 
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
+            class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="tel" placeholder="e.g. 01*********" />
         </div>
 
@@ -97,7 +97,7 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Years Of Experience</label>
           <input v-model="experience" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
+            class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="number" placeholder="e.g. 5" />
         </div>
 
@@ -105,7 +105,7 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Bio</label>
           <textarea v-model="bio" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none resize-none" 
+            class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none resize-none" 
             rows="4" placeholder="Write a short description about your work and experience"></textarea>
         </div>
 

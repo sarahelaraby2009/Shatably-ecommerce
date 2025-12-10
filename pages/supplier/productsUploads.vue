@@ -94,7 +94,7 @@ const onSaveProduct = async (payload) => {
     editingProduct.value = null;
   } catch (err) {
     console.error("Error saving product:", err);
-    await loadProducts(); 
+    await loadProducts();
   }
 };
 // -------------------------------------------------------------------
@@ -129,13 +129,7 @@ onMounted(() => {
   <div class="min-h-screen bg-gray-50">
     <!-- Desktop -->
     <div class="hidden lg:flex">
-      <SideBar
-        :feild1="data.feild1"
-        :feild2="data.feild2"
-        :feild3="data.feild3"
-        :userName="userName"
-        :email="email"
-      />
+      <SideBar :feild1="data.feild1" :feild2="data.feild2" :feild3="data.feild3" :userName="userName" :email="email" />
 
       <div class="flex-1 p-8">
         <div class="max-w-6xl mx-auto">
@@ -147,25 +141,17 @@ onMounted(() => {
                   View & Update Your project
                 </p>
               </div>
-              <button
-                @click="handleAddProduct"
-                class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-6 rounded-full transition-colors"
-              >
+              <button @click="handleAddProduct"
+                class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-6 rounded-full transition-colors">
                 Add New Product
               </button>
             </div>
           </div>
 
           <div class="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div
-              v-if="products.length === 0"
-              class="text-center py-12 text-gray-400"
-            >
+            <div v-if="products.length === 0" class="text-center py-12 text-gray-400">
               <div class="text-6xl mb-4">
-                <font-awesome-icon
-                  :icon="['far', 'folder-open']"
-                  class="text-[40px] text-gray-400"
-                />
+                <font-awesome-icon :icon="['far', 'folder-open']" class="text-[40px] text-gray-400" />
               </div>
               <p class="text-lg font-medium text-gray-500">
                 No products available at the moment
@@ -186,11 +172,8 @@ onMounted(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr
-                    v-for="product in products"
-                    :key="product.id"
-                    class="border-b border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
+                  <tr v-for="product in products" :key="product.id"
+                    class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
                     <td class="py-4 px-4">
                       <p class="text-gray-800 font-medium">{{ product.name }}</p>
                     </td>
@@ -200,20 +183,11 @@ onMounted(() => {
                       </p>
                     </td>
                     <td class="py-4 px-4">
-                      <div
-                        v-if="product.image"
-                        class="w-10 h-10 rounded bg-gray-200 overflow-hidden"
-                      >
-                        <img
-                          :src="product.image"
-                          alt="Product"
-                          class="w-full h-full object-cover"
-                        />
+                      <div v-if="product.image" class="w-10 h-10 rounded bg-gray-200 overflow-hidden">
+                        <img :src="product.image" alt="Product" class="w-full h-full object-cover" />
                       </div>
-                      <div
-                        v-else
-                        class="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-400 text-xs"
-                      >
+                      <div v-else
+                        class="w-10 h-10 rounded bg-gray-200 flex items-center justify-center text-gray-400 text-xs">
                         📷
                       </div>
                     </td>
@@ -228,16 +202,12 @@ onMounted(() => {
                     </td>
                     <td class="py-4 px-4">
                       <div class="flex items-center justify-center gap-3">
-                        <button
-                          @click="editProduct(product)"
-                          class="text-gray-400 hover:text-[#C76950] transition-colors"
-                        >
+                        <button @click="editProduct(product)"
+                          class="text-gray-400 hover:text-[#C76950] transition-colors">
                           <font-awesome-icon :icon="['far', 'edit']" class="text-[20px] text-black" />
                         </button>
-                        <button
-                          @click="deleteProduct(product.id)"
-                          class="text-gray-400 hover:text-red-500 transition-colors"
-                        >
+                        <button @click="deleteProduct(product.id)"
+                          class="text-gray-400 hover:text-red-500 transition-colors">
                           <font-awesome-icon :icon="['far', 'trash-can']" class="text-[20px] text-black" />
                         </button>
                       </div>
@@ -256,7 +226,8 @@ onMounted(() => {
       <div class="border-b bg-white sticky top-0 z-10">
         <div class="flex justify-around">
           <NuxtLink to="/supplier" class="flex-1">
-            <div class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
+            <div
+              class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
               {{ data.feild1 }}
             </div>
           </NuxtLink>
@@ -266,7 +237,8 @@ onMounted(() => {
             </div>
           </NuxtLink>
           <NuxtLink to="/supplier/ordersTrack" class="flex-1">
-            <div class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
+            <div
+              class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
               {{ data.feild3 }}
             </div>
           </NuxtLink>
@@ -279,51 +251,28 @@ onMounted(() => {
             <h1 class="text-xl font-bold text-gray-800">Product</h1>
             <p class="text-gray-500 text-xs mt-1">View & Update Your project</p>
           </div>
-          <button
-            @click="handleAddProduct"
-            class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-4  rounded-[24px] w-[48px] h-[35px] transition-colors text-sm"
-          >
-             <font-awesome-icon
-            :icon="['fas', 'plus']"
-            class="text-white  mb-4 "
-          />
+          <button @click="handleAddProduct"
+            class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-4  rounded-[24px] w-[48px] h-[35px] transition-colors text-sm">
+            <font-awesome-icon :icon="['fas', 'plus']" class="text-white  mb-4 " />
           </button>
         </div>
 
-        <div
-          v-if="products.length === 0"
-          class="text-center py-12 text-gray-400 bg-white rounded-lg border"
-        >
-          <font-awesome-icon
-            :icon="['far', 'folder-open']"
-            class="text-5xl text-gray-300 mb-4"
-          />
+        <div v-if="products.length === 0" class="text-center py-12 text-gray-400 bg-white rounded-lg border">
+          <font-awesome-icon :icon="['far', 'folder-open']" class="text-5xl text-gray-300 mb-4" />
           <p class="text-base font-medium text-gray-500">
             No products available
           </p>
         </div>
 
         <div v-else class="space-y-4">
-          <div
-            v-for="product in products"
-            :key="product.id"
-            class="bg-white border border-gray-200 rounded-lg overflow-hidden"
-          >
+          <div v-for="product in products" :key="product.id"
+            class="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <div class="bg-gray-100 p-4 flex justify-center">
-              <div
-                v-if="product.image"
-                class="w-full h-48 rounded-lg bg-white overflow-hidden"
-              >
-                <img
-                  :src="product.image"
-                  alt="Product"
-                  class="w-full h-full object-cover"
-                />
+              <div v-if="product.image" class="w-full h-48 rounded-lg bg-white overflow-hidden">
+                <img :src="product.image" alt="Product" class="w-full h-full object-cover" />
               </div>
-              <div
-                v-else
-                class="w-full h-48 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 text-4xl"
-              >
+              <div v-else
+                class="w-full h-48 rounded-lg bg-gray-200 flex items-center justify-center text-gray-400 text-4xl">
                 📷
               </div>
             </div>
@@ -355,16 +304,12 @@ onMounted(() => {
               </div>
 
               <div class="flex gap-3 py-3 px-4 bg-gray-50">
-                <button
-                  @click="editProduct(product)"
-                  class="flex-1 py-2.5 bg-[#C76950] rounded-lg text-sm font-medium text-white hover:bg-[#b85840] transition-colors"
-                >
+                <button @click="editProduct(product)"
+                  class="flex-1 py-2.5 bg-[#C76950] rounded-lg text-sm font-medium text-white hover:bg-[#b85840] transition-colors">
                   Edit
                 </button>
-                <button
-                  @click="deleteProduct(product.id)"
-                  class="flex-1 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-                >
+                <button @click="deleteProduct(product.id)"
+                  class="flex-1 py-2.5 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                   Delete
                 </button>
               </div>
@@ -374,12 +319,7 @@ onMounted(() => {
       </div>
     </div>
 
-    <AddProductModal
-      :show="showAddModal"
-      :initial="editingProduct"
-      @close="onCloseModal"
-      @save="onSaveProduct"
-    />
+    <AddProductModal :show="showAddModal" :initial="editingProduct" @close="onCloseModal" @save="onSaveProduct" />
   </div>
 </template>
 
