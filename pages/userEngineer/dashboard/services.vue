@@ -32,10 +32,10 @@
                     </button>
                 </div>
 
-                <!-- Add/Edit Service Modal -->
+                <!-- Add/Edit Service Modal --> 
                 <div v-if="showModal"
-                    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-                    <div class="bg-white rounded-[24px] w-full max-w-[500px] max-h-[90vh]  p-5 relative">
+                    class="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 p-3">
+                    <div class="bg-white rounded-[24px] w-auto lg:w-[500px] max-w-[500px] h-auto   p-3 relative">
                         <button @click="closeModal"
                             class="absolute -top-4 -right-4 w-8 h-8 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center shadow">
                             ✕
@@ -87,7 +87,7 @@
                                 class="bg-[#C76950] w-full text-white px-4 py-3 rounded-xl shadow hover:bg-[#a85740] transition">
                                 {{ editIndex !== null ? 'Update Service' : 'Save Service' }}
                             </button>
-                            <span class="text-red-400">{{ errorMessage }}</span>
+                            <span class="text-red-400 text-center">{{ errorMessage }}</span>
                         </div>
                     </div>
                 </div>
@@ -127,37 +127,38 @@
                 <!-- Services Table -->
                 <div v-if="services.length > 0" class="w-full max-w-[900px] mt-10 overflow-x-auto px-4">
                     <table
-                        class="table-auto w-full border-collapse rounded-[12px] overflow-hidden shadow-lg text-center">
-                        <thead class="bg-[#C76950] text-white">
-                            <tr>
-                                <th class="p-3">Photo</th>
-                                <th class="p-3">Title</th>
-                                <th class="p-3">Description</th>
-                                <th class="p-3">Edit</th>
-                                <th class="p-3">Delete</th>
+                        class="table-auto w-full border-collapse rounded-[12px] overflow-hidden shadow-lg ">
+                        <thead >
+                            <tr class="bg-[#C76950] text-white">
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Photo</th>
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Title</th>
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Description</th>
+                                <th class="text-left py-3 px-4 font-semibold text-sm">Actions</th>
+                               
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(service, index) in services" :key="index"
-                                class="border-b hover:bg-gray-50 transition">
-                                <td class="p-3">
+                                class="border-b border-gray-200 hover:bg-gray-50 transition-colors">
+                                <td class="p-4">
                                     <img :src="service.preview"
                                         class="w-[50px] h-[50px] object-cover rounded-lg mx-auto" />
                                 </td>
-                                <td class="p-3 font-semibold">{{ service.title }}</td>
-                                <td class="p-3 max-w-[300px] truncate">{{ service.description }}</td>
-                                <td class="p-3">
+                                <td class="p-4 font-semibold">{{ service.title }}</td>
+                                <td class="p-4 max-w-[300px] truncate">{{ service.description }}</td>
+                                <td class="p-4">
                                     <button @click="openEditModal(index)"
                                         class="text-blue-600 hover:text-blue-800 transition text-lg">
                                         <font-awesome-icon icon="fa-solid fa-pen-to-square" />
                                     </button>
-                                </td>
-                                <td class="p-3">
-                                    <button @click="openDeleteModal(index)"
+                                     <button @click="openDeleteModal(index)"
                                         class="text-red-600 hover:text-red-800 transition text-lg">
                                         <font-awesome-icon icon="fa-regular fa-trash-can" />
                                     </button>
                                 </td>
+                                <!-- <td class="p-3">
+                                   
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -170,6 +171,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const showModal = ref(false);
 const showSecModal = ref(false);
@@ -181,6 +183,8 @@ const engineerImage = ref('');
 const editIndex = ref(null);
 const deleteIndex = ref(null); // Store index to delete
 const errorMessage=ref('')
+const auth=getAuth()
+
 
 const { $db } = useNuxtApp();
 const router = useRouter();
@@ -270,6 +274,11 @@ const removePhoto = () => {
 };
 
 const saveData = () => {
+    const user=auth.currentUser
+    if(!user){
+        errorMessage.value='Please sign in'
+        return;
+    }
     // Validation
     if (!newService.value.title || !newService.value.description) {
         errorMessage.value='please fill the fields'
