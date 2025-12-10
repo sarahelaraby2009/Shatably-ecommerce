@@ -407,7 +407,7 @@ const deleteAddress = async () => {
       addresses: addresses.value
     });
 
-    successMessage.value = "Address deleted successfully ✔";
+    successMessage.value = "Address deleted successfully ";
     setTimeout(() => successMessage.value = "", 3000);
   } catch (error) {
     console.error("Error deleting address:", error);

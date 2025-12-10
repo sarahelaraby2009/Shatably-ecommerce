@@ -24,10 +24,12 @@ const currentUser = ref(null);
 
 // -------------------------
 const goToDetails = () => {
-  router.push(`/categories/${props.categoryId}/${props.subId}/${props.product.id}`);
-  console.log("category:", props.categoryId, "sub:", props.subId);
-};
+  console.log("GO DETAILS =>", props.categoryId, props.subId, props.product.id);
+  const realCategory = props.product.categoryId || props.categoryId;
+  const realSub = props.product.subId || props.subId;
 
+  router.push(`/categories/${realCategory}/${realSub}/${props.product.id}`);
+}
 
 // -------------------------
 onMounted(() => {
@@ -96,14 +98,14 @@ async function addToCart(event) {
 
 
 <template>
-  <div class="card cursor-pointer h-[350px] flex flex-col" @click="goToDetails">
+  <div class="card cursor-pointer  flex flex-col" @click="goToDetails">
     <!-- Image + Wishlist Heart -->
     <div class="image relative flex-shrink-0">
       <div @click.stop="addToWishlist"
         class="heart absolute top-3 right-3 bg-[#D9D9D9] w-8 h-8 rounded-full flex justify-center items-center z-10">
         <font-awesome-icon :icon="[isInWishlist ? 'fas' : 'far', 'heart']" class="text-[#C76950] text-md" />
       </div>
-      <img :src="product.image" :alt="product.name" class="w-full h-60 object-cover rounded-lg" />
+      <img :src="product.image" :alt="product.name" class="w-full h-60 object-contain rounded-lg" />
     </div>
 
     <!-- Product Info -->
@@ -135,8 +137,9 @@ async function addToCart(event) {
 <style scoped>
 .card {
   background: white;
+  width:280px;
   border-radius: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 4px rgba(0.1, 0.1, 0.1, 0.1);
   padding: 10px;
   transition: 0.2s;
 }

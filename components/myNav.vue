@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full bg-[#F7F7F7] shadow-md relative">
+    <div class="w-full bg-[#F7F7F7] shadow-md relative p-3">
         <div class="flex justify-between items-center p-2 h-[100px]">
             <!-- Burger Icon (Mobile) -->
             <button @click="mobileMenueOpen = !mobileMenueOpen" class="lg:hidden text-gray-700 text-2xl z-50">
@@ -27,7 +27,7 @@
             <!-- الجزء المركزي: اللينكات والسيرش بار (Desktop) -->
             <div class="hidden lg:flex flex-col gap-[10px] justify-center items-center">
                 <!-- Navigation Links -->
-                <div class="flex justify-center items-center">
+                <div class="flex justify-center items-center p-3 mr-14">
                     <ul class="flex gap-10 items-center justify-center">
                         <li>
                             <NuxtLink to="/" exact-active-class="text-[20px] font-medium text-[#C76950]"
@@ -53,12 +53,13 @@
                                 WishList
                             </NuxtLink>
                         </li>
-                        <li class="relative" @mouseenter="open = true" @mouseleave="open = false">
+                        <li class="relative" @mouseenter="open = true"
+    @mouseleave="closeCategories" >
                             <NuxtLink to="/categories" class="flex items-center hover:text-[#C76950]">
                                 Categories <font-awesome-icon icon="fa-solid fa-caret-down" />
                             </NuxtLink>
                             <!-- Dropdown -->
-                            <ul v-if="open"
+                            <ul v-if="open" @mouseenter="clearTimeout(closeTimeout)" @mouseleave="closeCategories"
                                 class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
                                 <li v-for="cat in categories" :key="cat.id">
                                     <NuxtLink class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500"
@@ -309,7 +310,13 @@ const searchQuery = ref("")
 const defaultAvatar = "/default.png"
 const router = useRouter()
 
+let closeTimeout = null
 
+const closeCategories = () => {
+    closeTimeout = setTimeout(() => {
+        open.value = false
+    }, 200)  // نص ثانية كافية
+}
 
 const menuLinks=computed(()=>{
     if(!userData.value) return[]
@@ -318,7 +325,7 @@ const links={
     engineer:[{name:'Portfolio',path:'/userEngineer/dashboard/portfolio'},
     {name:'Services',path:'/userEngineer/dashboard/services'}],
 
-    client:[{name:'address', path:'/userprofile/addresses'},
+    client:[{name:'address', path:'/userprofile/address'},
     {name:'orders',path:'/userprofile/orders'}],
 
     supplier:[{name:'products',path:'/supplier/productsUpload'},
@@ -377,7 +384,7 @@ const goToProfile = () => {
         router.push('/userprofile')
     }
     else {
-        router.push('/')
+        router.push('/supplier')
     }
     mobileMenueOpen.value = false
 }

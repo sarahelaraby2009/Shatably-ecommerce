@@ -11,6 +11,7 @@ import {
   serverTimestamp,
   query,
   limit,
+  where
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 // -------------------------------------------------------
@@ -30,44 +31,54 @@ const quantity = ref(1);
 const currentUser = ref(null);
 const isInWishlist = ref(false);
 // ----------------------------------------------------
+console.log("Params:", route.params)
+console.log("categoryId:", route.params.id)
+console.log("subId:", subId)
+console.log("productId:", productId)
 const fetchProduct = async () => {
   loading.value = true;
   error.value = null;
-  
-  try {
-    let docRef = doc(db, "categories", categoryId, "subcategories", subId, "products", productId);
-    let docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      product.value = { id: docSnap.id, ...docSnap.data() };
-    } else {
-      product.value = null;
-      error.value = "Product not found or has been deleted.";
-    }
-  } 
-  
-  catch (err) {
-    console.error("Error fetching product:", err);
-    error.value = err?.message || "Error loading product";
-  } 
-  
-  finally {
-    loading.value = false;
-  }
-};
-// ----------------------------------------------------
-const fetchRecommendedProducts = async () => {
   try {
-    const productsCol = collection(
+    // 1st: Try nested
+    let docRef = doc(
       db,
       "categories",
       categoryId,
       "subcategories",
       subId,
-      "products"
+      "products",
+      productId
     );
-    const q = query(productsCol, limit(6));
-    const snap = await getDocs(q);
+    let docSnap = await getDoc(docRef);
+
+    // 2nd: If nested not found → try root
+    if (!docSnap.exists()) {
+      docRef = doc(db, "products", productId);
+      docSnap = await getDoc(docRef);
+    }
+
+    // 3rd: Check again
+    if (docSnap.exists()) {
+      product.value = { id: docSnap.id, ...docSnap.data() };
+    } else {
+      product.value = null;
+      error.value = "Product not found.";
+    }
+  } catch (err) {
+    console.error("Error fetching product:", err);
+    error.value = "Error loading product.";
+  } finally {
+    loading.value = false;
+  }
+};
+
+// ----------------------------------------------------
+const fetchRecommendedProducts = async () => {
+  try {
+    let snap = await getDocs(
+      query(collection(db, "products"), limit(6))
+    );
     recommendedProducts.value = snap.docs
       .filter((d) => d.id !== productId)
       .slice(0, 4)
@@ -76,6 +87,7 @@ const fetchRecommendedProducts = async () => {
     console.error("Error loading recommended products:", err);
   }
 };
+
 // ------------------------------------------------------
 const addToCart = async () => {
   if (!currentUser.value) {

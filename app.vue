@@ -13,12 +13,16 @@
 </template>
 <style>
 @import "swiper/swiper-bundle.css";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
 body {
   overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 
 html {
   overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
