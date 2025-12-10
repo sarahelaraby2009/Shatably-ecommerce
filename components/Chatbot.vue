@@ -2,17 +2,24 @@
 import { ref, watch } from "vue";
 import { Icon } from "@iconify/vue";
 
+
 const isOpen = ref(false);
 const language = ref(null);
 const messages = ref([]);
 const input = ref("");
 const isTyping = ref(false);
 const messagesEndRef = ref(null);
+const showGreeting = ref(true);
 
+const apiKey = "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";
 
+const closeGreeting = () => {
+  showGreeting.value = false;
+};
 
 const toggleChat = () => {
   isOpen.value = !isOpen.value;
+  showGreeting.value = false;
 
   if (isOpen.value && !language.value) {
     messages.value = [
@@ -61,15 +68,22 @@ const handleSend = async () => {
       content: msg.text,
     }));
 
-    const response = await fetch("/api/chat", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    messages: apiMessages,
-  }),
-});
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          "HTTP-Referer": window.location.href,
+          "X-Title": "Finishing Assistant",
+        },
+        body: JSON.stringify({
+          model: "x-ai/grok-4.1-fast:free",
+          messages: apiMessages,
+        }),
+      }
+    );
 
     if (!response.ok) {
       messages.value.push({
@@ -77,13 +91,9 @@ const handleSend = async () => {
         text: language.value === "ar" ? "حدث خطأ في الخادم." : "Server error.",
       });
     } else {
-            const data = await response.json();
-      const botFull = data?.choices?.[0]?.message?.content?.trim() || "";
-      const botClean = botFull
-        .replace(/<think>.*?<\/think>/gis, "")
-        .replace(/<#thinking>.*?<\/#thinking>/gis, "")
-        .trim();
-
+      const data = await response.json();
+      const botFull = data?.choices?.[0]?.message?.content || "";
+      const botClean = botFull.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
 
       messages.value.push({
         from: "bot",
@@ -107,33 +117,53 @@ const handleSend = async () => {
 </script>
 
 <template>
+
+<div
+  v-if="!isOpen && showGreeting"
+  class="greeting-box"
+>
+  <button @click="closeGreeting" class="greeting-close">×</button>
+
+  <h3 class="font-semibold text-gray-800 text-base mb-1">AI-Powered Advisor</h3>
+  <p class="text-gray-600 text-sm leading-snug">
+    Hello! I am your advisor, happy to assist you.
+    <strong>Ask me now!</strong>
+  </p>
+
+ 
+  <div class="greeting-arrow"></div>
+</div>
+
+
+ 
   <button
     @click="toggleChat"
-    class="fixed bottom-4 right-4 bg-white p-4 rounded-full shadow-xl z-50"
+    class="chat-button"
   >
-    <img src="/robohead.png" class="w-12 h-12" />
+    <img
+      src="/public/chatbot 1.png"
+      class="chat-image"
+      :class="{ 'is-floating': !isOpen }"
+      alt="Chat"
+    />
   </button>
 
-  <!-- Chat Window -->
+ 
   <div
     v-if="isOpen"
     class="fixed bottom-20 right-4 w-80 bg-white rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col"
   >
-    <!-- Header -->
+  
     <div class="bg-[#C76950] text-white text-center py-3 text-lg font-semibold">
       Your advisor
     </div>
 
-    <!-- Messages -->
+   
     <div class="p-4 h-64 overflow-y-auto space-y-3 text-sm text-gray-700">
       <p
         v-for="(msg, idx) in messages"
         :key="idx"
-        :class="
-          msg.from === 'bot'
-            ? 'text-left'
-            : 'text-right text-[#C76950] font-semibold'
-        "
+        :class="msg.from === 'bot' ? 'text-left' : 'text-right text-[#C76950] font-semibold'"
       >
         {{ msg.text }}
       </p>
@@ -142,7 +172,6 @@ const handleSend = async () => {
       <div ref="messagesEndRef"></div>
     </div>
 
-    <!-- Language Selection -->
     <div v-if="!language" class="p-3 flex gap-2 bg-gray-50">
       <button
         @click="handleLanguageSelect('en')"
@@ -158,29 +187,22 @@ const handleSend = async () => {
       </button>
     </div>
 
-    <!-- Input Bar -->
+  
     <div v-else class="p-3 bg-gray-50 flex items-center gap-2 rounded-b-2xl">
       <input
         type="text"
         v-model="input"
         @keydown.enter="handleSend"
         class="flex-grow bg-white px-3 py-2 rounded-xl border"
-        :placeholder="
-          language === 'ar' ? 'اكتب رسالتك...' : 'Type your message...'
-        "
+        :placeholder="language === 'ar' ? 'اكتب رسالتك...' : 'Type your message...'"
       />
 
-      <!-- Trash -->
+   
       <button @click="clearChat" class="p-2">
-        <Icon
-          icon="mdi:trash-can"
-          width="22"
-          height="22"
-          class="text-[#C76950]"
-        />
+        <Icon icon="mdi:trash-can" width="22" height="22" class="text-[#C76950]" />
       </button>
 
-      <!-- Send -->
+     
       <button @click="handleSend" :disabled="isTyping" class="p-2">
         <Icon icon="mdi:send" width="24" height="24" class="text-[#C76950]" />
       </button>
@@ -189,6 +211,66 @@ const handleSend = async () => {
 </template>
 
 <style scoped>
+
+.chat-button {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 50;
+  background: white;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.chat-image {
+  width: 5rem;
+  height: 5rem;
+  pointer-events: none;
+  will-change: transform;
+  backface-visibility: hidden;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+
+.chat-image.is-floating {
+  animation: float-image 2.5s ease-in-out infinite;
+}
+
+
+@keyframes float-image {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+
+.chat-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -196,4 +278,58 @@ const handleSend = async () => {
   background: #c76950;
   border-radius: 4px;
 }
+
+.greeting-box {
+  position: fixed;
+
+ 
+  bottom: 116px;   
+
+  right: 1rem;     
+  
+  width: 250px;
+  background: white;
+  padding: 14px 16px;
+  border-radius: 14px;
+
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  z-index: 60;
+
+  animation: fadeIn 0.25s ease-out;
+}
+
+
+.greeting-close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+}
+
+
+.greeting-arrow {
+  position: absolute;
+  bottom: -10px;
+  right: 28px;   
+
+  width: 0;
+  height: 0;
+
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid white;
+
+  filter: drop-shadow(0 -2px 2px rgba(0,0,0,0.1));
+}
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 </style>

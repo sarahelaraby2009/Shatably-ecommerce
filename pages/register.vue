@@ -7,8 +7,8 @@
         </div>
       </div>
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] w-[400px] p-3 shadow-lg rounded-[20px] gap-[5px]">
+        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]">
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
 
             <h3 class="font-semibold text-base">sign up as :</h3>
@@ -283,7 +283,7 @@ const handleSignUp = async () => {
         mobile: ''
       })
       console.log('Engineer account created successfully')
-      navigateTo('/userEngineer/complete-profile')
+      // navigateTo('/userEngineer/complete-profile')
 
     } else if (userRole.value === 'supplier') {
       console.log("set suppliers");
@@ -297,7 +297,7 @@ const handleSignUp = async () => {
         profileComplete: false,
       })
       console.log('Supplier account created successfully')
-      navigateTo('/supplier/compelete-profile')
+      // navigateTo('/supplier/compelete-profile')
 
     } else if (userRole.value === 'client') {
       await setDoc(doc($db, 'clients', user.uid), {
@@ -308,8 +308,9 @@ const handleSignUp = async () => {
         createdAt: serverTimestamp()
       })
       console.log('Client account created successfully')
-      navigateTo('/')
+      // navigateTo('/')
     }
+    navigateTo('/signin')
 
   } catch (err) {
     console.error('Sign up error:', err)
@@ -336,7 +337,7 @@ const handleSignUp = async () => {
   cursor: pointer;
   text-align: center;
   height: 34px;
-  padding: 12px 10px;
+  padding: 12px 15px;
   display: flex;
   justify-content: center;
   align-items: center;

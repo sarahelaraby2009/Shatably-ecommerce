@@ -1,133 +1,219 @@
 <template>
-  <div class="container mx-auto px-4 py-10 relative ">
+  <div>
+    <!-- Notification -->
+    <div
+      v-if="notification.show"
+      class="fixed top-4 left-1/2 -translate-x-1/2 z-[9999] max-w-sm p-4 rounded-lg shadow-lg flex items-center gap-3"
+      :class="{
+        'bg-green-50 text-green-800 border border-green-200': notification.type === 'success',
+        'bg-red-50 text-red-800 border border-red-200': notification.type === 'error',
+        'bg-yellow-50 text-yellow-800 border border-yellow-200': notification.type === 'warning'
+      }"
+    >
+      <span v-if="notification.type === 'success'" class="text-green-500 text-xl">✓</span>
+      <span v-else-if="notification.type === 'error'" class="text-red-500 text-xl">✕</span>
+      <span v-else class="text-yellow-500 text-xl">⚠</span>
+      
+      <p class="flex-1 text-sm font-medium">{{ notification.message }}</p>
+      
+      <button 
+        @click="notification.show = false"
+        class="text-gray-400 hover:text-gray-600"
+      >
+        ✕
+      </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 py-10 relative">
    
-    <h2 class="text-[18px] lg:text-[36px] font-bold mb-[5px] md:mb-5">Checkout</h2>
+      <h2 class="text-[18px] lg:text-[36px] font-bold mb-[5px] md:mb-5">Checkout</h2>
 
-    <!-- Grid page -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
+      <!-- Grid page -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 items-start">
 
-      <!--left side-->
-      <div class="lg:col-span-2 space-y-3">
-        <!-- Customer Info -->
-        <section class="lg:space-y-3">
-          <h2 class="text-[18px] lg:text-[28px] lg:mt-4   lg:mb-5 font-semibold">Customer info</h2>
+        <!--left side-->
+        <div class="lg:col-span-2 space-y-3">
+          <!-- Customer Info -->
+          <section class="lg:space-y-3">
+            <h2 class="text-[18px] lg:text-[22px] lg:mt-4 lg:mb-5 font-semibold">Customer info</h2>
 
-          <!-- left side 2colum-->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormInput label="First Name" placeholder="First Name" v-model="firstName" />
-            <FormInput label="Last Name" placeholder="Last Name" v-model="lastName" />
-            <FormInput label="Email" placeholder="Example@gmail.com" type="email" v-model="email" />
-            <FormInput label="Phone Number" placeholder="Phone Number" type="number" v-model="phone" />
-          </div>
-        </section>
+            <!-- left side 2colum-->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl">
 
-        <!-- Shipping details -->
-        <section class="space-y-3">
-          <h2 class="lg:mt-12 text-[18px]  lg:text-[28px] font-semibold">Shipping details</h2>
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">First Name</label>
+                <FormInput placeholder="First Name" v-model="firstName" />
+              </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 pt-2 gap-4">
-            <div class="md:col-span-2">
-              <FormInput label="Address" placeholder="Enter your Address" v-model="address" />
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">Last Name</label>
+                <FormInput placeholder="Last Name" v-model="lastName" />
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">Email</label>
+                <FormInput placeholder="Example@gmail.com" type="email" v-model="email" />
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">Phone Number</label>
+                <FormInput placeholder="Phone Number" type="number" v-model="phone" />
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Shipping details -->
+          <section class="space-y-3">
+            <h2 class="lg:mt-12 text-[18px] lg:text-[22px] font-semibold">Shipping details</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 pt-2 gap-4 bg-gray-50 p-4 rounded-2xl">
+
+              <!-- Address -->
+              <div class="md:col-span-2 flex flex-col gap-1">
+                <label class="text-xl text-black-600">Address</label>
+                <FormInput placeholder="Enter your Address" v-model="address" />
+              </div>
+
+              <!-- Governorate -->
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">Governorate</label>
+                <FormInput placeholder="Governorate" v-model="governorate" />
+              </div>
+
+              <!-- City -->
+              <div class="flex flex-col gap-1">
+                <label class="text-xl text-black-600">City</label>
+                <FormInput
+                  type="select"
+                  v-model="selectedGov"
+                  :options="city"
+                />
+              </div>
+
+            </div>
+          </section>
+
+          <!--payment methods-->
+          <section class="space-y-3">
+            <h1 class="lg:mt-12 lg:pb-1 text-[18px] lg:text-[22px] font-semibold">Payment Method</h1>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-2xl">
+
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment" value="cash" v-model="payment" class="w-4 h-4"/>
+                <label class="text-[20px]">Cash on Delivery</label>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <input type="radio" name="payment" value="card" v-model="payment" class="w-4 h-4"/>
+                <label class="text-[20px]">Credit Card</label>
+              </div>
+
+              <div v-if="payment === 'card'" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3 pb-4">
+
+                <!-- Card Number -->
+                <div class="md:col-span-2 flex flex-col gap-1">
+                  <label class="text-l text-black-600">Card Number</label>
+                  <FormInput
+                    placeholder="Enter your Card Number"
+                    type="number"
+                    v-model="cardNumber"
+                  />
+                </div>
+
+                <!-- Expiry Date -->
+                <div class="flex flex-col gap-1">
+                  <label class="text-l text-black-600">Expiry Date</label>
+                  <FormInput
+                    placeholder="Expiry Date"
+                    type="date"
+                    v-model="expirydate"
+                  />
+                </div>
+
+                <!-- CVV -->
+                <div class="flex flex-col gap-1">
+                  <label class="text-l text-black-600">CVV</label>
+                  <FormInput
+                    placeholder="CVV"
+                    type="number"
+                    v-model="CVV"
+                  />
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!------------------------------right side -------------------------------------------------->
+        <div class="lg:col-span-1">  
+          <h2 class="taxt-[18px] lg:text-[20px] font-semibold mb-4 mt-5">Order Summary</h2>
+
+          <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
+            <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
+            
+            <!-- Discount Code Section -->
+            <div class="mb-4 pb-4 border-b border-gray-200">
+              <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
+              <input 
+                type="text" 
+                placeholder="enter your discount code" 
+                v-model="discountcode"
+                class="w-full px-3 py-2 border border-gray-300 rounded-[20px] outline-none focus:border-[#C76950] text-[13px] mb-2"
+              />
+              <button class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
+                Apply
+              </button>
             </div>
 
-            <FormInput label="Governorate" placeholder="governorate" v-model="governorate" />
-          <FormInput label="City" type="select" v-model="selectedGov" :options="city"/>
-          </div>
-        </section>
-        <!--payment methods-->
-       <section class="space-y-3">
-  <h2 class="lg:mt-12 lg:pb-4 text-[18px] lg:text-[28px] font-semibold">Payment Method</h2>
+            <!-- Price Summary -->
+            <div class="bg-white shadow rounded-2xl p-6">
+              <div class="space-y-4">
+                <div class="flex justify-between">
+                  <p>Subtotal:</p>
+                  <p>{{ subtotal }} LE</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>Discount (5%):</p>
+                  <p>-{{ discount }} LE</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>Shipping:</p>
+                  <p>{{ shipping }} LE</p>
+                </div>
+              </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <hr class="mt-5"/>
 
-    <div class="flex items-center gap-3 p">
-      <input  type="radio"  name="payment"  value="cash" v-model="payment" class="w-5 h-5"/>
-      <label class="text">Cash on Delivery</label>
-    </div>
-
-    <div class="flex items-center gap-3">
-      <input  type="radio"  name="payment" value="card" v-model="payment"class="w-5 h-5"/>
-      <label class="text">Credit Card</label>
-    </div>
-
-    <div v-if="payment === 'card'">
-<div class="mt-3 md:col-span-2 pb-4">
-              <FormInput label="Card Number" placeholder="Enter your Card Number"  type="number" v-model="cardNumber" />
+              <!---مجموع-->   
+              <div class="flex justify-between font-bold mt-3">
+                <p>Total</p>
+                <p>{{ total }} LE</p>
+              </div>
             </div>
-                  <FormInput label="Expiry Date" placeholder="Expiry Date" type="date" v-model="expirydate" />
-                   <FormInput label="CVV" placeholder="CVV"  type="number" v-model="CVV" />
 
-    </div>
-              
-           
-  </div>
-</section>
-
-
-      </div>
-
-      <!------------------------------right side -------------------------------------------------->
-  <div class="lg:col-span-1">
-        <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
-          <h2 class="taxt-[18px] lg:text-[20px] font-semibold mb-4">Order Summary</h2>
-         <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
-          <!-- Discount Code Section -->
-          <div class="mb-4 pb-4 border-b border-gray-200">
-            <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
-            <input 
-              type="text" 
-              placeholder="enter your discount code" 
-              v-model="discountcode"
-              class="w-full px-3 py-2 border border-gray-300 rounded-[10px] outline-none focus:border-[#C76950] text-[13px] mb-2"
-            />
-            <button class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
-              Apply
+            <!-- Place Order Button -->
+            <button @click="order" class="w-full mt-[10px] py-3 bg-[#C76950] text-white rounded-[22px] hover:bg-[#AD563F] text-[15px] font-medium">
+              Place order
             </button>
           </div>
-
-          <!-- Price Summary -->
-         <div class="bg-white shadow rounded-2xl p-6">
-        <div class="space-y-4">
-        <div class="flex justify-between">
-          <p>Subtotal:</p>
-          <p>{{ subtotal }} LE</p>
-        </div>
-        <div class="flex justify-between">
-          <p>Discount (5%):</p>
-           <p>-{{ discount }} LE</p>
         </div>
 
-        <div class="flex justify-between ">
-          <p>Shipping:</p>
-          <p>{{ shipping }} LE</p>
-        </div>
-
-           
-            
-          </div>
-
-
-          <hr class="mt-5"/>
-
-
-           <!---مجموع-->   
-          <div class="flex justify-between font-bold mt-3">
-            <p>Total</p>
-            <p> {{  total}} LE</p>
-          </div>
-        </div>
-
-          <!-- Place Order Button -->
-          <button @click="order" class="w-full   mt-[10px] py-3 border-radius[24px] bg-[#C76950] text-white rounded-[10px] hover:bg-[#AD563F] text-[15px] font-medium">
-            Place order
-          </button>
-        </div>
       </div>
-
     </div>
   </div>
 </template>
 
+<style scoped>
+
+.custom-label label {
+  font-size: 12px;
+}
+</style>
 <script setup>
 import {ref,onMounted,onUnmounted,computed} from "vue";
 import { useNuxtApp } from "#app";
@@ -184,6 +270,22 @@ const payment =ref("")
 const cardNumber=ref("")
 const expirydate=ref("")
 const CVV=ref("")
+
+const notification = ref({
+  show: false,
+  message: '',
+  type: 'success'
+});
+
+function showNotification(message, type = 'success') {
+  notification.value = { show: true, message, type };
+  
+  setTimeout(() => {
+    notification.value.show = false;
+  }, 4000);
+}
+
+
 function round3(num) {
   return Number(num.toFixed(3));
 }
@@ -256,15 +358,16 @@ function cleanData(obj) {
   return cleaned;
 }
 
+
 async function order(){
   const hasError = validateCheckout();
   if(hasError){
-    alert("Please fill all required fields");
+    showNotification("Please fill all required fields", "error");   
     return;
   }
   
   if(!userId.value){
-    alert("please log in first");
+    showNotification("Please log in first", "warning"); 
     return;
   }
   
@@ -297,7 +400,6 @@ async function order(){
         price: item.productSnapshot.price,
         title: item.productSnapshot.name,
         image: item.productSnapshot.image,
-        
       })),
       subtotal: subtotal.value || 0,
       discount: discount.value || 0,
@@ -307,15 +409,13 @@ async function order(){
       createdAt: serverTimestamp(),
     };
     
-    // تنظيف البيانات
     const cleanedOrderData = cleanData(orderData);
-    
     console.log("CLEANED ORDER DATA => ", cleanedOrderData);
     
     const orderRef = await addDoc(collection(db, "orders"), cleanedOrderData);
     console.log("ORDER ID:", orderRef.id);
-    alert("Order placed! Your Order ID is: " + orderRef.id);
-
+    
+    showNotification("Order placed! Your Order ID is: " + orderRef.id, "success");  
     // Clear cart
     const batch = writeBatch(db);
     cartItems.value.forEach((item) => {
@@ -325,7 +425,7 @@ async function order(){
 
   } catch (error) {
     console.error("Order Error:", error);
-    alert("Failed to place order: " + error.message);
+    showNotification("Failed to place order: " + error.message, "error");  
   }
 }
 
