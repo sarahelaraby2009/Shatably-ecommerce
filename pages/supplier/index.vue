@@ -21,7 +21,7 @@ const lastName = ref('')
 const gender = ref('')
 const currentUser = ref(null)
 const loading = ref(true)
-const profileImage = ref('/assets/HomeLogo.png') 
+const profileImage = ref('/assets/supplier.jpeg') 
 
 // ----------------------------
 const loadSupplierData = async (user) => {
