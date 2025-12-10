@@ -6,11 +6,16 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  collection,
+  getDocs,
+  setDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import SideBar from "~/components/SideBar.vue";
 import AddProductModal from "~/components/AddProductModal.vue";
-// ----------------------------------------------------------------
+
+// -----------------------------------------------------------------
 const data = {
   feild1: "Profile",
   feild2: "Product uploads",
@@ -23,10 +28,21 @@ const editingProduct = ref(null);
 const supplierId = ref(null);
 const userName = ref("");
 const email = ref("");
-const { $auth, $db } = useNuxtApp();
-// ------------------------------------------------------------
+const categories = ref([]);
+let $auth = null;
+let $db = null;
+// --------------------------------------------------------------
+if (process.client) {
+  const nuxtApp = useNuxtApp();
+  $auth = nuxtApp.$auth ?? null;
+  $db = nuxtApp.$db ?? null;
+}
+
+// --------------------------------------------------------------
 const loadProducts = async () => {
   try {
+    if (!process.client || !$auth || !$db) return;
+
     onAuthStateChanged($auth, async (user) => {
       if (user) {
         supplierId.value = user.uid;
@@ -45,20 +61,58 @@ const loadProducts = async () => {
     console.error("Error loading products:", err);
   }
 };
-// -----------------------------------------------------------
+
+// ------------------------------------------------------------
+const loadCategories = async () => {
+  try {
+    if (!process.client || !$db) return;
+    const q = collection($db, "categories");
+    const snap = await getDocs(q);
+    const list = [];
+    snap.forEach((docSnap) => {
+      const d = docSnap.data();
+      list.push({
+        id: docSnap.id,
+        name: d.name ?? d.title ?? "Unnamed",
+      });
+    });
+    categories.value = list;
+  } catch (err) {
+    console.error("Error loading categories:", err);
+  }
+};
+
+// --------------------------------------------------------------------------
 const handleAddProduct = () => {
   editingProduct.value = null;
   showAddModal.value = true;
 };
-// ---------------------------------------------------------
+
+// ------------------------------------------------------------------------
 const onCloseModal = () => {
   showAddModal.value = false;
   editingProduct.value = null;
 };
-// ----------------------------------------------------------
+
+// -------------------------------------------------------------------------
 const onSaveProduct = async (payload) => {
   try {
+    if (!supplierId.value) {
+      console.warn("supplierId not set yet");
+      return;
+    }
+
+    if (!process.client || !$db) {
+      console.error("Cannot save product: $db is not available on server");
+      return;
+    }
+    if (!payload.categoryId || !payload.subcategory) {
+      console.error("Category and Subcategory are required");
+      return;
+    }
+
     if (editingProduct.value) {
+      // ---------------------------------------------------------------------------
       const index = products.value.findIndex(
         (p) => p.id === editingProduct.value.id
       );
@@ -67,6 +121,36 @@ const onSaveProduct = async (payload) => {
         const updatedProduct = { ...oldProduct, ...payload };
 
         products.value[index] = updatedProduct;
+
+        if (
+          oldProduct.categoryId !== payload.categoryId ||
+          oldProduct.subcategory !== payload.subcategory
+        ) {
+          try {
+            const oldProductRef = doc(
+              $db,
+              "categories",
+              oldProduct.categoryId,
+              "subcategories",
+              oldProduct.subcategory,
+              "products",
+              oldProduct.id
+            );
+            await deleteDoc(oldProductRef);
+          } catch (err) {
+            console.error("Error deleting old product:", err);
+          }
+        }
+        const newProductRef = doc(
+          $db,
+          "categories",
+          payload.categoryId,
+          "subcategories",
+          payload.subcategory,
+          "products",
+          updatedProduct.id
+        );
+        await setDoc(newProductRef, updatedProduct);
 
         const supplierRef = doc($db, "suppliers", supplierId.value);
         await updateDoc(supplierRef, {
@@ -77,12 +161,36 @@ const onSaveProduct = async (payload) => {
         });
       }
     } else {
+      // ------------------------------------------------------------------------------
+      const productId = Date.now().toString();
+
       const newProduct = {
-        id: Date.now(),
-        ...payload,
+        id: productId,
+        name: payload.name,
+        description: payload.description,
+        price: payload.price,
+        sellerId: payload.sellerId,
+        brand: payload.brand,
+        image: payload.image,
+        uploadDate: payload.uploadDate,
+        categoryId: payload.categoryId,
+        categoryName: payload.categoryName,
+        subcategory: payload.subcategory,
+        supplierId: supplierId.value,
       };
 
       products.value.push(newProduct);
+
+      const productRef = doc(
+        $db,
+        "categories",
+        payload.categoryId,
+        "subcategories",
+        payload.subcategory,
+        "products",
+        productId
+      );
+      await setDoc(productRef, newProduct);
 
       const supplierRef = doc($db, "suppliers", supplierId.value);
       await updateDoc(supplierRef, {
@@ -94,16 +202,36 @@ const onSaveProduct = async (payload) => {
     editingProduct.value = null;
   } catch (err) {
     console.error("Error saving product:", err);
-    await loadProducts(); 
+    await loadProducts();
   }
 };
-// -------------------------------------------------------------------
+
+// ------------------------------------------------------------------------
 const deleteProduct = async (id) => {
   try {
     const product = products.value.find((p) => p.id === id);
     if (!product) return;
 
     products.value = products.value.filter((p) => p.id !== id);
+
+    if (!process.client || !$db) {
+      console.error("Cannot delete product: $db is not available on server");
+      return;
+    }
+    try {
+      const productRef = doc(
+        $db,
+        "categories",
+        product.categoryId,
+        "subcategories",
+        product.subcategory,
+        "products",
+        product.id
+      );
+      await deleteDoc(productRef);
+    } catch (err) {
+      console.error("Error deleting from categories path:", err);
+    }
 
     const supplierRef = doc($db, "suppliers", supplierId.value);
     await updateDoc(supplierRef, {
@@ -114,14 +242,19 @@ const deleteProduct = async (id) => {
     await loadProducts();
   }
 };
-// -------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
 const editProduct = (product) => {
   editingProduct.value = product;
   showAddModal.value = true;
 };
-// --------------------------------------------------------------------
+
+// -----------------------------------------------------------------------
 onMounted(() => {
-  loadProducts();
+  if (process.client) {
+    loadProducts();
+    loadCategories();
+  }
 });
 </script>
 
@@ -144,7 +277,7 @@ onMounted(() => {
               <div>
                 <h1 class="text-2xl font-bold text-gray-800">Product</h1>
                 <p class="text-gray-500 text-sm mt-1">
-                  View & Update Your project
+                  View & Update Your products
                 </p>
               </div>
               <button
@@ -176,13 +309,30 @@ onMounted(() => {
               <table class="w-full">
                 <thead>
                   <tr class="bg-[#C76950] text-white">
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Name</th>
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Description</th>
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Image</th>
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Price</th>
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Seller ID</th>
-                    <th class="text-left py-3 px-4 font-semibold text-sm">Brand</th>
-                    <th class="text-center py-3 px-4 font-semibold text-sm">Actions</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Name
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Description
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Image
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Price
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Category
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Subcategory
+                    </th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">
+                      Brand
+                    </th>
+                    <th class="text-center py-3 px-4 font-semibold text-sm">
+                      Actions
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -192,7 +342,9 @@ onMounted(() => {
                     class="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                   >
                     <td class="py-4 px-4">
-                      <p class="text-gray-800 font-medium">{{ product.name }}</p>
+                      <p class="text-gray-800 font-medium">
+                        {{ product.name }}
+                      </p>
                     </td>
                     <td class="py-4 px-4">
                       <p class="text-gray-600 text-sm truncate max-w-xs">
@@ -218,13 +370,24 @@ onMounted(() => {
                       </div>
                     </td>
                     <td class="py-4 px-4">
-                      <p class="text-gray-800 font-medium">{{ product.price }} LE</p>
+                      <p class="text-gray-800 font-medium">
+                        {{ product.price }} LE
+                      </p>
                     </td>
                     <td class="py-4 px-4">
-                      <p class="text-gray-600 text-sm">{{ product.sellerId || "—" }}</p>
+                      <p class="text-gray-800 font-medium">
+                        {{ product.categoryName || "—" }}
+                      </p>
                     </td>
                     <td class="py-4 px-4">
-                      <p class="text-gray-600 text-sm">{{ product.brand || "—" }}</p>
+                      <p class="text-gray-800 font-medium">
+                        {{ product.subcategory || "—" }}
+                      </p>
+                    </td>
+                    <td class="py-4 px-4">
+                      <p class="text-gray-600 text-sm">
+                        {{ product.brand || "—" }}
+                      </p>
                     </td>
                     <td class="py-4 px-4">
                       <div class="flex items-center justify-center gap-3">
@@ -232,13 +395,19 @@ onMounted(() => {
                           @click="editProduct(product)"
                           class="text-gray-400 hover:text-[#C76950] transition-colors"
                         >
-                          <font-awesome-icon :icon="['far', 'edit']" class="text-[20px] text-black" />
+                          <font-awesome-icon
+                            :icon="['far', 'edit']"
+                            class="text-[20px]"
+                          />
                         </button>
                         <button
                           @click="deleteProduct(product.id)"
                           class="text-gray-400 hover:text-red-500 transition-colors"
                         >
-                          <font-awesome-icon :icon="['far', 'trash-can']" class="text-[20px] text-black" />
+                          <font-awesome-icon
+                            :icon="['far', 'trash-can']"
+                            class="text-[20px]"
+                          />
                         </button>
                       </div>
                     </td>
@@ -256,17 +425,23 @@ onMounted(() => {
       <div class="border-b bg-white sticky top-0 z-10">
         <div class="flex justify-around">
           <NuxtLink to="/supplier" class="flex-1">
-            <div class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
+            <div
+              class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent"
+            >
               {{ data.feild1 }}
             </div>
           </NuxtLink>
           <NuxtLink to="/supplier/productsUploads" class="flex-1">
-            <div class="text-center py-4 text-sm font-medium transition-all border-b-2 text-[#C76950] border-[#C76950]">
+            <div
+              class="text-center py-4 text-sm font-medium transition-all border-b-2 text-[#C76950] border-[#C76950]"
+            >
               {{ data.feild2 }}
             </div>
           </NuxtLink>
           <NuxtLink to="/supplier/ordersTrack" class="flex-1">
-            <div class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent">
+            <div
+              class="text-center py-4 text-sm font-medium transition-all border-b-2 text-gray-500 border-transparent"
+            >
               {{ data.feild3 }}
             </div>
           </NuxtLink>
@@ -277,16 +452,15 @@ onMounted(() => {
         <div class="flex items-center justify-between mb-6">
           <div>
             <h1 class="text-xl font-bold text-gray-800">Product</h1>
-            <p class="text-gray-500 text-xs mt-1">View & Update Your project</p>
+            <p class="text-gray-500 text-xs mt-1">
+              View & Update Your products
+            </p>
           </div>
           <button
             @click="handleAddProduct"
-            class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-4  rounded-[24px] w-[48px] h-[35px] transition-colors text-sm"
+            class="bg-[#C76950] hover:bg-[#b55a42] text-white font-medium py-2 px-4 rounded-[24px] w-[48px] h-[35px] transition-colors text-sm"
           >
-             <font-awesome-icon
-            :icon="['fas', 'plus']"
-            class="text-white  mb-4 "
-          />
+            <font-awesome-icon :icon="['fas', 'plus']" class="text-white" />
           </button>
         </div>
 
@@ -330,28 +504,57 @@ onMounted(() => {
 
             <div class="divide-y divide-gray-200">
               <div class="flex py-3 px-4">
-                <span class="text-xs font-semibold text-gray-500 w-24">Name:</span>
-                <span class="text-sm text-gray-800 flex-1">{{ product.name }}</span>
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Name:</span
+                >
+                <span class="text-sm text-gray-800 flex-1">{{
+                  product.name
+                }}</span>
               </div>
 
               <div class="flex py-3 px-4">
-                <span class="text-xs font-semibold text-gray-500 w-24">Description:</span>
-                <span class="text-sm text-gray-600 flex-1">{{ product.description || "—" }}</span>
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Description:</span
+                >
+                <span class="text-sm text-gray-600 flex-1">{{
+                  product.description || "—"
+                }}</span>
               </div>
 
               <div class="flex py-3 px-4">
-                <span class="text-xs font-semibold text-gray-500 w-24">Price:</span>
-                <span class="text-sm font-bold text-gray-800 flex-1">{{ product.price }} LE</span>
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Price:</span
+                >
+                <span class="text-sm font-bold text-gray-800 flex-1"
+                  >{{ product.price }} LE</span
+                >
               </div>
 
               <div class="flex py-3 px-4">
-                <span class="text-xs font-semibold text-gray-500 w-24">Seller ID:</span>
-                <span class="text-sm text-gray-600 flex-1">{{ product.sellerId || "—" }}</span>
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Category:</span
+                >
+                <span class="text-sm font-bold text-gray-800 flex-1">{{
+                  product.categoryName || "—"
+                }}</span>
               </div>
 
               <div class="flex py-3 px-4">
-                <span class="text-xs font-semibold text-gray-500 w-24">Brand:</span>
-                <span class="text-sm text-gray-600 flex-1">{{ product.brand || "—" }}</span>
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Subcategory:</span
+                >
+                <span class="text-sm font-bold text-gray-800 flex-1">{{
+                  product.subcategory || "—"
+                }}</span>
+              </div>
+
+              <div class="flex py-3 px-4">
+                <span class="text-xs font-semibold text-gray-500 w-24"
+                  >Brand:</span
+                >
+                <span class="text-sm text-gray-600 flex-1">{{
+                  product.brand || "—"
+                }}</span>
               </div>
 
               <div class="flex gap-3 py-3 px-4 bg-gray-50">
@@ -377,6 +580,7 @@ onMounted(() => {
     <AddProductModal
       :show="showAddModal"
       :initial="editingProduct"
+      :categories="categories"
       @close="onCloseModal"
       @save="onSaveProduct"
     />

@@ -1,11 +1,21 @@
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from "vue";
-// ------------------------------------------------------------
+import { collection, getDocs } from "firebase/firestore";
+
+// --------------------------------------------------------------------
 const emit = defineEmits(["close", "save"]);
 const props = defineProps({
   show: { type: Boolean, default: false },
   initial: { type: Object, default: null },
+  categories: { type: Array, default: () => [] },
 });
+
+let $db = null;
+if (process.client) {
+  $db = useNuxtApp().$db ?? null;
+}
+
+// --------------------------------------------------------------------------
 const id = ref(null);
 const name = ref("");
 const description = ref("");
@@ -16,85 +26,12 @@ const errorMessages = ref("");
 const fileInput = ref(null);
 const selectedImage = ref(null);
 const isDragging = ref(false);
-// ----------------------------------------------------------------
-watch(
-  () => props.initial,
-  (val) => {
-    if (val) {
-      id.value = val.id ?? null;
-      name.value = val.name ?? "";
-      description.value = val.description ?? "";
-      price.value = val.price ?? "";
-      sellerId.value = val.sellerId ?? "";
-      brand.value = val.brand ?? "";
-      selectedImage.value = val.image ?? null;
-    } else {
-      resetForm();
-    }
-  }
-);
-// -----------------------------------------------------------------------
-const handleFileSelect = (event) => {
-  const file = event.target.files?.[0];
-  if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
-    previewImage(file);
-  } else {
-    errorMessages.value = "Please select a JPG or PNG image";
-  }
-};
-const previewImage = (file) => {
-  const reader = new FileReader();
-  reader.onload = (e) => (selectedImage.value = e.target.result);
-  reader.readAsDataURL(file);
-};
-const openFileDialog = () => fileInput.value?.click();
-const handleDragOver = (e) => {
-  e.preventDefault();
-  isDragging.value = true;
-};
-const handleDragLeave = () => {
-  isDragging.value = false;
-};
-const handleDrop = (e) => {
-  e.preventDefault();
-  isDragging.value = false;
-  const file = e.dataTransfer.files?.[0];
-  if (file && (file.type === "image/jpeg" || file.type === "image/png"))
-    previewImage(file);
-  else errorMessages.value = "Please drop a JPG or PNG image";
-};
-// ------------------------------------------------------------------
-const removeImage = () => {
-  selectedImage.value = null;
-  if (fileInput.value) fileInput.value.value = "";
-};
-// ----------------------------------------------------------------
-const saveData = () => {
-  errorMessages.value = "";
-  if (!name.value) {
-    errorMessages.value = "Please enter a name";
-    return;
-  }
-  const payload = {
-    id: id.value ?? null,
-    name: name.value,
-    description: description.value,
-    price: price.value,
-    sellerId: sellerId.value,
-    brand: brand.value,
-    image: selectedImage.value,
-    uploadDate: new Date().toISOString().slice(0, 10), 
-  };
-  emit("save", payload);
-  resetForm();
-};
-// --------------------------------------------------------------------
-const close = () => {
-  emit("close");
-  resetForm();
-};
-// -----------------------------------------------------------------------
-const resetForm = () => {
+const selectedCategoryId = ref("");
+const subcategories = ref([]);
+const selectedSubcategory = ref("");
+
+// ----------------------------------------------------------------------------
+function resetForm() {
   id.value = null;
   name.value = "";
   description.value = "";
@@ -104,13 +41,200 @@ const resetForm = () => {
   errorMessages.value = "";
   selectedImage.value = null;
   if (fileInput.value) fileInput.value.value = "";
-};
+  selectedCategoryId.value = "";
+  subcategories.value = [];
+  selectedSubcategory.value = "";
+}
+
 // -------------------------------------------------------------------------------
+watch(
+  () => props.initial,
+  async (val) => {
+    if (val) {
+      id.value = val.id ?? null;
+      name.value = val.name ?? "";
+      description.value = val.description ?? "";
+      price.value = val.price ?? "";
+      sellerId.value = val.sellerId ?? "";
+      brand.value = val.brand ?? "";
+      selectedImage.value = val.image ?? null;
+
+      selectedCategoryId.value = val.categoryId ?? "";
+      if (!selectedCategoryId.value && val.categoryName) {
+        const found = props.categories.find((c) => c.name === val.categoryName);
+        if (found) selectedCategoryId.value = found.id;
+      }
+
+      selectedSubcategory.value = val.subcategory ?? "";
+
+      if (selectedCategoryId.value) {
+        try {
+          if (process.client && $db) {
+            const subsCol = collection(
+              $db,
+              "categories",
+              selectedCategoryId.value,
+              "subcategories"
+            );
+            const snap = await getDocs(subsCol);
+            const list = [];
+            snap.forEach((docSnap) => {
+              const d = docSnap.data();
+              list.push({
+                id: docSnap.id,
+                name: d.name ?? d.title ?? "Unnamed",
+              });
+            });
+            subcategories.value = list;
+          }
+        } catch (err) {
+          console.error("Error loading subcategories:", err);
+          subcategories.value = [];
+        }
+      }
+    } else {
+      resetForm();
+    }
+  },
+  { immediate: true }
+);
+
+// -----------------------------------------------------------------
+watch(
+  () => selectedCategoryId.value,
+  async (newId) => {
+    subcategories.value = [];
+    selectedSubcategory.value = "";
+
+    if (!newId) return;
+
+    try {
+      if (!process.client || !$db) {
+        subcategories.value = [];
+        return;
+      }
+
+      const subsCol = collection($db, "categories", newId, "subcategories");
+      const snap = await getDocs(subsCol);
+      const list = [];
+
+      snap.forEach((docSnap) => {
+        const d = docSnap.data();
+        list.push({
+          id: docSnap.id,
+          name: d.name ?? d.title ?? "Unnamed",
+        });
+      });
+
+      subcategories.value = list;
+    } catch (err) {
+      console.error("Error loading subcategories:", err);
+      subcategories.value = [];
+    }
+  }
+);
+
+// ------------------------------------------------------------------------
+const handleFileSelect = (event) => {
+  const file = event.target.files?.[0];
+  if (file && (file.type === "image/jpeg" || file.type === "image/png")) {
+    previewImage(file);
+  } else {
+    errorMessages.value = "Please select a JPG or PNG image";
+  }
+};
+
+const previewImage = (file) => {
+  const reader = new FileReader();
+  reader.onload = (e) => (selectedImage.value = e.target.result);
+  reader.readAsDataURL(file);
+};
+
+const openFileDialog = () => fileInput.value?.click();
+
+const handleDragOver = (e) => {
+  e.preventDefault();
+  isDragging.value = true;
+};
+
+const handleDragLeave = () => {
+  isDragging.value = false;
+};
+
+const handleDrop = (e) => {
+  e.preventDefault();
+  isDragging.value = false;
+  const file = e.dataTransfer.files?.[0];
+  if (file && (file.type === "image/jpeg" || file.type === "image/png"))
+    previewImage(file);
+  else errorMessages.value = "Please drop a JPG or PNG image";
+};
+
+const removeImage = () => {
+  selectedImage.value = null;
+  if (fileInput.value) fileInput.value.value = "";
+};
+
+// --------------------------------------------------------------------------
+const saveData = () => {
+  errorMessages.value = "";
+
+  if (!name.value.trim()) {
+    errorMessages.value = "Please enter a product name";
+    return;
+  }
+
+  if (!selectedCategoryId.value) {
+    errorMessages.value = "Please select a category";
+    return;
+  }
+
+  if (!selectedSubcategory.value) {
+    errorMessages.value = "Please select a subcategory";
+    return;
+  }
+
+  if (!price.value || parseFloat(price.value) <= 0) {
+    errorMessages.value = "Please enter a valid price";
+    return;
+  }
+
+  const categoryName =
+    props.categories.find((c) => c.id === selectedCategoryId.value)?.name || "";
+
+  const payload = {
+    id: id.value ?? null,
+    name: name.value.trim(),
+    description: description.value.trim(),
+    price: parseFloat(price.value),
+    sellerId: sellerId.value.trim() || "",
+    brand: brand.value.trim() || "",
+    image: selectedImage.value || null,
+    uploadDate: new Date().toISOString().slice(0, 10),
+    categoryId: selectedCategoryId.value,
+    categoryName: categoryName,
+    subcategory: selectedSubcategory.value,
+  };
+
+  emit("save", payload);
+  resetForm();
+};
+
+// --------------------------------------------------------------------
+const close = () => {
+  emit("close");
+  resetForm();
+};
+
+// --------------------------------------------------------------------
 const onKeyDown = (e) => {
   if (e.key === "Escape" && props.show) close();
 };
+
 onMounted(() => window.addEventListener("keydown", onKeyDown));
 onBeforeUnmount(() => window.removeEventListener("keydown", onKeyDown));
+
+// -----------------------------------------------------------------------
 watch(
   () => props.show,
   (v) => {
@@ -202,6 +326,50 @@ watch(
                     type="text"
                     placeholder="enter product brand"
                   />
+                </div>
+
+                <!-- Category dropdown -->
+                <div class="flex flex-col">
+                  <label class="font-bold text-sm text-[#3E3E3E]"
+                    >Category</label
+                  >
+                  <select
+                    v-model="selectedCategoryId"
+                    class="font-semibold text-sm border rounded-[12px] p-3 outline-none h-[44px] bg-white"
+                  >
+                    <option value="">Choose category</option>
+                    <option
+                      v-for="c in props.categories"
+                      :key="c.id"
+                      :value="c.id"
+                    >
+                      {{ c.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <!-- Subcategory dropdown -->
+                <div class="flex flex-col">
+                  <label class="font-bold text-sm text-[#3E3E3E]">
+                    Subcategory
+                  </label>
+                  <select
+                    v-model="selectedSubcategory"
+                    :disabled="subcategories.length === 0"
+                    class="font-semibold text-sm border rounded-[12px] p-3 outline-none h-[44px] bg-white"
+                  >
+                    <option value="" disabled v-if="subcategories.length === 0">
+                      Select a category first
+                    </option>
+                    <option value="" v-else>Choose subcategory</option>
+                    <option
+                      v-for="s in subcategories"
+                      :key="s.id"
+                      :value="s.id"
+                    >
+                      {{ s.name }}
+                    </option>
+                  </select>
                 </div>
               </div>
 

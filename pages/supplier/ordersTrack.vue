@@ -14,10 +14,18 @@ const products = ref([]);
 const supplierId = ref(null);
 const userName = ref("");
 const email = ref("");
-const { $auth, $db } = useNuxtApp();
+let $auth = null;
+let $db = null;
+if (process.client) {
+  const nuxtApp = useNuxtApp();
+  $auth = nuxtApp.$auth ?? null;
+  $db = nuxtApp.$db ?? null;
+}
 // -----------------------------------------------------
 const loadProducts = async () => {
   try {
+    if (!process.client || !$auth || !$db) return;
+
     onAuthStateChanged($auth, async (user) => {
       if (user) {
         supplierId.value = user.uid;
@@ -38,7 +46,9 @@ const loadProducts = async () => {
 };
 // ---------------------------------------------------------
 onMounted(() => {
-  loadProducts();
+  if (process.client) {
+    loadProducts();
+  }
 });
 </script>
 
@@ -91,6 +101,8 @@ onMounted(() => {
                     <th class="text-left py-3 px-4 font-semibold text-sm">Description</th>
                     <th class="text-left py-3 px-4 font-semibold text-sm">Image</th>
                     <th class="text-left py-3 px-4 font-semibold text-sm">Price</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">Category</th>
+                    <th class="text-left py-3 px-4 font-semibold text-sm">Subcategory</th>
                     <th class="text-left py-3 px-4 font-semibold text-sm">Seller ID</th>
                     <th class="text-left py-3 px-4 font-semibold text-sm">Brand</th>
                   </tr>
@@ -130,6 +142,13 @@ onMounted(() => {
                     <td class="py-4 px-4">
                       <p class="text-gray-800 font-medium">{{ product.price }} LE</p>
                     </td>
+                    <td class="py-4 px-4">
+                      <p class="text-gray-800 font-medium">{{ product.categoryName || "—" }}</p>
+                    </td>
+                    <td class="py-4 px-4">
+                      <p class="text-gray-800 font-medium">{{ product.subcategory || "—" }}</p>
+                    </td>
+
                     <td class="py-4 px-4">
                       <p class="text-gray-600 text-sm">{{ product.sellerId || "—" }}</p>
                     </td>
@@ -222,6 +241,16 @@ onMounted(() => {
               <div class="flex py-3 px-4">
                 <span class="text-xs font-semibold text-gray-500 w-24">Price:</span>
                 <span class="text-sm font-bold text-gray-800 flex-1">{{ product.price }} LE</span>
+              </div>
+
+              <div class="flex py-3 px-4">
+                <span class="text-xs font-semibold text-gray-500 w-24">Category:</span>
+                <span class="text-sm font-bold text-gray-800 flex-1">{{ product.categoryName || "—" }}</span>
+              </div>
+
+              <div class="flex py-3 px-4">
+                <span class="text-xs font-semibold text-gray-500 w-24">Subcategory:</span>
+                <span class="text-sm font-bold text-gray-800 flex-1">{{ product.subcategory || "—" }}</span>
               </div>
 
               <div class="flex py-3 px-4">
