@@ -2,6 +2,7 @@
     <div class="flex flex-col lg:flex-row min-h-screen">
         <EngineerMobileView class="block lg:hidden" />
         <EngineerSideBar class="hidden lg:block w-[500px]" />
+        
         <div class="flex flex-col flex-1 lg:p-10 p-4 min-h-screen">
             <div class="p-6 flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                 <div class="flex-1">
@@ -169,6 +170,9 @@
 </template>
 
 <script setup>
+        definePageMeta({
+  ssr: false
+})
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';

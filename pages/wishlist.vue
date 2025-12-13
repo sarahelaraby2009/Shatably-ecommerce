@@ -82,19 +82,14 @@ onUnmounted(() => {
   <div class="container mx-auto p-4">
     <h1 class="text-2xl font-semibold m-4">Wishlist</h1>
     <div v-if="items.length === 0" class="text-gray-600 ml-4 mt-8">
-      لا توجد منتجات في المفضلات حالياً.
-      <div class="mt-4">
+      Your wishlist is empty. <div class="mt-4">
         <nuxt-link to="/" class="bg-gray-200 px-4 py-2 rounded-md ">Back to home</nuxt-link>
       </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      <WishlistCard
-        v-for="item in items"
-        :key="item.id"
-        :product="item"
-        :on-remove="removeFromWishlist"
-      />
+      <WishlistCard v-for="item in items" :key="item.id" :product="item" :on-remove="removeFromWishlist" />
+
     </div>
   </div>
 </template>

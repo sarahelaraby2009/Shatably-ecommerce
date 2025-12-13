@@ -80,9 +80,9 @@
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
       <div class="flex gap-5 justify-center items-center">
-        <button @click="leftScrollBest"
-          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
-        <button @click="rightScrollBest"
+        <button @click="leftScrollNew"
+          class="border border-[#3E3E3E] rounded-full flex justify-center items-center text-[#3E3E3E]  text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
+        <button @click="rightScrollNew"
           class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-right" /></button>
       </div>
     </div>
@@ -104,7 +104,7 @@
       </div>
       <div class="flex gap-5 justify-center items-center">
         <button @click="leftScrollBest"
-          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
+          class="border border-[#3E3E3E] flex justify-center items-center rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
         <button @click="rightScrollBest"
           class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-right" /></button>
       </div>
@@ -206,12 +206,12 @@ onMounted(async () => {
     where('bestSelling', '==', true),
     limit(10))
   const snap2 = await getDocs(q2)
-  bestSelling.value = (snap2).docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-    categoryId: doc.data().categoryId,
-  subId: doc.data().subId
-  }))
+  bestSelling.value = snap2.docs.map(d => ({
+  id: d.id,
+  ...d.data(),
+  categoryId: d.data().categoryId,
+  subId: d.data().subId
+}))
 
   const snapshot2 = await getDocs(collection($db, 'categories'))
   cats.value = snapshot2.docs.map(g => ({
@@ -285,19 +285,7 @@ const showAll = async () => {
   activeSelection.value = 'all'
 }
 
-const leftScroll = () => {
-  productContainer.value.scrollBy({
-    left: -300,
-    behavior: "smooth"
-  })
-}
 
-const rightScroll = () => {
-  productContainer.value.scrollBy({
-    left: 300,
-    behavior: "smooth"
-  })
-}
 
 const showAllBest = async () => {
   const qbest = query(collection($db, 'products'),
@@ -339,6 +327,19 @@ const leftScrollBest = () => {
 
 const rightScrollBest = () => {
   productContainerBest.value.scrollBy({
+    left: 300,
+    behavior: "smooth"
+  })
+}
+const leftScrollNew = () => {
+  productContainer.value.scrollBy({
+    left: -300,
+    behavior: "smooth"
+  })
+}
+
+const rightScrollNew = () => {
+  productContainer.value.scrollBy({
     left: 300,
     behavior: "smooth"
   })
