@@ -29,7 +29,7 @@ onMounted(async () => {
   <div v-if="engineer">
     
     <!-- Hero Card -->
-    <div class="w-full max-w-[1240px] bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-start relative container mx-auto">
+    <div class=" mt-10 w-full max-w-[1240px] bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-start relative container mx-auto">
 
       <img 
         :src="engineer.image" 
