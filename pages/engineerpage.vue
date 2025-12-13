@@ -1,8 +1,8 @@
 
 <template>
 
-  <div class="flex container mx-auto px-4 md:px-8 lg:px-12 gap-6 pb-10">
-    <img src="/Engtitle.png">
+  <div class=" h-[400px] flex container mx-auto px-4 md:px-8 lg:px-12 gap-6 pb-10 mt-10">
+    <img class="w-full h-full rounded-[16px] object-cover" src="/Engtitle.png">
   </div>
 
   <div 
