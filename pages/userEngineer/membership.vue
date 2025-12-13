@@ -16,7 +16,7 @@
           and allow clients to contact you directly.
         </p>
       </div>
-      <div class="rounded-[24px] w-[80%] shadow-lg bg-red-100 mb-12  p-3">
+      <div class="rounded-[24px] w-[130%] shadow-lg bg-red-100 mb-12  p-3">
         <h2 class="font-bold text-[20px] text-[#262626]">Important Information</h2>
         <ul class="text-[#262626] ">
           <li class="text-[16px]">• You <span class="font-semibold">cannot display your projects</span> until you
@@ -28,28 +28,28 @@
           </li>
         </ul>
       </div>
-      <div class="grid md:grid-cols-3 gap-6 mb-14  mx-auto">
-        <div class="bg-white rounded-2xl shadow p-6 text-center">
+      <div class="grid md:grid-cols-3 gap-[90px] mb-14  mx-auto">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center">
           <h3 class="font-bold  text-lg mb-2">Showcase Your Work</h3>
           <p class="text-gray-600">Display your engineering projects clearly and professionally.</p>
 
         </div>
 
-        <div class="bg-white rounded-2xl shadow p-6 text-center ">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center ">
           <h3 class="font-bold text-lg mb-2">Direct Client Contact</h3>
           <p class="text-gray-600">Clients can reach out to you directly during your active plan.</p>
 
         </div>
-        <div class="bg-white rounded-2xl shadow p-6 text-center">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center">
           <h3 class="font-bold text-lg mb-2">Public Engineer Profile</h3>
           <p class="text-gray-600">Your portfolio and skills become visible to all users.</p>
 
         </div>
 
       </div>
-      <div class="grid md:grid-cols-3 gap-6 mb-14  mx-auto">
+      <div class="grid md:grid-cols-3 gap-[90px] mb-14  mx-auto">
         <div @click="openModal('Monthly', 1, 500)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Monthly Plan</h1>
           <p class="text-gray-600 text-[15px]">1 Month Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">500EGP</p>
@@ -57,7 +57,7 @@
             Monthly</button>
         </div>
         <div @click="openModal('Quarterly', 3, 1200)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Quarterly Plan</h1>
           <p class="text-gray-600 text-[15px]">3 Months Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">1200EGP</p>
@@ -66,7 +66,7 @@
 
         </div>
         <div @click="openModal('Semi', 6, 2500)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Semi Annual Plan</h1>
           <p class="text-gray-600 text-[15px]">6 Months Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">2500EGP</p>
@@ -148,6 +148,9 @@
 </template>
 
 <script setup>
+      definePageMeta({
+  ssr: false
+})
 import { ref, onMounted } from 'vue'
 import { updateDoc, getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';

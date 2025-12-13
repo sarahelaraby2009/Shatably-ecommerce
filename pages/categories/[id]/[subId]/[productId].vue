@@ -206,7 +206,7 @@ onMounted(() => {
       <div class="hidden lg:grid lg:grid-cols-2 gap-8 px-4 py-8">
         <div class="flex flex-col gap-4">
           <div class="relative bg-white rounded-lg overflow-hidden shadow-sm">
-            <img :src="product.image" :alt="product.name" class="w-full h-96 object-cover" />
+            <img :src="product.image" :alt="product.name" class="w-full h-96 object-contain" />
             <button @click="toggleWishlist" class="absolute top-4 right-4 bg-white w-10 h-10 rounded-full flex justify-center items-center shadow-md hover:bg-gray-100">
               <font-awesome-icon :icon="[isInWishlist ? 'fas' : 'far', 'heart']" :class="isInWishlist ? 'text-orange-500' : 'text-gray-400'" class="text-xl" />
             </button>
