@@ -1,9 +1,9 @@
 
 <template>
 
-  <div class=" h-[400px] flex container mx-auto px-4 md:px-8 lg:px-12 gap-6 pb-10 mt-10">
-    <img class="w-full h-full rounded-[16px] object-cover" src="/Engtitle.png">
-  </div>
+<div class="w-full h-[200px] sm:h-[300px] md:h-[400px] container mx-auto px-4 md:px-8 lg:px-12 pb-10 mt-10">
+  <img class="w-full h-full rounded-[16px] object-cover" src="/Engtitle.png">
+</div>
 
   <div 
     class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-10 container mx-auto px-4 md:px-8 lg:px-12 pb-10"
