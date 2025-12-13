@@ -53,13 +53,13 @@
                                 WishList
                             </NuxtLink>
                         </li>
-                        <li class="relative" @mouseenter="open = true"
-    @mouseleave="closeCategories" >
-                            <NuxtLink to="/categories" class="flex items-center hover:text-[#C76950]">
+                        <!-- Categories Dropdown - FIXED -->
+                        <li class="relative" @mouseenter="openCategories" @mouseleave="closeCategories">
+                            <NuxtLink to="/categories" class="flex items-center gap-1 hover:text-[#C76950]">
                                 Categories <font-awesome-icon icon="fa-solid fa-caret-down" />
                             </NuxtLink>
                             <!-- Dropdown -->
-                            <ul v-if="open" @mouseenter="clearTimeout(closeTimeout)" @mouseleave="closeCategories"
+                            <ul v-if="open"
                                 class="absolute top-full left-0 mt-2 w-40 bg-white border rounded shadow-lg z-50">
                                 <li v-for="cat in categories" :key="cat.id">
                                     <NuxtLink class="block px-4 py-2 hover:bg-gray-100 hover:text-orange-500"
@@ -80,14 +80,15 @@
                         style="box-shadow: 0 0 4px rgba(0,0,0,0.3);">
                         <font-awesome-icon :icon="['fas', 'magnifying-glass']" class="mr-2 text-[#4B5563]" />
                         <input v-model="searchQuery" @keyup.enter="goSearch" type="text"
-                            placeholder="Search for products or bands" class="outline-none text-[#4B5563] w-full" />
+                            placeholder="Search for products or brands" class="outline-none text-[#4B5563] w-full" />
                     </div>
 
                     <!-- Cart Icon -->
                     <nuxt-link to="/cart">
                         <div
-                            class="w-10 h-10 flex items-center justify-center rounded-full bg-[#F9EEEC] shadow cursor-pointer hover:bg-orange-600 transition">
-                            <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-[#C76950] text-xl" />
+                            class="group w-10 h-10 flex items-center justify-center rounded-full bg-[#F9EEEC] shadow cursor-pointer hover:bg-[#C76950] transition">
+                            <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-[#C76950]  group-hover:text-white transition text-xl" />
+                            
                         </div>
                     </nuxt-link>
                 </div>
@@ -180,26 +181,6 @@
                                     class="block w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-[#C76950] hover:bg-gray-50 rounded">
                                     {{ link.name }} 
                                 </NuxtLink>
-                                <!-- <NuxtLink v-if="role==='engineer'"
-                                 to="/userEngineer/services"
-                                    @click="mobileMenueOpen = false"
-                                    class="block w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-[#C76950] hover:bg-gray-50 rounded">
-                                    Services    
-                                </NuxtLink>
-                                <NuxtLink v-if="role==='engineer'"
-                                 to="/userEngineer/portfolio  
-                                    @click="mobileMenueOpen = "false"
-                                    class="block w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-[#C76950] hover:bg-gray-50 rounded">
-                                    Portfolio
-                                </NuxtLink>
-                                <NuxtLink v-if="role==='client'" 
-                                to="/userprofile/addresses"
-                                    @click="mobileMenueOpen = false"
-                                    class="block w-full text-left px-3 py-2 text-sm text-gray-600 hover:text-[#C76950] hover:bg-gray-50 rounded">
-                                    Addresses
-                                </NuxtLink> -->
-
-                                
                             </div>
                         </transition>
                     </div>
@@ -290,7 +271,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+
+import { ref, onMounted, computed } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 import { signOut } from "firebase/auth"
@@ -312,29 +294,40 @@ const router = useRouter()
 
 let closeTimeout = null
 
+// دالة فتح الـ dropdown
+const openCategories = () => {
+    if (closeTimeout) {
+        clearTimeout(closeTimeout)
+    }
+    open.value = true
+}
+
+// دالة إغلاق الـ dropdown مع تأخير
 const closeCategories = () => {
     closeTimeout = setTimeout(() => {
         open.value = false
-    }, 200)  // نص ثانية كافية
+    }, 200)
 }
 
-const menuLinks=computed(()=>{
-    if(!userData.value) return[]
-    const role=userData.value?.role || null
-const links={
-    engineer:[{name:'Portfolio',path:'/userEngineer/dashboard/portfolio'},
-    {name:'Services',path:'/userEngineer/dashboard/services'}],
-
-    client:[{name:'address', path:'/userprofile/address'},
-    {name:'orders',path:'/userprofile/orders'}],
-
-    supplier:[{name:'products',path:'/supplier/productsUpload'},
-    {name:'orders',path:'/supplier/ordersTrack'}]
-}
-return links[role]
+const menuLinks = computed(() => {
+    if (!userData.value) return []
+    const role = userData.value?.role || null
+    const links = {
+        engineer: [
+            { name: 'Portfolio', path: '/userEngineer/dashboard/portfolio' },
+            { name: 'Services', path: '/userEngineer/dashboard/services' }
+        ],
+        client: [
+            { name: 'address', path: '/userprofile/address' },
+            { name: 'orders', path: '/userprofile/orders' }
+        ],
+        supplier: [
+            { name: 'products', path: '/supplier/productsUpload' },
+            { name: 'orders', path: '/supplier/ordersTrack' }
+        ]
+    }
+    return links[role] || []
 })
-
-
 
 const signIN = () => {
     navigateTo('/signin')
@@ -360,34 +353,77 @@ const goSearch = () => {
 }
 
 onMounted(async () => {
-    const categoryRef = collection($db, "categories")
-    const snapshot = await getDocs(categoryRef)
-    categories.value = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-    }))
-    const currentUser = $auth.currentUser;
-    if (!currentUser) return;
-    const userDoc = await getDoc(doc($db, 'users', currentUser.uid))
-    if (userDoc.exists()) {
-        userData.value = userDoc.data()
+  // categories
+  const categoryRef = collection($db, "categories")
+  const snapshot = await getDocs(categoryRef)
+  categories.value = snapshot.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+  }))
+
+  const currentUser = $auth.currentUser
+  if (!currentUser) return
+
+  // 1️⃣ users (أساسي)
+  const userDoc = await getDoc(doc($db, 'users', currentUser.uid))
+  if (!userDoc.exists()) return
+
+  const baseUser = userDoc.data()
+
+  // 2️⃣ حسب الدور
+  if (baseUser.role === 'engineer') {
+    const engineerDoc = await getDoc(
+      doc($db, 'engineers', currentUser.uid)
+    )
+
+    userData.value = {
+      ...baseUser,
+      ...(engineerDoc.exists() ? engineerDoc.data() : {})
     }
+  }
+  else if (baseUser.role === 'supplier') {
+    const supplierDoc = await getDoc(
+      doc($db, 'suppliers', currentUser.uid)
+    )
+
+    userData.value = {
+      ...baseUser,
+      ...(supplierDoc.exists() ? supplierDoc.data() : {})
+    }
+  }
+  else {
+    // client
+    userData.value = baseUser
+  }
 })
 
+
 const goToProfile = () => {
-    if (!userData.value) return;
-    const role = userData.value.role;
-    if (role === 'engineer') {
-        router.push('/userEngineer/dashboard')
+  if (!userData.value) return
+
+  const { role, profileComplete, hasMembership } = userData.value
+
+  if (role === 'engineer') {
+    if (!profileComplete) {
+      router.push('/userEngineer/complete-profile')
     }
-    else if (role === 'client') {
-        router.push('/userprofile')
+    else if (!hasMembership) {
+      router.push('/userEngineer/membership')
     }
     else {
-        router.push('/supplier')
+      router.push('/userEngineer/dashboard')
     }
-    mobileMenueOpen.value = false
+  }
+  else if (role === 'client') {
+    router.push('/userprofile')
+  }
+  else if (role === 'supplier') {
+    router.push('/supplier')
+  }
+
+  mobileMenueOpen.value = false
 }
+
 </script>
 
 <style scoped>

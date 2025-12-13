@@ -4,6 +4,7 @@
 
 
       <EngineerMobileView class="block lg:hidden" />
+      
       <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
         <div class="p-4 ">
           <h1 class="text-2xl font-bold mb-4">Profile</h1>
@@ -50,80 +51,92 @@
   </template>
 
 <script setup>
-import { getAuth, signOut } from "firebase/auth";
 import { ref, onMounted } from "vue";
-import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { signOut } from "firebase/auth";
+import { useAuth } from "~/composables/useAuth";
 import EditableField from "~/components/EditableField.vue";
 
 definePageMeta({
-  layout: 'default'
-})
+  layout: "default",
+  ssr: false
+});
 
-const auth = getAuth();
 const router = useRouter();
-const { $db } = useNuxtApp();
-const engineerName = ref('');
-const engineerImage = ref('');
-const selected = ref('profile')
-const successMessage=ref('')
-const data = ref({
-  position: '',
-  specialization: '',
-  yearsOfExperience: '',
-  bio: ''
+const { $db, $auth } = useNuxtApp();
+const { user } = useAuth();
 
-})
+// UI state
+const engineerName = ref("");
+const engineerImage = ref("");
+const successMessage = ref("");
+
+// form data
+const data = ref({
+  position: "",
+  specialization: "",
+  yearsOfExperience: "",
+  bio: ""
+});
+
 onMounted(async () => {
-  const user = auth.currentUser;
-  if (!user) {
-    return router.push('/signin');
+  // 1️⃣ لازم يكون مسجل دخول
+  if (!user.value) {
+    return router.push("/signin");
   }
 
-  const docSnap = await getDoc(doc($db, 'engineers', user.uid));
+  // 2️⃣ نجيب بيانات المهندس
+  const docRef = doc($db, "engineers", user.value.uid);
+  const docSnap = await getDoc(docRef);
+
   if (!docSnap.exists()) {
-    return router.push('/userEngineer/complete-profile');
+    return router.push("/userEngineer/complete-profile");
   }
 
   const d = docSnap.data();
 
-  if (d.profileComplete === false) {
-    return router.push('/userEngineer/complete-profile');
+  // 3️⃣ لازم يكون مكمّل البروفايل
+  if (!d.profileComplete) {
+    return router.push("/userEngineer/complete-profile");
   }
 
+  // 4️⃣ تأكيد إضافي إن البيانات الأساسية موجودة
   if (!d.position || !d.specialization || !d.yearsOfExperience || !d.bio) {
-    return router.push('/userEngineer/complete-profile');
+    return router.push("/userEngineer/complete-profile");
   }
 
-  engineerName.value = d.name;
-  engineerImage.value = d.image;
+  // 5️⃣ تعبئة الداتا في الصفحة
+  engineerName.value = d.name || "";
+  engineerImage.value = d.image || "/default.png";
+
   data.value = {
     position: d.position,
     specialization: d.specialization,
-    yearsOfExperience: d.yearsOfExperience?.toString(),
-    bio: d.bio,
+    yearsOfExperience: d.yearsOfExperience.toString(),
+    bio: d.bio
   };
 });
 
 const saveChanges = async () => {
-  const user = auth.currentUser
-    ;
+  if (!user.value) return;
+
   try {
-    await updateDoc(doc($db, 'engineers', user.uid), {
+    await updateDoc(doc($db, "engineers", user.value.uid), {
       position: data.value.position,
       specialization: data.value.specialization,
       yearsOfExperience: Number(data.value.yearsOfExperience),
-      bio: data.value.bio
-      
-    }
-  ) ;   successMessage.value='Your data has been updated sucessfully'
+      bio: data.value.bio,
+      profileComplete: true
+    });
 
-  } catch (e) {
-    console.error("Error updating profile:", e)
+    successMessage.value = "Your data has been updated successfully";
+  } catch (error) {
+    console.error("Error updating profile:", error);
   }
-}
-const logout = async () => {
-  await signOut(auth);
-  router.push('/signin');
-}
+};
 
+const logout = async () => {
+  await signOut($auth);
+  router.push("/signin");
+};
 </script>

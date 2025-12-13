@@ -1,0 +1,7 @@
+.dash-fade-enter-active {
+  transition: opacity 0.2s ease-out;
+}
+
+.dash-fade-enter-from {
+  opacity: 0;
+}

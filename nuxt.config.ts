@@ -9,9 +9,11 @@ export default defineNuxtConfig({
     '~/plugins/firebase.client.js',
     '~/plugins/fontawesome.js'
   ],
+  
 
   css: [
-    '@fortawesome/fontawesome-svg-core/styles.css'
+    '@fortawesome/fontawesome-svg-core/styles.css',
+    '~/assets/css/main.css'
   ],
 
   runtimeConfig: {

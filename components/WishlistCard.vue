@@ -4,7 +4,7 @@
       <img
         :src="product.productSnapshot?.image || '/placeholder.png'"
         :alt="product.productSnapshot?.name || 'product'"
-        class="w-full h-full object-cover"
+        class="w-full h-full object-contain"
       />
     </div>
 
@@ -15,12 +15,12 @@
     </div>
 
     <div class="mt-4 flex items-center justify-between gap-2">
-      <nuxt-link :to="`/products/${product.productSnapshot?.id}`" class="px-3 py-2 border rounded text-sm">
+<nuxt-link :to="`/categories/${product.categoryId}/${product.subId}/${product.productSnapshot?.id}`">
         View
       </nuxt-link>
 
       <button @click="onRemove(product.id)" class="px-3 py-2 rounded bg-red-500 text-white text-sm">
-        Remove
+        <font-awesome-icon icon="fa-solid fa-trash-can" />
       </button>
     </div>
   </div>

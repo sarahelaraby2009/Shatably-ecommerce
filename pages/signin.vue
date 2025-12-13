@@ -48,7 +48,7 @@
 
             <!-- Sign In Button -->
             <button type="submit" :disabled="isLoading"
-              class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
+              class="text-[#fefefe] w-full h-[42px] text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
               {{ isLoading ? 'Loading...' : 'Sign In' }}
             </button>
 
