@@ -265,6 +265,26 @@ const city = [
   "10th of Ramadan",
   "October 6 City"
 ];
+//////////shipping cost
+const shippingRules = {
+  "Cairo": 50,
+  "Giza": 60,
+  "Alexandria": 70,
+  "Dakahlia": 80,
+  "Sharqia": 80,
+  "Kafr El Sheikh": 85,
+  "Gharbia": 85,
+  "Menoufia": 90,
+  "Beni Suef": 90,
+  "Faiyum": 95,
+  "Qena": 100,
+  "Luxor": 110,
+  "Aswan": 120,
+  "Matrouh": 100,
+  "South Sinai": 120,
+  "North Sinai": 130,
+ 
+};
 const selectedGov=ref("")
 const payment =ref("")
 const cardNumber=ref("")
@@ -302,7 +322,8 @@ const discount = computed(() => {
 });
 
 const shipping = computed(() => {
-  return round3(100);
+  
+  return shippingRules[selectedGov.value] || 120; 
 });
 
 const total = computed(() => {
