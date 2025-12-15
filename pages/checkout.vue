@@ -151,7 +151,7 @@
 
         <!------------------------------right side -------------------------------------------------->
         <div class="lg:col-span-1">  
-          <h2 class="taxt-[18px] lg:text-[20px] font-semibold mb-4 mt-5">Order Summary</h2>
+          <h2 class="text-[18px] lg:text-[20px] font-semibold mb-4 mt-5">Order Summary</h2>
 
           <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
             <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
@@ -161,12 +161,15 @@
               <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
               <input 
                 type="text" 
-                placeholder="enter your discount code" 
+                placeholder="you have  discount promo code?" 
                 v-model="discountcode"
                 class="w-full px-3 py-2 border border-gray-300 rounded-[20px] outline-none focus:border-[#C76950] text-[13px] mb-2"
               />
-              <button class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
+              <!-- <button  @click="ApplyDiscount" class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
                 Apply
+              </button> -->
+              <button @click="toggleDiscount" class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
+                {{ discountRate > 0 ? "Reset" : "Apply" }}
               </button>
             </div>
 
@@ -178,7 +181,7 @@
                   <p>{{ subtotal }} LE</p>
                 </div>
                 <div class="flex justify-between">
-                  <p>Discount (5%):</p>
+                  <p>Discount</p>
                   <p>-{{ discount }} LE</p>
                 </div>
                 <div class="flex justify-between">
@@ -197,7 +200,11 @@
             </div>
 
             <!-- Place Order Button -->
-            <button @click="order" class="w-full mt-[10px] py-3 bg-[#C76950] text-white rounded-[22px] hover:bg-[#AD563F] text-[15px] font-medium">
+            <button @click="order"
+            :disabled="cartItems.length === 0"
+             class="w-full mt-[10px] py-3 bg-[#C76950] text-white rounded-[22px] 
+             hover:bg-[#AD563F] text-[15px] font-medium 
+             disabled:opacity-50 disabled:cursor-not-allowed">
               Place order
             </button>
           </div>
@@ -315,20 +322,58 @@ const subtotal = computed(() => {
   }, 0);
   return round3(sum);
 });
+const discountcode=ref("");
+const discountRate=ref(0);
 
-const discountRate = 0.05;
+
 const discount = computed(() => {
-  return round3(subtotal.value * discountRate);
+    if (cartItems.value.length === 0) return 0;
+  return round3(subtotal.value * discountRate.value);
 });
 
 const shipping = computed(() => {
+    if (cartItems.value.length === 0) return 0;
   
   return shippingRules[selectedGov.value] || 120; 
 });
 
 const total = computed(() => {
+  
+    if (cartItems.value.length === 0) return 0;
   return round3(subtotal.value - discount.value + shipping.value);
 });
+//////////////apply discount
+function toggleDiscount() {
+  //apply discount
+  if(discountRate.value >0){
+     discountRate.value = 0;
+    discountcode.value = "";
+     
+
+    showNotification("Discount removed", "success");
+    return;
+  }
+  const code = discountcode.value.trim().toLowerCase();
+
+  if (code !== "shatably") {
+    
+    showNotification("Invalid discount code", "error");
+      discountcode.value = "";
+    return;
+  }
+
+  // 🔒 check localStorage
+  const used = localStorage.getItem("used_shatably_discount");
+
+  if (used === "true") {
+    showNotification("You already used this discount code", "error");
+    return;
+  }
+
+  discountRate.value = 0.02;
+  showNotification("Discount code applied (2%)", "success");
+}
+
 /////////order colllection
 
 
@@ -381,6 +426,10 @@ function cleanData(obj) {
 
 
 async function order(){
+   if (cartItems.value.length === 0) {
+    showNotification("Your cart is empty", "error");
+    return;
+  }
   const hasError = validateCheckout();
   if(hasError){
     showNotification("Please fill all required fields", "error");   
@@ -434,6 +483,9 @@ async function order(){
     console.log("CLEANED ORDER DATA => ", cleanedOrderData);
     
     const orderRef = await addDoc(collection(db, "orders"), cleanedOrderData);
+    if (discountRate.value > 0) {
+  localStorage.setItem("used_shatably_discount", "true");
+}
     console.log("ORDER ID:", orderRef.id);
     
     showNotification("Order placed! Your Order ID is: " + orderRef.id, "success");  
