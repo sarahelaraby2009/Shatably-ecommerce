@@ -36,7 +36,7 @@ onMounted(async () => {
     <div class="flex justify-center mt-6 px-6 lg:px-10">
       <div class="w-full max-w-[1256px] h-auto">
         <img 
-          src="/assets/image 3.png"
+          src="/assets/Categories.png"
           alt="categories"
           class="w-full h-full object-cover rounded-2xl" 
         />
