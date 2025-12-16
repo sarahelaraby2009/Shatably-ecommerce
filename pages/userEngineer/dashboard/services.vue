@@ -25,7 +25,7 @@
                 <!-- Empty State -->
                 <div v-if="show"
                     class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6">
-                    <img src="/add image.png" alt="add service" class="w-12 mb-3" />
+                    <img src="/add-Image.png" alt="add service" class="w-12 mb-3" />
                     <p class="text-[18px]">Add your service here</p>
                     <button @click="openModal"
                         class="bg-[#C76950] w-auto lg:w-full text-white px-2 py-1 rounded-xl shadow transition hover:bg-[#a85740]">
