@@ -69,7 +69,7 @@ useHead({
 
 definePageMeta({
   layout: "default",
-  ssr: false
+  
 });
 
 const router = useRouter();

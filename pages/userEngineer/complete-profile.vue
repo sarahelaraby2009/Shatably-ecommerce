@@ -191,9 +191,7 @@
 </template>
 
 <script setup>
-      definePageMeta({
-  ssr: false
-})
+  
 import { ref, onMounted } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getDoc, updateDoc, doc } from 'firebase/firestore'
