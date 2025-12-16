@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-4xl mx-auto mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">My Orders</h1>
-    <p class="text-gray-500">Track and manage your orders</p>
+    <h1 class="font-bold text-xl">My Orders</h1>
+    <p>Track and manage your orders</p>
   </div>
 
   <!-- when no orders -->

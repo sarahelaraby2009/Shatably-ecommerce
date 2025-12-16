@@ -54,52 +54,6 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-
-const goBack = () => {
-  router.back();
-};
-
-const availableBrands = computed(() => {
-  const brands = new Set();
-  products.value.forEach((p) => {
-    if (p.brand) brands.add(p.brand);
-  });
-  return Array.from(brands).sort();
-});
-
-const hasActiveFilters = computed(() => {
-  return selectedBrand.value || minPrice.value || maxPrice.value;
-});
-
-const clearFilters = () => {
-  selectedBrand.value = "";
-  minPrice.value = "";
-  maxPrice.value = "";
-};
-
-const filteredProducts = computed(() => {
-  return products.value.filter((p) => {
-    // Search filter
-    if (
-      searchQuery.value &&
-      !p.name?.toLowerCase().includes(searchQuery.value.toLowerCase())
-    ) {
-      return false;
-    }
-    // Brand filter
-    if (selectedBrand.value && p.brand !== selectedBrand.value) {
-      return false;
-    }
-    // Price filters
-    if (minPrice.value && p.price < Number(minPrice.value)) {
-      return false;
-    }
-    if (maxPrice.value && p.price > Number(maxPrice.value)) {
-      return false;
-    }
-    return true;
-  });
-});
 </script>
 
 <template>
