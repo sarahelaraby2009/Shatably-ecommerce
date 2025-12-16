@@ -2,24 +2,44 @@
 import { useRoute } from 'vue-router'
 
 defineProps({
-    email: String,
-    userName: String,
-    feild1: String,
-    feild2: String,
-    feild3: String,
+  email: String,
+  userName: String,
+  feild1: String,
+  feild2: String,
+  feild3: String,
 })
 
 const route = useRoute()
-const isActive = (routeName) => {
-  return route.name === routeName
-}
+const isActive = (routeName) => route.name === routeName
 </script>
 
 <template>
   <div>
     <!-- Mobile -->
     <div class="lg:hidden border-b bg-white sticky top-0 z-10">
-      <div class="flex justify-around">
+      <div class="flex flex-col items-center pt-4">
+        <!-- Profile Image Mobile -->
+        <div class="relative mb-3">
+          <img
+            src="/supplier.jpeg"
+            class="w-12 h-12 rounded-full object-cover"
+          />
+          <label
+            for="upload"
+            class="absolute bottom-0 right-0 bg-white border rounded-full p-1 shadow cursor-pointer"
+          >
+            <font-awesome-icon
+              :icon="['fas', 'edit']"
+              class="text-gray-700 text-xs"
+            />
+          </label>
+        </div>
+        <h3 class="font-bold text-lg">{{ userName }}</h3>
+        <p class="text-sm text-gray-500 mb-4">{{ email }}</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex justify-around border-t">
         <NuxtLink to="/supplier" class="flex-1">
           <div
             :class="[
@@ -68,12 +88,12 @@ const isActive = (routeName) => {
           <div class="flex gap-4 pt-5">
             <div class="relative">
               <img
-                src="/assets/supplier.jpeg"
+                src="/supplier.jpeg"
                 class="w-14 h-14 rounded-full object-cover ml-5"
               />
               <label
                 for="upload"
-                class="absolute bottom-0 right-0 bg-white border rounded-full object-cover pr-1 pl-1 shadow cursor-pointer"
+                class="absolute bottom-0 right-0 bg-white border rounded-full pr-1 pl-1 shadow cursor-pointer"
               >
                 <font-awesome-icon
                   :icon="['fas', 'edit']"

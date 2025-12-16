@@ -1,15 +1,20 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { doc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+
 useHead({
   title: "Subcategories",
   meta: [
     {
       name: "description",
-      content: "استكشف الفئات الفرعية المتنوعة واختر ما يناسب احتياجاتك بسهولة.",
+      content: "استكشف الفئات الفرعية المتاحة واختر ما يناسب احتياجاتك بسهولة",
     },
-    {'keywords': 'فئات فرعية, تسوق, منتجات, شراء إلكتروني, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة, تخفيضات, تسوق آمن, تجربة تسوق'},
+    {
+      name: "keywords",
+      content:
+        "فئات فرعية، متجر إلكتروني، تسوق أونلاين، تشطيب، أدوات بناء",
+    },
   ],
 });
 
@@ -18,11 +23,19 @@ const { $db } = useNuxtApp();
 
 const categoryId = route.params.id;  
 const subcategories = ref([]);
+const headerImage = ref("/assets/image 4.png"); // Default image
 const loading = ref(true);
 const error = ref(null);
 
 onMounted(async () => {
   try {
+    // Fetch the category document to get the header image
+    const categoryDoc = await getDoc(doc($db, "categories", categoryId));
+    if (categoryDoc.exists() && categoryDoc.data().header) {
+      headerImage.value = categoryDoc.data().header;
+    }
+
+    // Fetch subcategories
     const subRef = collection(doc($db, "categories", categoryId), "subcategories");
     const snap = await getDocs(subRef);
 
@@ -70,7 +83,7 @@ onMounted(async () => {
     <div class="flex justify-center mt-6 px-6 lg:px-10">
       <div class="w-full max-w-[1256px] h-auto">
         <img 
-          src="/assets/image 4.png"
+          :src="headerImage"
           alt="subcategories"
           class="w-full h-full object-cover rounded-2xl" 
         />
