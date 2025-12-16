@@ -2,6 +2,16 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { doc, collection, getDocs } from "firebase/firestore";
+useHead({
+  title: "Subcategories",
+  meta: [
+    {
+      name: "description",
+      content: "استكشف الفئات الفرعية المتنوعة واختر ما يناسب احتياجاتك بسهولة.",
+    },
+    {'keywords': 'فئات فرعية, تسوق, منتجات, شراء إلكتروني, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة, تخفيضات, تسوق آمن, تجربة تسوق'},
+  ],
+});
 
 const route = useRoute();
 const { $db } = useNuxtApp();

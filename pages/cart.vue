@@ -6,6 +6,15 @@ import { useNuxtApp } from "#app";
 import { collection, query,doc,  updateDoc, where, limit, getDocs, } from "firebase/firestore";
 
 import ProductCard from "~/components/productCard.vue";
+useHead({
+  title: 'Shopping Cart',
+  meta: [
+    {
+      name: 'description',
+      content: 'استعرض وادارة منتجاتك في سلة التسوق الخاصة بك بسهولة قبل إتمام عملية الشراء.'
+    }
+  ]
+})
 const { $db: db } = useNuxtApp();
 const {
   cartItems,

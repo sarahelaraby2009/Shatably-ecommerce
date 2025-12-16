@@ -148,12 +148,19 @@
 </template>
 
 <script setup>
-      definePageMeta({
-  ssr: false
-})
+  
 import { ref, onMounted } from 'vue'
 import { updateDoc, getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+useHead({
+  title: 'Engineer Membership',
+  meta: [
+    {
+      name: 'description',
+      content: 'تحكم في اشتراك العضوية الخاص بك كمهندس وعرض مشاريعك للعملاء.'
+    }
+  ]
+})
 
 const { $db } = useNuxtApp()
 const auth = getAuth()

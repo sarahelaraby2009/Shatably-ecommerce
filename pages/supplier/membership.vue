@@ -4,6 +4,16 @@ import { useNuxtApp } from "#app";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "vue-router";
+useHead({
+  title: "Supplier Membership",
+  meta: [
+    {
+      name: "description",
+      content: "استعرض وحدث ملف المورد الخاص بك بسهولة لضمان تقديم أفضل الخدمات والمنتجات لعملائك.",
+    },
+    {'keywords': 'مورد, ملف مورد, تحديث ملف مورد, معلومات مورد, خدمات مورد, منتجات مورد, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة'},
+  ],
+});
 // -----------------------------------------------------------------
 const { $auth, $db } = useNuxtApp();
 const router = useRouter();
