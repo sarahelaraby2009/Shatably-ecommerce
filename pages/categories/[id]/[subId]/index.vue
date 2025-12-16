@@ -3,6 +3,21 @@ import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 
+useHead({
+  title: "Products",
+  meta: [
+    {
+      name: "description",
+      content: "تسوق أفضل المنتجات في فئات مختلفة بسهولة ويسر",
+    },
+    {
+      name: "keywords",
+      content:
+        "تسوق، منتجات، فئات، متجر إلكتروني، عروض، خصومات",
+    },
+  ],
+});
+
 const route = useRoute();
 const router = useRouter();
 const { $db } = useNuxtApp();
@@ -17,6 +32,69 @@ const searchQuery = ref("");
 const selectedBrand = ref("");
 const minPrice = ref("");
 const maxPrice = ref("");
+
+// ✅ استخراج البراندات المتاحة من المنتجات
+const availableBrands = computed(() => {
+  const brands = products.value
+    .map(p => p.brand)
+    .filter(brand => brand && brand.trim() !== ''); // إزالة القيم الفارغة
+  
+  // إزالة التكرار
+  return [...new Set(brands)].sort();
+});
+
+// ✅ فحص إذا كان هناك فلاتر نشطة
+const hasActiveFilters = computed(() => {
+  return selectedBrand.value !== "" || minPrice.value !== "" || maxPrice.value !== "";
+});
+
+// ✅ تصفية المنتجات بناءً على الفلاتر والبحث
+const filteredProducts = computed(() => {
+  let filtered = products.value;
+
+  // فلتر البحث
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(p => 
+      p.name?.toLowerCase().includes(query) || 
+      p.brand?.toLowerCase().includes(query) ||
+      p.description?.toLowerCase().includes(query)
+    );
+  }
+
+  // فلتر البراند
+  if (selectedBrand.value) {
+    filtered = filtered.filter(p => p.brand === selectedBrand.value);
+  }
+
+  // فلتر السعر الأدنى
+  if (minPrice.value) {
+    const min = parseFloat(minPrice.value);
+    filtered = filtered.filter(p => {
+      const price = parseFloat(p.price);
+      return !isNaN(price) && price >= min;
+    });
+  }
+
+  // فلتر السعر الأقصى
+  if (maxPrice.value) {
+    const max = parseFloat(maxPrice.value);
+    filtered = filtered.filter(p => {
+      const price = parseFloat(p.price);
+      return !isNaN(price) && price <= max;
+    });
+  }
+
+  return filtered;
+});
+
+// ✅ مسح كل الفلاتر
+const clearFilters = () => {
+  searchQuery.value = "";
+  selectedBrand.value = "";
+  minPrice.value = "";
+  maxPrice.value = "";
+};
 
 onMounted(async () => {
   if (!categoryId || !subId) {

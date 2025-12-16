@@ -3,6 +3,21 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 
+useHead({
+  title: "Subcategories",
+  meta: [
+    {
+      name: "description",
+      content: "استكشف الفئات الفرعية المتاحة واختر ما يناسب احتياجاتك بسهولة",
+    },
+    {
+      name: "keywords",
+      content:
+        "فئات فرعية، متجر إلكتروني، تسوق أونلاين، تشطيب، أدوات بناء",
+    },
+  ],
+});
+
 const route = useRoute();
 const { $db } = useNuxtApp();
 

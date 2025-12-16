@@ -12,7 +12,7 @@
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
 
             <h3 class="font-semibold text-base">sign up as :</h3>
-            <div class="flex gap-2 justify-center items-center">
+            <div class="flex gap-2 justify-start items-center">
               <div class="options" @click="userRole = 'client'"
                 :class="userRole === 'client' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">Client
               </div>
@@ -102,6 +102,15 @@
 import { ref } from 'vue'
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore'
+useHead({
+  title: 'Register | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم.'
+    }
+  ]
+})
 
 const email = ref('')
 const name = ref('')
