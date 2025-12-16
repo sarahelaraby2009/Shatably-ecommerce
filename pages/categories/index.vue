@@ -1,6 +1,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { collection, getDocs } from "firebase/firestore";
+useHead({
+  title: "Categories",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح مجموعة واسعة من الفئات لاكتشاف المنتجات التي تناسب احتياجاتك.",
+    },
+    {'keywords': 'فئات, تسوق, منتجات, شراء إلكتروني, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة, تخفيضات, تسوق آمن, تجربة تسوق'},
+  ],
+});
 
 const { $db } = useNuxtApp();
 const categories = ref([]);

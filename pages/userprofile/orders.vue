@@ -35,6 +35,15 @@ import { ref, onMounted } from "vue";
 import { useNuxtApp } from "#app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
+useHead({
+  title: 'User Orders',
+  meta: [
+    {
+      name: 'description',
+      content: 'تعقب وادارة طلباتك بسهولة من خلال صفحة الطلبات الخاصة بك.'
+    }
+  ]
+})
 
 const orders = ref([]);
 const loading = ref(true);

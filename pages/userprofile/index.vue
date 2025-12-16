@@ -10,7 +10,7 @@
     <div class="flex flex-col md:flex-row gap-4 p-3">
       <div class="grid gap-2 w-full md:w-auto">
         <h1>Email</h1>
-        <div class="w-full md:w-[240px] border border-gray-300 rounded-full p-3 outline-none">
+        <div class="w-full md:w-[250px] border border-gray-300 rounded-full p-3 outline-none">
           {{ profile.email }}
         </div>
       </div>
@@ -89,6 +89,15 @@
 import { ref, onMounted } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+useHead({
+  title: 'User Profile',
+  meta: [
+    {
+      name: 'description',
+      content: 'تحكم في معلوماتك الشخصية ومعلومات الاتصال الخاصة بك بسهولة وأمان.'
+    }
+  ]
+})
 
 const { $auth, $db } = useNuxtApp();
 

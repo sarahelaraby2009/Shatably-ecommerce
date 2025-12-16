@@ -3,6 +3,16 @@ import { ref, onMounted, watch } from 'vue'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useNuxtApp } from '#app'
 import { onAuthStateChanged } from 'firebase/auth'
+useHead({
+  title: "Supplier Profile",
+  meta: [
+    {
+      name: "description",
+      content: "استعرض وحدث ملف المورد الخاص بك بسهولة لضمان تقديم أفضل الخدمات والمنتجات لعملائك.",
+    },
+    {'keywords': 'مورد, ملف مورد, تحديث ملف مورد, معلومات مورد, خدمات مورد, منتجات مورد, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة'},
+  ],
+});
 
 // ----------------------------
 const { $auth, $db } = useNuxtApp();

@@ -3,20 +3,26 @@
         <div class="max-w-[1200px] w-full flex flex-col gap-4">
             <!-- part1 -->
             <div class="mb-4">
-                <div class="w-full h-[400px] flex justify-center mt-2 relative">
+                <div class="w-full aspect-[16/7] lg:h-[400px] flex justify-center mt-2 relative">
                     <img class="w-full h-full rounded-[16px] object-cover" src="/calc.avif" />
                     <div class="absolute inset-0 flex justify-center pointer-events-none">
                         <div class="w-full h-full bg-black/70 rounded-[16px]"></div>
                     </div>
-                    <div class="absolute inset-0 flex flex-col justify-center items-center gap-3 px-4">
-                        <h2 class="text-[#fefefe] font-bold text-[28px] max-w-[700px] text-center">Calculate Your
-                            Apartment
-                            Finishing Cost Easily</h2>
-                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] text-left">A space where
-                            creativity meets
-                            craftsmanship find your engineer, view their work, and bring your dream
-                            apartment to life.</p>
-                    </div>
+                 <div class="absolute inset-0 flex flex-col justify-center items-start gap-3 px-4 sm:px-6 lg:px-10">
+  <h2
+    class="text-[#fefefe] font-bold text-[20px] sm:text-[24px] lg:text-[28px]
+           max-w-[90%] sm:max-w-[700px] text-left leading-snug">
+    Calculate Your Apartment Finishing Cost Easily
+  </h2>
+
+  <p
+    class="text-[#fefefe] font-medium text-[13px] sm:text-[14px]
+           max-w-[90%] sm:max-w-[600px] text-left opacity-90">
+    A space where creativity meets craftsmanship find your engineer, view their work,
+    and bring your dream apartment to life.
+  </p>
+</div>
+
                 </div>
             </div>
 
@@ -38,7 +44,7 @@
                     <h2 class="text-[#262626] font-semibold text-[18px]">Select the finishing level that suits your
                         budget:</h2>
                 </div>
-                <div class="flex gap-10 overflow-x-auto scrollbar-hide lg:overflow-clip justify-center ">
+                <div class="flex gap-10 overflow-x-auto scrollbar-hide lg:overflow-clip justify-start lg:justify-center ">
                     <div v-for="pkg in packages" :key="pkg.id" @click="selectedPkg = pkg"
                         :class="{ 'border-[#C76950] border-2': selectedPkg?.id === pkg.id, 'border-slate-200': selectedPkg?.id !== pkg.id }"
                         class="min-w-[260px] lg:w-[260px] overflow-hidden text-left shadow-md rounded-[16px] h-[240px] cursor-pointer transition flex flex-col gap-4">
@@ -121,7 +127,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { collection, getDocs } from 'firebase/firestore'
-
+useHead({
+  title: 'Pricing Calculator | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'احسب تكلفة تشطيب شقتك بسهولة مع خيارات متعددة تناسب ميزانيتك.'
+    }
+  ]
+})
 const packages = ref([])
 const { $db } = useNuxtApp()
 const calc = ref('')
