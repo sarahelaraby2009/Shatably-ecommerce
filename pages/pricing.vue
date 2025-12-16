@@ -3,16 +3,16 @@
         <div class="max-w-[1200px] w-full flex flex-col gap-4">
             <!-- part1 -->
             <div class="mb-4">
-                <div class="w-full h-[400px] flex justify-center mt-2 relative">
+                <div class="w-full aspect-[16/7] lg:h-[400px] flex justify-center mt-2 relative">
                     <img class="w-full h-full rounded-[16px] object-cover" src="/calc.avif" />
                     <div class="absolute inset-0 flex justify-center pointer-events-none">
                         <div class="w-full h-full bg-black/70 rounded-[16px]"></div>
                     </div>
-                    <div class="absolute inset-0 flex flex-col justify-center items-center gap-3 px-4">
-                        <h2 class="text-[#fefefe] font-bold text-[28px] max-w-[700px] text-center">Calculate Your
+                    <div class="absolute inset-0 flex flex-col justify-center items-start gap-3 p-4">
+                        <h2 class="text-[#fefefe] font-bold text-[28px] p-3 ml-[50px] max-w-[700px] text-left">Calculate Your
                             Apartment
                             Finishing Cost Easily</h2>
-                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] text-left">A space where
+                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] ml-[50px] text-left">A space where
                             creativity meets
                             craftsmanship find your engineer, view their work, and bring your dream
                             apartment to life.</p>
