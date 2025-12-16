@@ -26,7 +26,7 @@
 <script setup>
 import{ref,onMounted,watch} from 'vue'
 import { collection,getDocs } from 'firebase/firestore'
-import ProductCard from "/components/ProductCard.vue"
+
 useHead({
   title: 'Search | MyProject',
   meta: [
