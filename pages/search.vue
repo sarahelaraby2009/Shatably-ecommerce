@@ -27,6 +27,15 @@
 import{ref,onMounted,watch} from 'vue'
 import { collection,getDocs } from 'firebase/firestore'
 import ProductCard from "/components/ProductCard.vue"
+useHead({
+  title: 'Search | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'ابحث عن المنتجات التي تناسب احتياجاتك في مجال التشطيب المنزلي بسهولة وسرعة.'
+    }
+  ]
+})
 const route = useRoute()
 const queryText = ref(route.query.query) //search word
 const allProducts=ref([])

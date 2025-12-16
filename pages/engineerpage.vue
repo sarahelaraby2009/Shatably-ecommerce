@@ -22,6 +22,15 @@
 
 import{ref,onMounted} from'vue';
 import { collection, getDocs } from 'firebase/firestore';
+useHead({
+  title: 'Engineers',
+  meta: [
+    {
+      name: 'description',
+      content: 'اكتشف مهندسين موهوبين في مجالات مختلفة وتواصل معهم لمشاريعك التقنية.'
+    }
+  ]
+})
 
 const {$db}=useNuxtApp()
 const engineers=ref([])

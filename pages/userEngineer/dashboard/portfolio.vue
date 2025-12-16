@@ -136,6 +136,16 @@
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+useHead({
+  title: "Engineer portfolio",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح محفظة اعمالك و حدثها.",
+    },
+    {'keywords': 'لوحة تحكم مهندس, بروفايل مهندس, إدارة مشاريع, تحديث ملف شخصي, خبرة مهندس, تخصص مهندس, خدمات مهندس, عملاء, تصميم, تطوير'},
+  ],
+});
 const { $db } = useNuxtApp();
 
 const showSecModal = ref(false);

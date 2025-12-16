@@ -124,6 +124,15 @@ import {
   browserSessionPersistence 
 } from 'firebase/auth'
 import { getDoc, doc } from 'firebase/firestore'
+useHead({
+  title: 'Sign In | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'قم بتسجيل الدخول إلى حسابك للوصول إلى ميزات شطبلي المخصصة.'
+    }
+  ]
+})
 
 const { $auth, $db } = useNuxtApp()
 

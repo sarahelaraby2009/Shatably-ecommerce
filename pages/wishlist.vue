@@ -4,6 +4,15 @@ import { useNuxtApp } from '#app';
 import { collection, query, where, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import WishlistCard from '@/components/WishlistCard.vue'; // استيراد الكارد
+useHead({
+  title: 'Wishlist | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'استعرض وادارة قائمة الأمنيات الخاصة بك بسهولة واختر ما يناسبك من منتجات.'
+    }
+  ]
+})
 
 const nuxtApp = useNuxtApp();
 const db = nuxtApp.$db;

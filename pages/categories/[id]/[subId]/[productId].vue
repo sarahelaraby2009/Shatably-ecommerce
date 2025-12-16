@@ -14,6 +14,19 @@ import {
   where
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+useHead({
+  title: "Product Details - Shatably",
+  meta: [
+    {
+      name: "description",
+      content: "اكتشف تفاصيل المنتج، المواصفات، والمراجعات على Shatably - وجهتك للتسوق الإلكتروني."
+    },
+    {
+      name: "keywords",
+      content: "تسوق إلكتروني, تفاصيل المنتج, مراجعات المنتج, مواصفات المنتج, Shatably"
+    }
+  ]
+});
 // -------------------------------------------------------
 const route = useRoute();
 const router = useRouter();

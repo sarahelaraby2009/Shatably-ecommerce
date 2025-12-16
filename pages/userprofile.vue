@@ -2,7 +2,15 @@
 import { ref, onMounted } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore"; 
 import { onAuthStateChanged } from "firebase/auth";
-
+useHead({
+  title: 'User Profile | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'تحكم في معلوماتك الشخصية ومعلومات الاتصال الخاصة بك بسهولة وأمان.'
+    }
+  ]
+})
 const { $auth, $db } = useNuxtApp();
 
 const profile = ref({

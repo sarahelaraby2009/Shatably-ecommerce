@@ -155,7 +155,7 @@
 
           <!-- Certificate File Name -->
           <p v-if="certificateName" class="text-xs text-gray-600 mt-2 text-center">
-            📄 {{ certificateName }}
+             {{ certificateName }}
           </p>
 
           <!-- Certificate Upload Progress -->
@@ -197,6 +197,16 @@
 import { ref, onMounted } from 'vue'
 import { getAuth } from 'firebase/auth'
 import { getDoc, updateDoc, doc } from 'firebase/firestore'
+useHead ({
+  title: "Complete Engineer Profile",
+  meta: [
+    {
+      name: "description",
+      content: "اكمل ملف المهندس الخاص بك لتقديم خدماتك ومشاريعك للعملاء بسهولة.",
+    },
+    {'keywords': 'مهندس, ملف مهندس, تسجيل مهندس, خدمات مهندس, مشاريع مهندس, تصميم, تطوير, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت'},
+  ],
+});
 
 // Form fields
 const specialization = ref('')

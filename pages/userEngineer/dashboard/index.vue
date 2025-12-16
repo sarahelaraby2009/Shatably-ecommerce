@@ -56,6 +56,16 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { useAuth } from "~/composables/useAuth";
 import EditableField from "~/components/EditableField.vue";
+useHead({
+  title: "Engineer Dashboard",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح لوحة تحكم المهندس الخاصة بك لإدارة ملفك الشخصي ومشاريعك بسهولة.",
+    },
+    {'keywords': 'لوحة تحكم مهندس, بروفايل مهندس, إدارة مشاريع, تحديث ملف شخصي, خبرة مهندس, تخصص مهندس, خدمات مهندس, عملاء, تصميم, تطوير'},
+  ],
+});
 
 definePageMeta({
   layout: "default",

@@ -121,7 +121,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { collection, getDocs } from 'firebase/firestore'
-
+useHead({
+  title: 'Pricing Calculator | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'احسب تكلفة تشطيب شقتك بسهولة مع خيارات متعددة تناسب ميزانيتك.'
+    }
+  ]
+})
 const packages = ref([])
 const { $db } = useNuxtApp()
 const calc = ref('')
