@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   doc,
@@ -40,6 +40,9 @@ const product = ref(null);
 const loading = ref(true);
 const error = ref(null);
 const recommendedProducts = ref([]);
+const recentlyViewedProducts = ref([]);
+const recentlyViewedIndex = ref(0);
+const recentlyViewedIndexMobile = ref(0);
 const quantity = ref(1);
 const currentUser = ref(null);
 const isInWishlist = ref(false);
@@ -48,12 +51,12 @@ console.log("Params:", route.params)
 console.log("categoryId:", route.params.id)
 console.log("subId:", subId)
 console.log("productId:", productId)
+
 const fetchProduct = async () => {
   loading.value = true;
   error.value = null;
 
   try {
-    // 1st: Try nested
     let docRef = doc(
       db,
       "categories",
@@ -65,13 +68,11 @@ const fetchProduct = async () => {
     );
     let docSnap = await getDoc(docRef);
 
-    // 2nd: If nested not found → try root
     if (!docSnap.exists()) {
       docRef = doc(db, "products", productId);
       docSnap = await getDoc(docRef);
     }
 
-    // 3rd: Check again
     if (docSnap.exists()) {
       product.value = { id: docSnap.id, ...docSnap.data() };
     } else {
@@ -89,17 +90,79 @@ const fetchProduct = async () => {
 // ----------------------------------------------------
 const fetchRecommendedProducts = async () => {
   try {
-    let snap = await getDocs(
-      query(collection(db, "products"), limit(6))
-    );
-    recommendedProducts.value = snap.docs
+    let snap = await getDocs(collection(db, "products"));
+    
+    let allProducts = snap.docs
       .filter((d) => d.id !== productId)
-      .slice(0, 4)
       .map((d) => ({ id: d.id, ...d.data() }));
+    
+    if (allProducts.length === 0) {
+      const categoriesSnap = await getDocs(collection(db, "categories"));
+      for (const catDoc of categoriesSnap.docs) {
+        const subcatsSnap = await getDocs(collection(db, "categories", catDoc.id, "subcategories"));
+        for (const subDoc of subcatsSnap.docs) {
+          const prodsSnap = await getDocs(
+            collection(db, "categories", catDoc.id, "subcategories", subDoc.id, "products")
+          );
+          prodsSnap.docs.forEach(d => {
+            if (d.id !== productId) {
+              allProducts.push({ id: d.id, ...d.data() });
+            }
+          });
+        }
+      }
+    }
+    
+    // Filter out products with names longer than 25 characters
+    const validProducts = allProducts.filter(prod => 
+      (prod.name?.length || 0) <= 25
+    );
+    
+    // Shuffle for random selection
+    const shuffled = validProducts.sort(() => 0.5 - Math.random());
+    
+    // Get 4 for recommended
+    recommendedProducts.value = shuffled.slice(0, 4);
+    
+    // Get different 6 for recently viewed (random)
+    recentlyViewedProducts.value = shuffled.slice(4, 10);
   } catch (err) {
     console.error("Error loading recommended products:", err);
   }
 };
+
+// Recently Viewed Navigation Functions
+const scrollRecentlyViewed = (direction) => {
+  const maxIndex = Math.max(0, recentlyViewedProducts.value.length - 3);
+  if (direction === 'next') {
+    recentlyViewedIndex.value = Math.min(recentlyViewedIndex.value + 1, maxIndex);
+  } else {
+    recentlyViewedIndex.value = Math.max(recentlyViewedIndex.value - 1, 0);
+  }
+};
+
+const scrollRecentlyViewedMobile = (direction) => {
+  const maxIndex = Math.max(0, recentlyViewedProducts.value.length - 3);
+  if (direction === 'next') {
+    recentlyViewedIndexMobile.value = Math.min(recentlyViewedIndexMobile.value + 1, maxIndex);
+  } else {
+    recentlyViewedIndexMobile.value = Math.max(recentlyViewedIndexMobile.value - 1, 0);
+  }
+};
+
+const visibleRecentlyViewed = computed(() => {
+  return recentlyViewedProducts.value.slice(
+    recentlyViewedIndex.value,
+    recentlyViewedIndex.value + 3
+  );
+});
+
+const visibleRecentlyViewedMobile = computed(() => {
+  return recentlyViewedProducts.value.slice(
+    recentlyViewedIndexMobile.value,
+    recentlyViewedIndexMobile.value + 3
+  );
+});
 
 // ------------------------------------------------------
 const addToCart = async () => {
@@ -170,6 +233,35 @@ const decreaseQuantity = () => {
   if (quantity.value > 1) quantity.value--;
 };
 
+const goToProduct = (prod) => {
+  const targetCategoryId = prod.categoryId || categoryId;
+  const targetSubId = prod.subId || subId;
+  router.push(`/categories/${targetCategoryId}/${targetSubId}/${prod.id}`);
+};
+
+const buyNow = async () => {
+  if (!currentUser.value) {
+    router.push("/auth/login");
+    return;
+  }
+
+  try {
+    // Add to cart first
+    const cartRef = doc(db, "carts", `${currentUser.value.uid}_${productId}`);
+    await setDoc(cartRef, {
+      userId: currentUser.value.uid,
+      productId: productId,
+      quantity: quantity.value,
+      createdAt: serverTimestamp(),
+      productSnapshot: product.value,
+    });
+    
+    router.push("/checkout");
+  } catch (err) {
+    console.error("Error during buy now:", err);
+  }
+};
+
 onMounted(() => {
   if (auth) {
     onAuthStateChanged(auth, (user) => {
@@ -225,25 +317,38 @@ onMounted(() => {
             </button>
           </div>
 
-          <div class="bg-white rounded-lg px-3 py-4 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-semibold">Recently Viewed</h3>
+          <div class="bg-white rounded-lg px-4 py-4 shadow-sm">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-base font-semibold text-gray-900">Recently viewed</h3>
               <div class="flex gap-2">
-                <button class="w-8 h-8 rounded-full bg-gray-100 shadow flex items-center justify-center hover:bg-gray-200">
-                  <font-awesome-icon :icon="['fas', 'chevron-left']" class="text-xs text-gray-600" />
+                <button 
+                  @click="scrollRecentlyViewed('prev')"
+                  :disabled="recentlyViewedIndex === 0"
+                  class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <font-awesome-icon :icon="['fas', 'chevron-left']" class="text-xs text-gray-700" />
                 </button>
-                <button class="w-8 h-8 rounded-full bg-gray-100 shadow flex items-center justify-center hover:bg-gray-200">
-                  <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-xs text-gray-600" />
+                <button 
+                  @click="scrollRecentlyViewed('next')"
+                  :disabled="recentlyViewedIndex >= recentlyViewedProducts.length - 3"
+                  class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-xs text-gray-700" />
                 </button>
               </div>
             </div>
-            <div class="flex gap-2">
-              <div v-for="i in 3" :key="i" class="flex-1">
-                <img :src="`/assets/${i}.jpeg`" class="w-full h-32 object-cover rounded-lg mb-2" />
-                <div class="flex justify-between text-xs px-1">
-                  <p>Product Name</p>
-                  <p class="font-bold">300 LE</p>
+            <div class="flex gap-4">
+              <div 
+                v-for="prod in visibleRecentlyViewed" 
+                :key="prod.id" 
+                class="flex-1 cursor-pointer hover:opacity-80 transition-opacity"
+                @click="goToProduct(prod)"
+              >
+                <div class="bg-gray-50 rounded-lg p-3 mb-2 h-32 flex items-center justify-center">
+                  <img :src="prod.image" :alt="prod.name" class="w-full h-full object-contain" />
                 </div>
+                <p class="text-xs text-gray-800 truncate mb-1">{{ prod.name }}</p>
+                <p class="text-sm font-bold text-gray-900">{{ prod.price }} LE</p>
               </div>
             </div>
           </div>
@@ -298,7 +403,7 @@ onMounted(() => {
           </div>
 
           <div class="flex gap-3">
-            <button class="flex-1 h-14 bg-[#C76950] text-white rounded-full hover:bg-[#b85840] font-semibold">
+            <button @click="buyNow" class="flex-1 h-14 bg-[#C76950] text-white rounded-full hover:bg-[#b85840] font-semibold">
               Buy Now
             </button>
             <button @click="addToCart" class="flex-1 h-14 border border-[#612B1F] text-[#612B1F] rounded-full hover:bg-[#b85840] hover:border-[#b85840] hover:text-white font-semibold">
@@ -358,7 +463,7 @@ onMounted(() => {
           </div>
 
           <div class="flex gap-3 pb-4">
-            <button class="flex-1 h-12 bg-[#C76950] text-white rounded-full font-semibold text-sm">
+            <button @click="buyNow" class="flex-1 h-12 bg-[#C76950] text-white rounded-full font-semibold text-sm">
               Buy Now
             </button>
             <button @click="addToCart" class="flex-1 h-12 border-2 border-[#C76950] text-[#C76950] rounded-full font-semibold text-sm">
@@ -367,25 +472,40 @@ onMounted(() => {
           </div>
         </div>
 
-        <div class="px-4 py-4 bg-gray-50">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-bold text-lg">Recently viewed</h3>
+        <div class="px-4 py-5 bg-white">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-base text-gray-900">Recently viewed</h3>
             <div class="flex gap-2">
-              <button class="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
-                <font-awesome-icon :icon="['fas', 'chevron-left']" class="text-xs" />
+              <button 
+                @click="scrollRecentlyViewedMobile('prev')"
+                :disabled="recentlyViewedIndexMobile === 0"
+                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'chevron-left']" class="text-xs text-gray-700" />
               </button>
-              <button class="w-8 h-8 rounded-full bg-white shadow flex items-center justify-center">
-                <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-xs" />
+              <button 
+                @click="scrollRecentlyViewedMobile('next')"
+                :disabled="recentlyViewedIndexMobile >= recentlyViewedProducts.length - 3"
+                class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-xs text-gray-700" />
               </button>
             </div>
           </div>
 
-          <div class="flex gap-3 overflow-x-auto pb-2">
-            <div v-for="i in 3" :key="i" class="flex-shrink-0 w-32">
-              <img :src="`/assets/${i}.jpeg`" class="w-full h-28 object-cover rounded-lg mb-2" />
-              <p class="text-xs font-medium truncate">Midea Window AC</p>
-              <p class="text-xs text-gray-500">EMBER 4</p>
-              <div class="flex items-center gap-1 mt-1">
+          <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            <div 
+              v-for="prod in visibleRecentlyViewedMobile" 
+              :key="prod.id" 
+              class="flex-shrink-0 w-32 cursor-pointer hover:opacity-80 transition-opacity"
+              @click="goToProduct(prod)"
+            >
+              <div class="bg-gray-50 rounded-lg p-2 mb-2 h-28 flex items-center justify-center">
+                <img :src="prod.image" :alt="prod.name" class="w-full h-full object-contain" />
+              </div>
+              <p class="text-xs font-medium truncate text-gray-800 mb-1">{{ prod.name }}</p>
+              <p class="text-xs text-gray-500 truncate mb-1">{{ prod.brand || 'Brand' }}</p>
+              <div class="flex items-center gap-1">
                 <div class="flex gap-0.5">
                   <font-awesome-icon v-for="j in 5" :key="j" :icon="['fas', 'star']" class="text-yellow-400" style="font-size: 8px" />
                 </div>
@@ -449,28 +569,15 @@ onMounted(() => {
       <div class="bg-gray-50 px-4 py-6 lg:py-8">
         <div class="max-w-7xl mx-auto">
           <h2 class="text-xl lg:text-3xl font-bold mb-4 lg:mb-6">Recommended Products</h2>
-          <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6">
-            <div v-for="prod in recommendedProducts" :key="prod.id" class="bg-white rounded-lg overflow-hidden shadow-sm">
-              <div class="relative">
-                <img :src="prod.image" :alt="prod.name" class="w-full h-32 lg:h-48 object-cover" />
-              </div>
-              <div class="p-3">
-                <p class="text-sm font-semibold text-gray-800 mb-1 truncate">{{ prod.name }}</p>
-                <p class="text-xs text-gray-500 mb-2 truncate">{{ prod.brand || 'Brand' }}</p>
-                <div class="flex items-center gap-1 mb-2">
-                  <div class="flex gap-0.5">
-                    <font-awesome-icon v-for="j in 5" :key="j" :icon="['fas', 'star']" class="text-yellow-400" style="font-size: 8px" />
-                  </div>
-                  <span class="text-xs text-gray-500">5.0</span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <p class="text-base lg:text-lg font-bold text-gray-900">{{ prod.price }} LE</p>
-                  <button class="w-7 h-7 lg:w-8 lg:h-8 bg-[#C76950] rounded-full flex items-center justify-center hover:bg-[#b85840]">
-                    <font-awesome-icon :icon="['fas', 'plus']" class="text-white text-xs" />
-                  </button>
-                </div>
-              </div>
-            </div>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+            <ProductCard
+              v-for="prod in recommendedProducts"
+              :key="prod.id"
+              :product="prod"
+              :categoryId="prod.categoryId || categoryId"
+              :subId="prod.subId || subId"
+              class="w-full"
+            />
           </div>
         </div>
       </div>

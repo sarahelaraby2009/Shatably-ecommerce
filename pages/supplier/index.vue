@@ -31,7 +31,7 @@ const lastName = ref('')
 const gender = ref('')
 const currentUser = ref(null)
 const loading = ref(true)
-const profileImage = ref('/assets/supplier.jpeg') 
+const profileImage = ref('/supplier.jpeg') 
 
 // ----------------------------
 const loadSupplierData = async (user) => {
@@ -231,8 +231,10 @@ const updateProfile = async () => {
             </button>
           </div>
           <div>
-            <p class="font-bold text-base">Hello {{ firstName || 'Marina' }}!</p>
+            <p class="font-bold text-base">Hello {{ firstName}}!</p>
+             <p class=" text-base">{{ email}}</p>
           </div>
+          
         </div>
 
         <div class="mb-6">
