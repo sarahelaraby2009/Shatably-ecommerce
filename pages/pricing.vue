@@ -8,15 +8,21 @@
                     <div class="absolute inset-0 flex justify-center pointer-events-none">
                         <div class="w-full h-full bg-black/70 rounded-[16px]"></div>
                     </div>
-                    <div class="absolute inset-0 flex flex-col justify-center items-start gap-3 p-4">
-                        <h2 class="text-[#fefefe] font-bold text-[28px] p-3 ml-[50px] max-w-[700px] text-left">Calculate Your
-                            Apartment
-                            Finishing Cost Easily</h2>
-                        <p class="text-[#fefefe] font-medium text-[14px] max-w-[600px] ml-[50px] text-left">A space where
-                            creativity meets
-                            craftsmanship find your engineer, view their work, and bring your dream
-                            apartment to life.</p>
-                    </div>
+                 <div class="absolute inset-0 flex flex-col justify-center items-start gap-3 px-4 sm:px-6 lg:px-10">
+  <h2
+    class="text-[#fefefe] font-bold text-[20px] sm:text-[24px] lg:text-[28px]
+           max-w-[90%] sm:max-w-[700px] text-left leading-snug">
+    Calculate Your Apartment Finishing Cost Easily
+  </h2>
+
+  <p
+    class="text-[#fefefe] font-medium text-[13px] sm:text-[14px]
+           max-w-[90%] sm:max-w-[600px] text-left opacity-90">
+    A space where creativity meets craftsmanship find your engineer, view their work,
+    and bring your dream apartment to life.
+  </p>
+</div>
+
                 </div>
             </div>
 

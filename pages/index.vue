@@ -120,7 +120,8 @@
               icon="fa-solid fa-caret-right" /></NuxtLink>
         </div>
       </div>
-      <div class="grid grid-cols-2 gap-[50px] lg:grid-cols-4  mt-5 lg:gap-[30px] overflow-x-auto scroll-smooth scrollbar-hide py-4">
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
         <productCard  v-for="product in electericalPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
@@ -137,7 +138,8 @@
 
 
       </div>
-      <div class="grid grid-cols-2 gap-[50px] lg:grid-cols-4 lg:gap-[30px] m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
         <productCard  v-for="product in plumbPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
@@ -149,7 +151,8 @@
         <NuxtLink to="/categories/vwmN6jB5dNzfnS5dr4Y6" class="text-[#8D8D8D] ">See more <font-awesome-icon
             icon="fa-solid fa-caret-right" /></NuxtLink>
       </div>
-      <div class="grid grid-cols-2 gap-[50px] lg:grid-cols-4 m-5 mt-5 overflow-x-auto lg:gap-[30px] scroll-smooth scrollbar-hide py-4 ">
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
         <productCard  v-for="product in paintPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
