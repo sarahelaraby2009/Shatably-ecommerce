@@ -1,5 +1,5 @@
 <template>
-  <div class="container lg:mx-auto">
+  <div class="container px-4 lg:px-0 lg:mx-auto">
     <div>
       <div class="flex justify-center h-full lg:h-[400px] w-full mt-[20px] mb-6 lg:mb-[80px] relative">
         <Swiper :modules="modules" :slides-per-view="1" :space-between="10" :loop="true"
@@ -120,9 +120,9 @@
               icon="fa-solid fa-caret-right" /></NuxtLink>
         </div>
       </div>
-      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
-         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
-        <productCard  v-for="product in electericalPro" :key="product.id" :product="product"
+      <div  class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5">
+        <productCard  class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"  v-for="product in electericalPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
 
@@ -139,8 +139,8 @@
 
       </div>
       <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
-         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
-        <productCard  v-for="product in plumbPro" :key="product.id" :product="product"
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5"">
+        <productCard  class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"   v-for="product in plumbPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
     </div>
@@ -152,8 +152,8 @@
             icon="fa-solid fa-caret-right" /></NuxtLink>
       </div>
       <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
-         lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible m-5 mt-5">
-        <productCard  v-for="product in paintPro" :key="product.id" :product="product"
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5">
+        <productCard class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"  v-for="product in paintPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
     </div>
