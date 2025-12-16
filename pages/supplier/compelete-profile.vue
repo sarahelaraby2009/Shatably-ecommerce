@@ -4,6 +4,16 @@ import { useNuxtApp } from '#app'
 import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 import { onAuthStateChanged } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+useHead({
+  title: "Complete Supplier Profile",
+  meta: [
+    {
+      name: "description",
+      content: "اكمل ملف المورد الخاص بك لتقديم خدماتك ومنتجاتك للعملاء بسهولة.",
+    },
+    {'keywords': 'مورد, ملف مورد, تسجيل مورد, خدمات مورد, منتجات مورد, تسويق مورد, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة'},
+  ],
+});
 
 const { $auth, $db } = useNuxtApp()
 const router = useRouter()

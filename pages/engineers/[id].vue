@@ -1,5 +1,15 @@
 <script setup>
 import { doc, getDoc } from "firebase/firestore";
+useHead({
+  title: "Engineer Profile",
+  meta: [
+    {
+      name: "description",
+      content: "اكتشف ملف المهندس التفصيلي، بما في ذلك خبراته، ومشاريعه، وتقييماته من العملاء.",
+    },
+    {'keywords': 'مهندس, ملف مهندس, مشاريع, تقييمات, خبرة, تخصص, خدمات, عملاء, بروفايل مهندس, تصميم, تطوير'},
+  ],
+});
 const route = useRoute();
 const { $db } = useNuxtApp();
 

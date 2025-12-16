@@ -1,14 +1,16 @@
 <template>
 
- 
 
- 
-  <div class="font-poppins">  
+
+
+  <div class="font-poppins">
     <NuxtLayout>
-       <NuxtPage />
+
+      <NuxtPage />
+
     </NuxtLayout>
-   
-  
+
+
   </div>
 </template>
 <style>
@@ -17,20 +19,23 @@
 
 body {
   overflow-x: hidden;
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 html {
   overflow-x: hidden;
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
 .scrollbar-hide {
-  -ms-overflow-style: none;  
-  scrollbar-width: none;  
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
+
 .slider-track {
   width: max-content;
   animation: scroll-left 25s linear infinite;
@@ -40,6 +45,7 @@ html {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }

@@ -65,6 +65,8 @@ async function addToWishlist(event) {
     await setDoc(wishlistRef, {
       userId: currentUser.value.uid,
       productId: props.product.id,
+      categoryId: props.categoryId,        // ← الإضافة الوحيدة
+      subId: props.subId,                  // ← الإضافة الوحيدة
       createdAt: serverTimestamp(),
       productSnapshot: props.product
     });
