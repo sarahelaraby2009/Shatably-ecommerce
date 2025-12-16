@@ -19,7 +19,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 mx-5  mb-10">
 
         <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-          <img class="w-[50px]" src="/calculator.png" />
+          <img class="w-[50px]" src="/Calculator.png" />
           <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
         </div>
 
