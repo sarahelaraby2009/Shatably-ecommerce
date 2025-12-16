@@ -1,6 +1,6 @@
 <template>
     <div class="w-full bg-[#F7F7F7] shadow-md relative lg:p-3">
-        <div class="flex justify-between items-center p-2 h-[60px] lg:h-[100px]">
+        <div class="flex justify-between items-center p-2 h-[50px] lg:h-[100px]">
             <!-- Burger Icon (Mobile) -->
             <button @click="mobileMenueOpen = !mobileMenueOpen" class="lg:hidden text-gray-700 text-2xl z-50">
                 <font-awesome-icon icon="fa-solid fa-bars" />
