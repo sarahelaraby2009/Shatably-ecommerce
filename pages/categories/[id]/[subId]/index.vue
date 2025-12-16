@@ -277,7 +277,6 @@ const filteredProducts = computed(() => {
       >
         <ProductCard
           v-for="p in filteredProducts"
-          v-for="p in filteredProducts"
           :key="p.id"
           :product="p"
           :categoryId="categoryId"

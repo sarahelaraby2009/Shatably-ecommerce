@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import {
   doc,
   getDoc,
@@ -39,6 +39,7 @@ const supplierId = ref(null);
 const userName = ref("");
 const email = ref("");
 const categories = ref([]);
+const subcategoriesMap = ref({});
 let $auth = null;
 let $db = null;
 // --------------------------------------------------------------
@@ -79,17 +80,31 @@ const loadCategories = async () => {
     const q = collection($db, "categories");
     const snap = await getDocs(q);
     const list = [];
-    snap.forEach((docSnap) => {
+    const subMap = {};
+    
+    for (const docSnap of snap.docs) {
       const d = docSnap.data();
       list.push({
         id: docSnap.id,
         name: d.name ?? d.title ?? "Unnamed",
       });
-    });
+      
+      const subCollection = collection($db, "categories", docSnap.id, "subcategories");
+      const subSnap = await getDocs(subCollection);
+      subSnap.forEach((subDoc) => {
+        subMap[subDoc.id] = subDoc.data().name || subDoc.data().title || "Unnamed";
+      });
+    }
+    
     categories.value = list;
+    subcategoriesMap.value = subMap;
   } catch (err) {
     console.error("Error loading categories:", err);
   }
+};
+
+const getSubcategoryName = (subId) => {
+  return subcategoriesMap.value[subId] || subId;
 };
 
 // --------------------------------------------------------------------------
@@ -366,7 +381,7 @@ onMounted(() => {
                     </td>
                     <td class="py-4 px-4">
                       <p class="text-gray-800 font-medium">
-                        {{ product.subcategory || "—" }}
+                        {{ getSubcategoryName(product.subcategory) }}
                       </p>
                     </td>
                     <td class="py-4 px-4">
@@ -511,7 +526,7 @@ onMounted(() => {
                   >Subcategory:</span
                 >
                 <span class="text-sm font-bold text-gray-800 flex-1">{{
-                  product.subcategory || "—"
+                  getSubcategoryName(product.subcategory)
                 }}</span>
               </div>
 
