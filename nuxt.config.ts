@@ -1,4 +1,4 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     '~/plugins/firebase.client.js',
     '~/plugins/fontawesome.js'
   ],
-  
 
   css: [
     '@fortawesome/fontawesome-svg-core/styles.css',
@@ -17,6 +16,10 @@ export default defineNuxtConfig({
   ],
 
   runtimeConfig: {
+    // ✅ Server-side only (خاص - لا يظهر للعميل)
+    openrouterKey: process.env.OPENROUTER_KEY,
+    
+    // ✅ Public (عام - يظهر للعميل)
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -28,10 +31,9 @@ export default defineNuxtConfig({
     }
   },
 
-    vue: {
+  vue: {
     compilerOptions: {
       whitespace: 'preserve'
     }
   }
 });
-
