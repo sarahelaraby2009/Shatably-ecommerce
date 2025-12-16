@@ -68,6 +68,19 @@
 
 
 </template>
+<script setup>
+  useHead({
+    title: 'About Us',
+    meta: [
+      {
+        name: 'description',
+        content: 'تعرف علينا وعلى رؤيتنا في تسهيل رحلة التشطيب المنزلي للمستخدمين والمهنيين.'
+      }
+    ]
+  })
+</script>
+
+
 <style scoped>
 .cardbox {
   border-radius: 24px;

@@ -102,6 +102,15 @@
 import { ref } from 'vue'
 import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
 import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore'
+useHead({
+  title: 'Register | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم.'
+    }
+  ]
+})
 
 const email = ref('')
 const name = ref('')

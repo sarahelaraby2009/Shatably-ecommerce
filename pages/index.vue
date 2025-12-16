@@ -172,6 +172,15 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Chatbot from '@/components/Chatbot.vue';   
+useHead({
+  title: 'Home | Shatably',
+  meta: [
+    {
+      name: 'description',
+      content: 'اكتشف أحدث المنتجات والخدمات في مجال التشطيب المنزلي مع منصتنا المتكاملة.'
+    }
+  ]
+})
 const products = ref([])
 const cats = ref([])
 const { $db } = useNuxtApp()

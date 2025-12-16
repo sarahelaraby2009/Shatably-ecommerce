@@ -176,6 +176,16 @@
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+useHead({
+  title: "Engineer Services",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح وأدر خدماتك الهندسية لجذب المزيد من العملاء وعرض مهاراتك.",
+    },
+    {'keywords': 'engineering services, manage services, showcase services, client attraction, service portfolio, engineering projects, service management'},
+  ],
+});
 
 const showModal = ref(false);
 const showSecModal = ref(false);
