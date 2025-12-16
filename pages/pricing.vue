@@ -38,7 +38,7 @@
                     <h2 class="text-[#262626] font-semibold text-[18px]">Select the finishing level that suits your
                         budget:</h2>
                 </div>
-                <div class="flex gap-10 overflow-x-auto scrollbar-hide lg:overflow-clip justify-center ">
+                <div class="flex gap-10 overflow-x-auto scrollbar-hide lg:overflow-clip justify-start lg:justify-center ">
                     <div v-for="pkg in packages" :key="pkg.id" @click="selectedPkg = pkg"
                         :class="{ 'border-[#C76950] border-2': selectedPkg?.id === pkg.id, 'border-slate-200': selectedPkg?.id !== pkg.id }"
                         class="min-w-[260px] lg:w-[260px] overflow-hidden text-left shadow-md rounded-[16px] h-[240px] cursor-pointer transition flex flex-col gap-4">
