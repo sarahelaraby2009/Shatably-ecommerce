@@ -115,7 +115,7 @@ const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
-// Validation regex - حروف فقط (عربي وإنجليزي ومسافات)
+// Validation regex  
 const nameRegex = /^[\u0600-\u06FFa-zA-Z\s]+$/;
 
 // import user information
@@ -140,7 +140,7 @@ const updateProfile = async () => {
     return;
   }
 
-  // Validation للأسماء
+  // Validation 
   if (profile.value.firstName?.trim() && !nameRegex.test(profile.value.firstName)) {
     errorMessage.value = "First name must contain letters only";
     return;
