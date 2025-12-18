@@ -415,7 +415,7 @@ onMounted(() => {
 
       <div class="lg:hidden">
         <div class="relative">
-          <img :src="product.image" :alt="product.name" class="w-full h-80 object-cover" />
+          <img :src="product.image" :alt="product.name" class="w-full h-80 object-contain" />
           <button @click="toggleWishlist" class="absolute top-4 right-4 bg-white w-10 h-10 rounded-full flex justify-center items-center shadow-md">
             <font-awesome-icon :icon="[isInWishlist ? 'fas' : 'far', 'heart']" :class="isInWishlist ? 'text-orange-500' : 'text-gray-400'" />
           </button>

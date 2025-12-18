@@ -55,7 +55,7 @@ const saveData = async () => {
       { merge: true }
     )
 
-    router.push('/supplier/membership') // التوجّه لصفحة العضوية بعد حفظ البيانات
+    router.push('/supplier') // التوجّه لصفحة العضوية بعد حفظ البيانات
   } catch (err) {
     console.error(err)
     errorMessages.value = 'Failed to save profile. Try again.'
@@ -74,31 +74,31 @@ const saveData = async () => {
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Company Name</label>
           <input v-model="name" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
+            class="font-normal text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
             placeholder="enter company name" />
         </div>
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Phone Number</label>
           <input v-model="phone" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            class="font-normal text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
             placeholder="enter phone number" />
         </div>
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Business Category</label>
           <input v-model="Category" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
+            class="font-normal text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="text"
             placeholder="enter category" />
         </div>
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Tax Identification Number</label>
           <input v-model="Tax" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            class="font-normal text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
             placeholder=" enter tax Identification number" />
         </div>
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Bank account number</label>
           <input v-model="Bank" required
-            class="font-semibold text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
+            class="font-   text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" type="number"
             placeholder="enter bank account number" />
         </div>
         <P class="text-red-400">{{ errorMessages }}</P>
