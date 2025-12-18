@@ -55,7 +55,7 @@ const continueToProfile = async () => {
     >
       <div class="w-24 h-24 md:w-[130px] md:h-[150px] flex-shrink-0">
         <img
-          src="/assets/supplier.jpeg"
+          src="/supplier.jpeg"
           class="w-full h-full rounded-[24px] object-cover"
         />
       </div>
