@@ -344,7 +344,7 @@ const updateProfile = async () => {
               type="text"
               v-model="firstName"
               class="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:border-[#C76950] text-sm"
-              placeholder="Marina"
+              placeholder="First Name"
             />
           </div>
 
@@ -354,7 +354,7 @@ const updateProfile = async () => {
               type="text"
               v-model="lastName"
               class="w-full border border-gray-300 rounded-lg px-3 py-2.5 outline-none focus:border-[#C76950] text-sm"
-              placeholder="Marina"
+              placeholder="Last Name"
             />
           </div>
 
