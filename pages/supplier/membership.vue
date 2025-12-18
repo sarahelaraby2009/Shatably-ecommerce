@@ -71,13 +71,11 @@ const handleFileSelect = async (event) => {
     isLoading.value = true;
 
     try {
-      // قراءة الصورة كـ Base64
       const reader = new FileReader();
       reader.onload = async (e) => {
         const base64Image = e.target.result;
         supplierImage.value = base64Image;
 
-        // حفظ فوراً في Firestore
         const user = $auth.currentUser;
         if (user) {
           await setDoc(
@@ -110,7 +108,8 @@ const continueToProfile = async () => {
 
   try {
     const updateData = {
-      profileComplete: true,
+      hasMembership: true,
+      membershipAcceptedAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     };
 
@@ -122,8 +121,8 @@ const continueToProfile = async () => {
 
     router.push("/supplier");
   } catch (err) {
-    console.error("Error updating profile:", err);
-    errorMessage.value = err.message || "Failed to update profile. Try again.";
+    console.error("Error updating membership:", err);
+    errorMessage.value = err.message || "Failed to update membership. Try again.";
   } finally {
     isLoading.value = false;
   }
@@ -145,6 +144,7 @@ const continueToProfile = async () => {
         />
         <label
           class="absolute bottom-[-7px] right-[-7px] flex justify-center items-center bg-white text-white p-2 rounded-[50px] shadow-md cursor-pointer hover:bg-[#EBCDC5] transition"
+          :class="{ 'pointer-events-none opacity-50': isLoading }"
         >
           <font-awesome-icon
             :icon="['far', 'camera']"
@@ -155,6 +155,7 @@ const continueToProfile = async () => {
             type="file"
             @change="handleFileSelect"
             accept="image/*"
+            :disabled="isLoading"
             class="hidden"
           />
         </label>
@@ -195,15 +196,18 @@ const continueToProfile = async () => {
           </ul>
         </div>
 
+        <p v-if="errorMessage" class="text-red-500 text-sm text-center">
+          {{ errorMessage }}
+        </p>
+
         <div class="mt-2">
-          <div
-            class="bg-[#C76950] p-3 rounded-3xl text-center text-white cursor-pointer hover:bg-[#b25745] transition disabled:opacity-50 disabled:cursor-not-allowed"
-            :class="{ 'opacity-50 cursor-not-allowed': isLoading }"
+          <button
+            @click="continueToProfile"
+            :disabled="isLoading"
+            class="w-full bg-[#C76950] p-3 rounded-3xl text-center text-white cursor-pointer hover:bg-[#b25745] transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <button @click="continueToProfile" :disabled="isLoading">
-              {{ isLoading ? "Uploading..." : "Continue" }}
-            </button>
-          </div>
+            {{ isLoading ? "Processing..." : "Continue" }}
+          </button>
         </div>
       </div>
     </div>

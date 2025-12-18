@@ -157,33 +157,33 @@ const navigateUser = async (userId, role) => {
     return
   }
 
-  if (role === 'supplier') {
-    // ✅ فقد البيانات الكاملة للـ supplier
-    const supplierDoc = await getDoc(doc($db, 'suppliers', userId))
-    if (supplierDoc.exists()) {
-      const supplierData = supplierDoc.data()
+ if (role === 'supplier') {
+  const supplierDoc = await getDoc(doc($db, 'suppliers', userId))
+  
+  if (supplierDoc.exists()) {
+    const supplierData = supplierDoc.data()
 
-      // لو ما كملش الـ profile (أول مرة) روح membership
-      if (!supplierData.profileComplete) {
-        navigateTo('/supplier/complete-profile')
-        return
-      }
-
-      // لو ما عنده membership، روح membership
-      if (!supplierData.hasMembership) {
-        navigateTo('/supplier/membership')
-        return
-      }
-
-      // لو كل شي تمام روح supplier page
-      navigateTo('/supplier')
+    // ✅ لو ما كملش الـ profile (أول مرة) → complete-profile
+    if (!supplierData.profileComplete) {
+      navigateTo('/supplier/complete-profile')
       return
     }
 
-    // لو الـ doc ما موجود روح supplier
-    navigateTo('/supplier/complete-profile')
+    // ✅ لو كمل profile بس ما عنده membership → membership
+    if (!supplierData.hasMembership) {
+      navigateTo('/supplier/membership')
+      return
+    }
+
+    // ✅ لو كل شي تمام (profileComplete ✓ و hasMembership ✓) → supplier page
+    navigateTo('/supplier')
     return
   }
+
+  // لو الـ doc ما موجود → complete-profile
+  navigateTo('/supplier/complete-profile')
+  return
+}
 
   if (role === 'engineer') {
     // Check if engineer profile is complete

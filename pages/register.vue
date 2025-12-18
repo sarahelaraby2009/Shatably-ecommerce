@@ -166,91 +166,91 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-import { setDoc, doc, serverTimestamp, getDoc } from 'firebase/firestore'
+import { ref } from "vue";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider,
+} from "firebase/auth";
+import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
 useHead({
-  title: 'Register | MyProject',
+  title: "Register | MyProject",
   meta: [
     {
-      name: 'description',
-      content: 'انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم.'
-    }
-  ]
-})
+      name: "description",
+      content: "انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم.",
+    },
+  ],
+});
 
-const email = ref('')
-const name = ref('')
-const password = ref('')
-const repassword = ref('')
-const errorMessage = ref('')
-const userRole = ref('')
-const isLoading = ref(false)
+const email = ref("");
+const name = ref("");
+const password = ref("");
+const repassword = ref("");
+const errorMessage = ref("");
+const userRole = ref("");
+const isLoading = ref(false);
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 definePageMeta({
-  layout: 'withOutNavFoot'
-})
+  layout: "withOutNavFoot",
+});
 
-const { $auth } = useNuxtApp()
-const { $db } = useNuxtApp()
+const { $auth } = useNuxtApp();
+const { $db } = useNuxtApp();
 
 const matchPass = () => {
   if (password.value !== repassword.value) {
-    errorMessage.value = "Passwords don't match"
-    return
+    errorMessage.value = "Passwords don't match";
+    return;
   }
-  errorMessage.value = ''
-}
+  errorMessage.value = "";
+};
 
 const googleSignUp = async () => {
-  errorMessage.value = ''
+  errorMessage.value = "";
 
   if (!userRole.value) {
-    errorMessage.value = "Please select your account type"
-    return
+    errorMessage.value = "Please select your account type";
+    return;
   }
 
-  isLoading.value = true
+  isLoading.value = true;
 
   try {
-    const provider = new GoogleAuthProvider()
-    const result = await signInWithPopup($auth, provider)
-    const user = result.user
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup($auth, provider);
+    const user = result.user;
 
-
-    // Check if user already exists
-    const userDoc = await getDoc(doc($db, 'users', user.uid))
+    const userDoc = await getDoc(doc($db, "users", user.uid));
 
     if (userDoc.exists()) {
-      const existingRole = userDoc.data().role
-      if (existingRole === 'client') {
-        navigateTo('/')
-      } else if (existingRole === 'engineer') {
-        navigateTo('/userEngineer/complete-profile')
-      } else if (existingRole === 'supplier') {
-        navigateTo('/supplier')
+      const existingRole = userDoc.data().role;
+      if (existingRole === "client") {
+        navigateTo("/");
+      } else if (existingRole === "engineer") {
+        navigateTo("/userEngineer/complete-profile");
+      } else if (existingRole === "supplier") {
+        navigateTo("/supplier");
       }
-      return
+      return;
     }
-
-    // Create main user document
-    await setDoc(doc($db, 'users', user.uid), {
+    await setDoc(doc($db, "users", user.uid), {
       email: user.email,
       name: user.displayName,
       role: userRole.value,
       cart: [],
-      createdAt: serverTimestamp()
-    })
+      createdAt: serverTimestamp(),
+    });
 
     // Create role-specific documents
-    if (userRole.value === 'engineer') {
-      await setDoc(doc($db, 'engineers', user.uid), {
+    if (userRole.value === "engineer") {
+      await setDoc(doc($db, "engineers", user.uid), {
         name: user.displayName,
         email: user.email,
         portfolio: [],
-        position: '',
+        position: "",
         rating: 0,
         createdAt: serverTimestamp(),
         profileComplete: false,
@@ -259,92 +259,97 @@ const googleSignUp = async () => {
         membershipType: null,
         membershipExpiry: null,
         reviews: [],
-        specialization: '',
+        specialization: "",
         yearsOfExperience: 0,
-        bio: '',
-        image: user.image || '',
-        certificateName:''
-      })
-      navigateTo('/userEngineer/complete-profile')
-
-    } else if (userRole.value === 'supplier') {
-      await setDoc(doc($db, 'suppliers', user.uid), {
-        name: user.displayName,
-        email: user.email,
+        bio: "",
+        image: user.image || "",
+        certificateName: "",
+      });
+      navigateTo("/userEngineer/complete-profile");
+    } else if (userRole.value === "supplier") {
+      // عند عمل Register (Email/Password أو Google)
+      await setDoc(doc($db, "suppliers", user.uid), {
+        name: name.value || user.displayName,
+        email: email.value || user.email,
         rating: 0,
         products: [],
         createdAt: serverTimestamp(),
-        image: user.image || '',
-        profileComplete: false,
-      })
-      navigateTo('/complete-profile')
+        image: user.photoURL || "",
+        profileComplete: false, // ✅ false في البداية
+        hasMembership: false, // ✅ false في البداية
+      });
 
-    } else if (userRole.value === 'client') {
-      await setDoc(doc($db, 'clients', user.uid), {
+      // بعد التسجيل نوديه على complete-profile
+      navigateTo("/supplier/complete-profile");
+    } else if (userRole.value === "client") {
+      await setDoc(doc($db, "clients", user.uid), {
         name: user.displayName,
         email: user.email,
         orders: [],
         favorites: [],
-        createdAt: serverTimestamp()
-      })
-      navigateTo('/')
+        createdAt: serverTimestamp(),
+      });
+      navigateTo("/");
     }
-
   } catch (err) {
-    console.error('Google sign up error:', err)
-    errorMessage.value = "Google sign up failed. Please try again."
+    console.error("Google sign up error:", err);
+    errorMessage.value = "Google sign up failed. Please try again.";
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 const handleSignUp = async () => {
-  errorMessage.value = ''
+  errorMessage.value = "";
 
   // Validation
   if (!emailRegex.test(email.value)) {
-    errorMessage.value = "Invalid email format"
-    return
+    errorMessage.value = "Invalid email format";
+    return;
   }
 
   if (password.value.length < 6) {
-    errorMessage.value = "Password must be at least 6 characters"
-    return
+    errorMessage.value = "Password must be at least 6 characters";
+    return;
   }
 
   if (password.value !== repassword.value) {
-    errorMessage.value = "Passwords don't match"
-    return
+    errorMessage.value = "Passwords don't match";
+    return;
   }
 
   if (!userRole.value) {
-    errorMessage.value = "Please select your account type"
-    return
+    errorMessage.value = "Please select your account type";
+    return;
   }
 
-  isLoading.value = true
+  isLoading.value = true;
 
   try {
     // Create Firebase Auth user
-    const userCredential = await createUserWithEmailAndPassword($auth, email.value, password.value)
-    const user = userCredential.user
+    const userCredential = await createUserWithEmailAndPassword(
+      $auth,
+      email.value,
+      password.value
+    );
+    const user = userCredential.user;
 
     // Create main user document
-    await setDoc(doc($db, 'users', user.uid), {
+    await setDoc(doc($db, "users", user.uid), {
       email: email.value,
       name: name.value,
       role: userRole.value,
       cart: [],
-      createdAt: serverTimestamp()
-    })
+      createdAt: serverTimestamp(),
+    });
 
     // Create role-specific documents
-    if (userRole.value === 'engineer') {
-      await setDoc(doc($db, 'engineers', user.uid), {
+    if (userRole.value === "engineer") {
+      await setDoc(doc($db, "engineers", user.uid), {
         name: name.value,
         email: email.value,
         portfolio: [],
-        position: '',
+        position: "",
         rating: 0,
         createdAt: serverTimestamp(),
         profileComplete: false,
@@ -353,60 +358,58 @@ const handleSignUp = async () => {
         membershipType: null,
         membershipExpiry: null,
         reviews: [],
-        specialization: '',
+        specialization: "",
         yearsOfExperience: 0,
-        bio: '',
-        image: '',
+        bio: "",
+        image: "",
         services: [],
-        mobile: ''
-      })
-      console.log('Engineer account created successfully')
+        mobile: "",
+      });
+      console.log("Engineer account created successfully");
       // navigateTo('/userEngineer/complete-profile')
-
-    } else if (userRole.value === 'supplier') {
+    } else if (userRole.value === "supplier") {
       console.log("set suppliers");
 
-      await setDoc(doc($db, 'suppliers', user.uid), {
+      await setDoc(doc($db, "suppliers", user.uid), {
         name: name.value,
         email: email.value,
         rating: 0,
         products: [],
         createdAt: serverTimestamp(),
         profileComplete: false,
-        image: ''
-      })
-      console.log('Supplier account created successfully')
+        image: "",
+      });
+      console.log("Supplier account created successfully");
       // navigateTo('/supplier/compelete-profile')
-
-    } else if (userRole.value === 'client') {
-      await setDoc(doc($db, 'clients', user.uid), {
+    } else if (userRole.value === "client") {
+      await setDoc(doc($db, "clients", user.uid), {
         name: name.value,
         email: email.value,
         orders: [],
         favorites: [],
-        createdAt: serverTimestamp()
-      })
-      console.log('Client account created successfully')
+        createdAt: serverTimestamp(),
+      });
+      console.log("Client account created successfully");
       // navigateTo('/')
     }
-    navigateTo('/signin')
-
+    navigateTo("/signin");
   } catch (err) {
-    console.error('Sign up error:', err)
+    console.error("Sign up error:", err);
 
-    if (err.code === 'auth/email-already-in-use') {
-      errorMessage.value = "This email is already registered. Please sign in instead."
-    } else if (err.code === 'auth/weak-password') {
-      errorMessage.value = "Password is too weak. Use at least 6 characters."
-    } else if (err.code === 'auth/invalid-email') {
-      errorMessage.value = "Invalid email address."
+    if (err.code === "auth/email-already-in-use") {
+      errorMessage.value =
+        "This email is already registered. Please sign in instead.";
+    } else if (err.code === "auth/weak-password") {
+      errorMessage.value = "Password is too weak. Use at least 6 characters.";
+    } else if (err.code === "auth/invalid-email") {
+      errorMessage.value = "Invalid email address.";
     } else {
-      errorMessage.value = "Registration failed. Please try again."
+      errorMessage.value = "Registration failed. Please try again.";
     }
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>
 
 <style scoped>
