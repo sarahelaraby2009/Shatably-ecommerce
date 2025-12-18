@@ -18,8 +18,8 @@
         <h1>Phone Number</h1>
         <input
           v-model="profile.phone"
-          type="tel"
-          placeholder="enter your phonenumber"
+          type="number"
+          placeholder="Enter your Number"
           class="w-full md:w-xl border border-gray-300 rounded-full p-3 outline-none focus:ring-1 focus:ring-[#C76950]"
         />
       </div>
@@ -89,6 +89,7 @@
 import { ref, onMounted } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
+
 useHead({
   title: 'User Profile',
   meta: [
@@ -97,7 +98,7 @@ useHead({
       content: 'تحكم في معلوماتك الشخصية ومعلومات الاتصال الخاصة بك بسهولة وأمان.'
     }
   ]
-})
+});
 
 const { $auth, $db } = useNuxtApp();
 
@@ -114,6 +115,9 @@ const loading = ref(false);
 const successMessage = ref("");
 const errorMessage = ref("");
 
+// Validation regex  
+const nameRegex = /^[\u0600-\u06FFa-zA-Z\s]+$/;
+
 // import user information
 const fetchProfile = async (uid) => {
   try {
@@ -123,16 +127,27 @@ const fetchProfile = async (uid) => {
     }
   } catch (error) {
     console.error("Error fetching profile:", error);
-    errorMessage.value = "  Failed Loading Data";
+    errorMessage.value = "Failed Loading Data";
   }
 };
 
-//update information functionت
+// update information function
 const updateProfile = async () => {
   const user = $auth.currentUser;
 
   if (!user) {
-    errorMessage.value = "you should sign in first";
+    errorMessage.value = "You should sign in first";
+    return;
+  }
+
+  // Validation 
+  if (profile.value.firstName?.trim() && !nameRegex.test(profile.value.firstName)) {
+    errorMessage.value = "First name must contain letters only";
+    return;
+  }
+
+  if (profile.value.lastName?.trim() && !nameRegex.test(profile.value.lastName)) {
+    errorMessage.value = "Last name must contain letters only";
     return;
   }
 
@@ -144,16 +159,16 @@ const updateProfile = async () => {
     const updatedData = {
       email: profile.value.email,
       phone: profile.value.phone,
-      firstName: profile.value.firstName,
-      lastName: profile.value.lastName,
+      firstName: profile.value.firstName?.trim() || "",
+      lastName: profile.value.lastName?.trim() || "",
       gender: profile.value.gender,
-      name: `${profile.value.firstName} ${profile.value.lastName}`.trim()
+      name: `${profile.value.firstName?.trim() || ""} ${profile.value.lastName?.trim() || ""}`.trim()
     };
 
     await updateDoc(doc($db, "users", user.uid), updatedData);
 
     profile.value.name = updatedData.name;
-    successMessage.value = "Profile updated sucessfully";
+    successMessage.value = "Profile updated successfully";
 
     setTimeout(() => {
       successMessage.value = "";
@@ -161,7 +176,7 @@ const updateProfile = async () => {
 
   } catch (error) {
     console.error("Error updating profile:", error);
-    errorMessage.value = " An error occurred during the update. Please try again" ;
+    errorMessage.value = "An error occurred during the update. Please try again";
 
   } finally {
     loading.value = false;
@@ -173,15 +188,12 @@ onMounted(() => {
     if (user) {
       fetchProfile(user.uid);
     } else {
-      errorMessage.value = "   please , sign in first";
+      errorMessage.value = "Please, sign in first";
     }
   });
 });
 
-
-
 definePageMeta({
   layout: "default"
 });
-
 </script>
