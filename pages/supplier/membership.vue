@@ -120,7 +120,7 @@ const continueToProfile = async () => {
 
     await setDoc(doc($db, "suppliers", user.uid), updateData, { merge: true });
 
-    router.push("/supplier/compelete-profile");
+    router.push("/supplier");
   } catch (err) {
     console.error("Error updating profile:", err);
     errorMessage.value = err.message || "Failed to update profile. Try again.";

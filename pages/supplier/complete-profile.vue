@@ -55,7 +55,7 @@ const saveData = async () => {
       { merge: true }
     )
 
-    router.push('/supplier') // التوجّه لصفحة العضوية بعد حفظ البيانات
+    router.push('/supplier/membership') // التوجّه لصفحة العضوية بعد حفظ البيانات
   } catch (err) {
     console.error(err)
     errorMessages.value = 'Failed to save profile. Try again.'

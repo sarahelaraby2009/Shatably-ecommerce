@@ -277,7 +277,7 @@ const googleSignUp = async () => {
         image: user.image || '',
         profileComplete: false,
       })
-      navigateTo('/supplier')
+      navigateTo('/complete-profile')
 
     } else if (userRole.value === 'client') {
       await setDoc(doc($db, 'clients', user.uid), {

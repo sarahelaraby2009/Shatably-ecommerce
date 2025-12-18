@@ -165,7 +165,7 @@ const navigateUser = async (userId, role) => {
 
       // لو ما كملش الـ profile (أول مرة) روح membership
       if (!supplierData.profileComplete) {
-        navigateTo('/supplier/membership')
+        navigateTo('/supplier/complete-profile')
         return
       }
 
@@ -181,7 +181,7 @@ const navigateUser = async (userId, role) => {
     }
 
     // لو الـ doc ما موجود روح supplier
-    navigateTo('/supplier')
+    navigateTo('/supplier/complete-profile')
     return
   }
 
