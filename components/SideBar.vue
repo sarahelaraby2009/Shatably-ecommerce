@@ -1,183 +1,293 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from "vue";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import { useNuxtApp } from "#app";
 
-defineProps({
-  email: String,
-  userName: String,
-  feild1: String,
-  feild2: String,
-  feild3: String,
-})
+const { $auth, $db } = useNuxtApp();
 
-const route = useRoute()
-const isActive = (routeName) => route.name === routeName
+// ----------------------------
+// Reactive object لكل بيانات المورد
+const supplierData = ref({
+  name: "",
+  email: "",
+  phoneNumber: "",
+  gender: "",
+  profileImage: "/5.jpg", // صورة افتراضية
+});
+
+// ----------------------------
+// جلب بيانات المورد من Firebase
+const fetchSupplier = async (uid) => {
+  try {
+    const snap = await getDoc(doc($db, "suppliers", uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      supplierData.value = data;
+
+      // جلب الصورة من Firebase
+      if (data.image && data.image.trim() !== "") {
+        supplierData.value.profileImage = data.image;
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching supplier:", err);
+  }
+};
+// ----------------------------
+// رفع صورة البروفايل وتحديثها
+const handleImageSelect = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    supplierData.value.profileImage = e.target.result;
+
+    const user = $auth.currentUser;
+    if (user) {
+      await updateDoc(doc($db, "suppliers", user.uid), {
+        profileImage: e.target.result,
+      });
+    }
+  };
+  reader.readAsDataURL(file);
+};
+
+// ----------------------------
+// تحديث بيانات المورد (email, phone, name, gender)
+const updateSupplierData = async () => {
+  const user = $auth.currentUser;
+  if (!user) {
+    alert("Please login first");
+    return;
+  }
+
+  try {
+    await updateDoc(doc($db, "suppliers", user.uid), {
+      name: supplierData.value.name,
+      email: supplierData.value.email,
+      phoneNumber: supplierData.value.phoneNumber,
+      gender: supplierData.value.gender,
+      profileImage: supplierData.value.profileImage,
+    });
+
+    alert("Profile updated successfully!");
+  } catch (err) {
+    console.error("Error updating supplier:", err);
+    alert("Failed to update profile");
+  }
+};
+
+// ----------------------------
+// Mounted: تحقق من المستخدم وجلب البيانات
+onMounted(() => {
+  onAuthStateChanged($auth, (user) => {
+    if (user) fetchSupplier(user.uid);
+  });
+});
 </script>
 
 <template>
-  <div>
+  <div class="min-h-screen bg-gray-50">
     <!-- Mobile -->
-    <div class="lg:hidden border-b bg-white sticky top-0 z-10">
-      <div class="flex flex-col items-center pt-4">
-        <!-- Profile Image Mobile -->
-        <div class="relative mb-3">
-          <img
-            src="/supplier.jpeg"
-            class="w-12 h-12 rounded-full object-cover"
-          />
-          <label
-            for="upload"
-            class="absolute bottom-0 right-0 bg-white border rounded-full p-1 shadow cursor-pointer"
-          >
-            <font-awesome-icon
-              :icon="['fas', 'edit']"
-              class="text-gray-700 text-xs"
-            />
-          </label>
-        </div>
-        <h3 class="font-bold text-lg">{{ userName }}</h3>
-        <p class="text-sm text-gray-500 mb-4">{{ email }}</p>
-      </div>
-
+    <div class="lg:hidden pt-6 pb-10">
       <!-- Tabs -->
-      <div class="flex justify-around border-t">
-        <NuxtLink to="/supplier" class="flex-1">
-          <div
-            :class="[
-              'text-center py-4 text-sm font-medium transition-all border-b-2',
-              isActive('supplier') 
-                ? 'text-[#C76950] border-[#C76950]' 
-                : 'text-gray-500 border-transparent'
-            ]"
-          >
-            {{ feild1 }}
-          </div>
+      <nav class="flex gap-6 mb-6 border-b">
+        <NuxtLink
+          to="/supplier"
+          class="pb-2 text-sm font-medium"
+          :class="
+            $route.path === '/supplier'
+              ? 'text-[#C17767] border-b-2 border-[#C17767]'
+              : 'text-gray-500'
+          "
+        >
+          Profile
         </NuxtLink>
+        <NuxtLink
+          to="/supplier/productsUploads"
+          class="pb-2 text-sm font-medium"
+          :class="
+            $route.path === '/supplier/productsUploads'
+              ? 'text-[#C17767] border-b-2 border-[#C17767]'
+              : 'text-gray-500'
+          "
+        >
+          Product uploads
+        </NuxtLink>
+        
+        <NuxtLink
+          to="/supplier/ordersTrack"
+          class="pb-2 text-sm font-medium"
+          :class="
+            $route.path === '/supplier/ordersTrack'
+              ? 'text-[#C17767] border-b-2 border-[#C17767]'
+              : 'text-gray-500'
+          "
+        >
+          Orders track
+        </NuxtLink>
+      </nav>
 
-        <NuxtLink to="/supplier/productsUploads" class="flex-1">
-          <div
-            :class="[
-              'text-center py-4 text-sm font-medium transition-all border-b-2',
-              isActive('supplier-productsUploads') 
-                ? 'text-[#C76950] border-[#C76950]' 
-                : 'text-gray-500 border-transparent'
-            ]"
-          >
-            {{ feild2 }}
+      <!-- Content -->
+      <div class="bg-white p-4 rounded-2xl shadow">
+        <div class="flex items-start gap-3 mb-6">
+         <div class="relative flex-shrink-0">
+            <img
+              :src="supplierData.profileImage"
+              class="w-14 h-14 rounded-full object-cover shadow-md"
+            />
+            <label
+              for="upload-desktop"
+              class="absolute bottom-[-6px] right-[-5px] flex justify-center items-center w-[25px] h-[25px] bg-white text-white p-2 rounded-[50px] shadow-md cursor-pointer hover:bg-[#EBCDC5] transition"
+            >
+              <font-awesome-icon
+                :icon="['far', 'camera']"
+                class="text-[12px] text-black"
+              />
+            </label>
+            <input
+              id="upload-desktop"
+              type="file"
+              accept="image/*"
+              @change="handleImageSelect"
+              hidden
+            />
           </div>
-        </NuxtLink>
+          <div>
+            <h3 class="font-bold text-lg">Hello {{ supplierData.name }}!</h3>
+            <p class="text-sm text-gray-500">{{ supplierData.email }}</p>
+          </div>
+        </div>
 
-        <NuxtLink to="/supplier/ordersTrack" class="flex-1">
-          <div
-            :class="[
-              'text-center py-4 text-sm font-medium transition-all border-b-2',
-              isActive('supplier-ordersTrack') 
-                ? 'text-[#C76950] border-[#C76950]' 
-                : 'text-gray-500 border-transparent'
-            ]"
-          >
-            {{ feild3 }}
+        <!-- Form لتعديل البيانات -->
+        <div class="space-y-4">
+          <input
+            v-model="supplierData.name"
+            type="text"
+            placeholder="Full Name"
+            class="w-full border rounded px-3 py-2"
+          />
+          <input
+            v-model="supplierData.email"
+            type="email"
+            placeholder="Email"
+            class="w-full border rounded px-3 py-2"
+          />
+          <input
+            v-model="supplierData.phoneNumber"
+            type="tel"
+            placeholder="Phone Number"
+            class="w-full border rounded px-3 py-2"
+          />
+          <div class="flex gap-4">
+            <label>
+              <input type="radio" value="male" v-model="supplierData.gender" />
+              Male
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="female"
+                v-model="supplierData.gender"
+              />
+              Female
+            </label>
           </div>
-        </NuxtLink>
+
+          <button
+            @click="updateSupplierData"
+            class="w-full bg-[#C76950] text-white py-2 rounded hover:bg-[#b85840] transition"
+          >
+            Update Profile
+          </button>
+        </div>
       </div>
     </div>
 
-    <!-- Desktop-->
-    <div class="hidden lg:block">
-      <div class="grid grid-cols-[300px_1fr] pt-10 gap-10 pb-10">
-        <aside class="space-y-1 shadow rounded-2xl h-[600px]">
-          <div class="flex gap-4 pt-5">
-            <div class="relative">
-              <img
-                src="/supplier.jpeg"
-                class="w-14 h-14 rounded-full object-cover ml-5"
+    <!-- Desktop -->
+    <div class="hidden lg:grid grid-cols-[350px_1fr] pt-10 gap-10 pb-10">
+      <aside class="space-y-1 shadow rounded-2xl h-[600px] p-5">
+        <div class="flex gap-4 items-start mb-5">
+          <div class="relative flex-shrink-0">
+            <img
+              :src="supplierData.profileImage"
+              class="w-14 h-14 rounded-full object-cover shadow-md"
+            />
+            <label
+              for="upload-desktop"
+              class="absolute bottom-[-6px] right-[-5px] flex justify-center items-center w-[25px] h-[25px] bg-white text-white p-2 rounded-[50px] shadow-md cursor-pointer hover:bg-[#EBCDC5] transition"
+            >
+              <font-awesome-icon
+                :icon="['far', 'camera']"
+                class="text-[12px] text-black"
               />
-              <label
-                for="upload"
-                class="absolute bottom-0 right-0 bg-white border rounded-full pr-1 pl-1 shadow cursor-pointer"
-              >
-                <font-awesome-icon
-                  :icon="['fas', 'edit']"
-                  class="text-gray-700 text-xs"
-                />
-              </label>
-            </div>
-            <div class="grid">
-              <h3 class="pt-1 font-bold text-xl">Hello {{ userName }}!</h3>
-              <p class="text-sm text-gray-500 pb-5">{{ email }}</p>
-            </div>
+            </label>
+            <input
+              id="upload-desktop"
+              type="file"
+              accept="image/*"
+              @change="handleImageSelect"
+              hidden
+            />
           </div>
+          <div class="grid">
+            <h3 class="pt-1 font-bold text-xl">
+              Hello {{ supplierData.name }}
+            </h3>
+            <p class="text-sm text-gray-500">{{ supplierData.email }}</p>
+          </div>
+        </div>
 
-          <hr />
-          <div class="space-y-5 pl-5 pr-2 h-[800px]">
-            <h3 class="font-bold pt-5 text-2xl pb-5">My Account</h3>
+        <hr />
 
-            <NuxtLink to="/supplier">
-              <div
-                :class="[
-                  'flex items-center gap-3 p-2 rounded-2xl cursor-pointer transition-all',
-                  isActive('supplier') 
-                    ? 'bg-[#EBCDC5] text-[#612B1F] font-bold' 
-                    : 'hover:bg-white text-gray-800'
-                ]"
-              >
-                <font-awesome-icon :icon="['fas', 'user']" class="text-[20px]" />
-                <p class="text-lg font-medium">{{ feild1 }}</p>
-              </div>
-            </NuxtLink>
-
-            <NuxtLink to="/supplier/productsUploads">
-              <div
-                :class="[
-                  'flex items-center gap-3 p-2 rounded-2xl cursor-pointer transition-all',
-                  isActive('supplier-productsUploads') 
-                    ? 'bg-[#EBCDC5] text-[#612B1F] font-bold' 
-                    : 'hover:bg-white text-gray-800'
-                ]"
-              >
-                <font-awesome-icon
+        <div class="space-y-5">
+          <NuxtLink
+            to="/supplier"
+            class="block p-2 hover:bg-[#EBCDC5] rounded-2xl text-lg font-medium"
+          >
+          <font-awesome-icon :icon="['fas', 'user']" class="text-[20px]" />
+            Profile
+          </NuxtLink>
+          <NuxtLink
+            to="/supplier/productsUploads"
+            class="block p-2 hover:bg-[#EBCDC5] rounded-2xl text-lg font-medium"
+          >
+           <font-awesome-icon
                   :icon="['fas', 'location-dot']"
                   class="text-[20px]"
                 />
-                <p class="text-lg font-medium">{{ feild2 }}</p>
-              </div>
-            </NuxtLink>
-
-            <NuxtLink to="/supplier/ordersTrack">
-              <div
-                :class="[
-                  'flex items-center gap-3 p-2 rounded-2xl cursor-pointer transition-all',
-                  isActive('supplier-ordersTrack') 
-                    ? 'bg-[#EBCDC5] text-[#612B1F] font-bold' 
-                    : 'hover:bg-white text-gray-800'
-                ]"
-              >
-                <font-awesome-icon
+            Product uploads
+          </NuxtLink>
+          <NuxtLink
+            to="/supplier/ordersTrack"
+            class="block p-2 hover:bg-[#EBCDC5] rounded-2xl text-lg font-medium"
+          >
+           <font-awesome-icon
                   :icon="['fas', 'bookmark']"
                   class="text-[20px]"
                 />
-                <p class="text-lg font-medium">{{ feild3 }}</p>
-              </div>
-            </NuxtLink>
-
-            <hr />
-            <div
-              class="flex items-center gap-3 p-2 hover:bg-[#EBCDC5] rounded-2xl cursor-pointer transition-all"
-            >
-              <font-awesome-icon
+            Orders track
+          </NuxtLink>
+        <hr/>
+          <NuxtLink
+            to="/signin"
+            class="block p-2 hover:bg-[#EBCDC5] rounded-2xl text-lg font-medium"
+          >
+                        <font-awesome-icon
                 :icon="['fas', 'right-from-bracket']"
                 class="text-[20px]"
               />
-              <p class="text-lg font-medium">log out</p>
-            </div>
-          </div>
-        </aside>
-      </div>
+
+            Log out
+          </NuxtLink>
+        </div>
+      </aside>
+
+      <main>
+        <NuxtPage />
+      </main>
     </div>
   </div>
 </template>
-
-<style scoped>
-div {
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-</style>

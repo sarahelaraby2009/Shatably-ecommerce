@@ -37,9 +37,7 @@ const maxPrice = ref("");
 const availableBrands = computed(() => {
   const brands = products.value
     .map(p => p.brand)
-    .filter(brand => brand && brand.trim() !== ''); // إزالة القيم الفارغة
-  
-  // إزالة التكرار
+    .filter(brand => brand && brand.trim() !== '');
   return [...new Set(brands)].sort();
 });
 
@@ -48,11 +46,18 @@ const hasActiveFilters = computed(() => {
   return selectedBrand.value !== "" || minPrice.value !== "" || maxPrice.value !== "";
 });
 
+// ✅ مسح كل الفلاتر
+const clearFilters = () => {
+  searchQuery.value = "";
+  selectedBrand.value = "";
+  minPrice.value = "";
+  maxPrice.value = "";
+};
+
 // ✅ تصفية المنتجات بناءً على الفلاتر والبحث
 const filteredProducts = computed(() => {
   let filtered = products.value;
 
-  // فلتر البحث
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     filtered = filtered.filter(p => 
@@ -62,12 +67,10 @@ const filteredProducts = computed(() => {
     );
   }
 
-  // فلتر البراند
   if (selectedBrand.value) {
     filtered = filtered.filter(p => p.brand === selectedBrand.value);
   }
 
-  // فلتر السعر الأدنى
   if (minPrice.value) {
     const min = parseFloat(minPrice.value);
     filtered = filtered.filter(p => {
@@ -76,7 +79,6 @@ const filteredProducts = computed(() => {
     });
   }
 
-  // فلتر السعر الأقصى
   if (maxPrice.value) {
     const max = parseFloat(maxPrice.value);
     filtered = filtered.filter(p => {
@@ -87,14 +89,6 @@ const filteredProducts = computed(() => {
 
   return filtered;
 });
-
-// ✅ مسح كل الفلاتر
-const clearFilters = () => {
-  searchQuery.value = "";
-  selectedBrand.value = "";
-  minPrice.value = "";
-  maxPrice.value = "";
-};
 
 onMounted(async () => {
   if (!categoryId || !subId) {
@@ -132,17 +126,6 @@ onMounted(async () => {
     loading.value = false;
   }
 });
-
-const goBack = () => {
-  router.back();
-};
-
-
-
-
-
-
-
 </script>
 
 <template>

@@ -1,72 +1,128 @@
 <template>
   <div>
     <div class="relative min-h-screen w-full">
-      <div class="blur-[2px] absolute bg-center inset-0 bg-cover" style="background-image: url('/sign.jpg');">
+      <div
+        class="blur-[2px] absolute bg-center inset-0 bg-cover"
+        style="background-image: url('/sign.jpg')"
+      >
         <div class="absolute inset-0 flex justify-center pointer-events-none">
           <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
         </div>
       </div>
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]">
-        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]">
-          <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
-
+        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]"
+      >
+        <div
+          class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]"
+        >
+          <form
+            class="flex flex-col gap-2 w-full"
+            @submit.prevent="handleSignUp"
+          >
             <h3 class="font-semibold text-base">sign up as :</h3>
             <div class="flex gap-2 justify-start items-center">
-              <div class="options" @click="userRole = 'client'"
-                :class="userRole === 'client' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">Client
+              <div
+                class="options"
+                @click="userRole = 'client'"
+                :class="
+                  userRole === 'client'
+                    ? 'bg-[#C76950] text-[#fefefe]'
+                    : 'bg-transparent text-[#612B1F]'
+                "
+              >
+                Client
               </div>
-              <div class="options" @click="userRole = 'engineer'"
-                :class="userRole === 'engineer' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">
-                Engineer</div>
-              <div class="options" @click="userRole = 'supplier'"
-                :class="userRole === 'supplier' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">
-                Supplier</div>
+              <div
+                class="options"
+                @click="userRole = 'engineer'"
+                :class="
+                  userRole === 'engineer'
+                    ? 'bg-[#C76950] text-[#fefefe]'
+                    : 'bg-transparent text-[#612B1F]'
+                "
+              >
+                Engineer
+              </div>
+              <div
+                class="options"
+                @click="userRole = 'supplier'"
+                :class="
+                  userRole === 'supplier'
+                    ? 'bg-[#C76950] text-[#fefefe]'
+                    : 'bg-transparent text-[#612B1F]'
+                "
+              >
+                Supplier
+              </div>
             </div>
 
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Your name</label>
-              <input required
+              <input
+                required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                v-model="name" placeholder="enter Your full name">
+                v-model="name"
+                placeholder="enter Your full name"
+              />
             </div>
 
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Email</label>
-              <input required
+              <input
+                required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="email" v-model="email" placeholder="user@example.com">
+                type="email"
+                v-model="email"
+                placeholder="user@example.com"
+              />
             </div>
 
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Password</label>
-              <input required
+              <input
+                required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="password" v-model="password" placeholder="*****">
+                type="password"
+                v-model="password"
+                placeholder="*****"
+              />
             </div>
 
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">confirm Password</label>
-              <input @input="matchPass" required
+              <input
+                @input="matchPass"
+                required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="password" v-model="repassword" placeholder="*****">
+                type="password"
+                v-model="repassword"
+                placeholder="*****"
+              />
             </div>
 
             <div>
-              <input required  type="checkbox"><span class="text-sm"> Agree to our <span
-                  class="underline cursor-pointer">Terms and conditions</span></span>
+              <input required type="checkbox" /><span class="text-sm">
+                Agree to our
+                <span class="underline cursor-pointer"
+                  >Terms and conditions</span
+                ></span
+              >
             </div>
 
             <span class="text-red-400 text-sm">{{ errorMessage }}</span>
 
             <div class="flex items-center gap-3 my-3">
               <div class="flex-1 h-px bg-gray-300"></div>
-              <span class="text-gray-400 font-medium text-xs">or continue with</span>
+              <span class="text-gray-400 font-medium text-xs"
+                >or continue with</span
+              >
               <div class="flex-1 h-px bg-gray-300"></div>
             </div>
 
-            <div @click="googleSignUp"
-              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[35px] justify-center items-center text-center gap-3">
+            <div
+              @click="googleSignUp"
+              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[35px] justify-center items-center text-center gap-3"
+            >
               <div>
                 <img src="/google.svg" class="w-5 h-5" alt="Google" />
               </div>
@@ -74,13 +130,21 @@
             </div>
 
             <div>
-              <button type="submit" :disabled="isLoading"
-                class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed">
-                {{ isLoading ? 'Loading...' : 'Register' }}
+              <button
+                type="submit"
+                :disabled="isLoading"
+                class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {{ isLoading ? "Loading..." : "Register" }}
               </button>
               <div class="text-center mt-3">
-                <span class="text-sm text-gray-500">Already have an account? </span>
-                <NuxtLink to="/signin" class="text-sm text-[#C76950] font-semibold hover:underline">
+                <span class="text-sm text-gray-500"
+                  >Already have an account?
+                </span>
+                <NuxtLink
+                  to="/signin"
+                  class="text-sm text-[#C76950] font-semibold hover:underline"
+                >
                   Sign In
                 </NuxtLink>
               </div>
@@ -89,10 +153,13 @@
         </div>
 
         <div class="leading-[40px]">
-          <p class="font-semibold text-[30px] text-[#fefefe] leading-30 mb-5">Welcome to Shatably</p>
-          <p class="text-[#fefefe] text-base">Make Your Dream Home A Reality with Shatbly</p>
+          <p class="font-semibold text-[30px] text-[#fefefe] leading-30 mb-5">
+            Welcome to Shatably
+          </p>
+          <p class="text-[#fefefe] text-base">
+            Make Your Dream Home A Reality with Shatbly
+          </p>
         </div>
-
       </div>
     </div>
   </div>
@@ -206,7 +273,9 @@ const googleSignUp = async () => {
         email: user.email,
         rating: 0,
         products: [],
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        image: user.image || '',
+        profileComplete: false,
       })
       navigateTo('/supplier')
 
@@ -304,6 +373,7 @@ const handleSignUp = async () => {
         products: [],
         createdAt: serverTimestamp(),
         profileComplete: false,
+        image: ''
       })
       console.log('Supplier account created successfully')
       // navigateTo('/supplier/compelete-profile')
@@ -342,7 +412,7 @@ const handleSignUp = async () => {
 <style scoped>
 .options {
   border-radius: 20px;
-  border: 1px solid #612B1F;
+  border: 1px solid #612b1f;
   cursor: pointer;
   text-align: center;
   height: 34px;

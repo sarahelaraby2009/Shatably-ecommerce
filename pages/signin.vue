@@ -158,6 +158,29 @@ const navigateUser = async (userId, role) => {
   }
 
   if (role === 'supplier') {
+    // ✅ فقد البيانات الكاملة للـ supplier
+    const supplierDoc = await getDoc(doc($db, 'suppliers', userId))
+    if (supplierDoc.exists()) {
+      const supplierData = supplierDoc.data()
+
+      // لو ما كملش الـ profile (أول مرة) روح membership
+      if (!supplierData.profileComplete) {
+        navigateTo('/supplier/membership')
+        return
+      }
+
+      // لو ما عنده membership، روح membership
+      if (!supplierData.hasMembership) {
+        navigateTo('/supplier/membership')
+        return
+      }
+
+      // لو كل شي تمام روح supplier page
+      navigateTo('/supplier')
+      return
+    }
+
+    // لو الـ doc ما موجود روح supplier
     navigateTo('/supplier')
     return
   }
