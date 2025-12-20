@@ -84,13 +84,27 @@
                     </div>
 
                     <!-- Cart Icon -->
-                    <nuxt-link to="/cart">
+                    <!-- <nuxt-link to="/cart">
                         <div
                             class="group w-10 h-10 flex items-center justify-center rounded-full bg-[#F9EEEC] shadow cursor-pointer hover:bg-[#C76950] transition">
                             <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-[#C76950]  group-hover:text-white transition text-xl" />
                             
                         </div>
-                    </nuxt-link>
+                    </nuxt-link> -->
+                    <nuxt-link to="/cart">
+    <div class="relative">
+        <div
+            class="group w-10 h-10 flex items-center justify-center rounded-full bg-[#F9EEEC] shadow cursor-pointer hover:bg-[#C76950] transition">
+            <font-awesome-icon :icon="['fas', 'cart-shopping']" 
+                class="text-[#C76950] group-hover:text-white transition text-xl" />
+        </div>
+        <!-- Badge -->
+        <span v-if="cartCount > 0"
+            class="absolute -top-2 -right-2 bg-[#e05833] text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
+            {{ cartCount > 99 ? '99+' : cartCount }}
+        </span>
+    </div>
+</nuxt-link>
                 </div>
             </div>
 
@@ -132,9 +146,20 @@
                 <button @click="mobileSearchOpen = !mobileSearchOpen" class="text-gray-700 text-xl">
                     <font-awesome-icon :icon="['fas', 'magnifying-glass']" />
                 </button>
-                <nuxt-link to="/cart">
+                <!-- <nuxt-link to="/cart">
                     <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-gray-700 text-xl" />
-                </nuxt-link>
+                </nuxt-link> -->
+                  <nuxt-link to="/cart">
+        <div class="relative">
+            <font-awesome-icon :icon="['fas', 'cart-shopping']" class="text-gray-700 text-xl" />
+            <!-- Mobile Badge -->
+            <span v-if="cartCount > 0"
+                class="absolute -top-3 -right-2 bg-[#e05833] text-white font-bold rounded-full w-4 h-4 flex items-center justify-center shadow-md"
+                style="font-size: 10px;">
+                {{ cartCount > 9 ? '9+' : cartCount }}
+            </span>
+        </div>
+    </nuxt-link>
             </div>
         </div>
 
@@ -277,6 +302,8 @@ import { useAuth } from '~/composables/useAuth'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
 import { signOut } from "firebase/auth"
 
+import { useCart } from '~/composables/useCart'
+
 const mobileMenueOpen = ref(false)
 const categoriesOpen = ref(false)
 const showList = ref(false)
@@ -293,14 +320,25 @@ const defaultAvatar = "/default.png"
 const router = useRouter()
 
 let closeTimeout = null
+/////////////////////
 
-// دالة فتح الـ dropdown
-const openCategories = () => {
-    if (closeTimeout) {
-        clearTimeout(closeTimeout)
-    }
-    open.value = true
-}
+const { cartCount, subscribeToCart, unsubscribe } = useCart()
+
+///////////////////////
+watch(user, (newUser) => {
+  if (newUser?.uid) {
+    console.log('👤 User logged in, subscribing to cart...')
+    subscribeToCart(newUser.uid)
+  } else {
+    console.log('👤 User logged out, clearing cart...')
+    unsubscribe()
+  }
+}, { immediate: true })
+
+// تنضيف
+onUnmounted(() => {
+  unsubscribe()
+})
 
 // دالة إغلاق الـ dropdown مع تأخير
 const closeCategories = () => {

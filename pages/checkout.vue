@@ -43,12 +43,12 @@
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">First Name</label>
-                <FormInput placeholder="First Name" v-model="firstName" />
+                <FormInput placeholder="First Name" v-model="firstName"  @input="firstName = firstName.replace(/[^a-zA-Z\u0600-\u06FF\s]/g, '')"/>
               </div>
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">Last Name</label>
-                <FormInput placeholder="Last Name" v-model="lastName" />
+                <FormInput placeholder="Last Name" v-model="lastName"  @input="firstName = firstName.replace(/[^a-zA-Z\u0600-\u06FF\s]/g, '')"/>
               </div>
 
               <div class="flex flex-col gap-1">
@@ -58,7 +58,7 @@
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">Phone Number</label>
-                <FormInput placeholder="Phone Number" type="number" v-model="phone" />
+                <FormInput placeholder="Phone Number" type="number" v-model="phone"  @input="phone = phone.replace(/\D/g, '').slice(0, 11)"/>
               </div>
 
             </div>
@@ -120,6 +120,7 @@
                     placeholder="Enter your Card Number"
                     type="number"
                     v-model="cardNumber"
+                     @input="cardNumber = cardNumber.replace(/\D/g, '').slice(0, 16)"
                   />
                 </div>
 
@@ -140,6 +141,7 @@
                     placeholder="CVV"
                     type="number"
                     v-model="CVV"
+                    @input="CVV = CVV.replace(/\D/g, '').slice(0, 3)"
                   />
                 </div>
 
@@ -378,25 +380,57 @@ function toggleDiscount() {
 
 
 function validateCheckout() {
-  const required = [
-    firstName.value.trim(),
-    lastName.value.trim(),
-    email.value.trim(),
-    phone.value.trim(),
-    address.value.trim(),
-    selectedGov.value.trim(),
-    payment.value,
-  ];
+  // ✅ Names: letters only (Arabic & English)
+  if (!firstName.value.trim())
+    return "First name is required";
 
+  if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(firstName.value))
+    return "First name must contain letters only";
+
+  if (!lastName.value.trim())
+    return "Last name is required";
+
+  if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(lastName.value))
+    return "Last name must contain letters only";
+
+  // ✅ Email
+  if (!email.value.trim())
+    return "Email is required";
+
+  if (!/^\S+@\S+\.\S+$/.test(email.value))
+    return "Invalid email address";
+
+  // ✅ Phone (Egypt)
+  if (!phone.value.trim())
+    return "Phone number is required";
+
+  if (!/^01[0-9]{9}$/.test(phone.value))
+    return "Invalid Egyptian phone number";
+
+  // ✅ Address & City
+  if (!address.value.trim())
+    return "Address is required";
+
+  if (!selectedGov.value.trim())
+    return "City is required";
+
+  // ✅ Payment
+  if (!payment.value)
+    return "Please select payment method";
+
+  // ✅ Card validation
   if (payment.value === "card") {
-    required.push(
-      cardNumber.value.trim(),
-      expirydate.value.trim(),
-      CVV.value.trim()
-    );
+    if (!/^[0-9]{16}$/.test(cardNumber.value))
+      return "Card number must be 16 digits";
+
+    if (!expirydate.value)
+      return "Expiry date is required";
+
+    if (!/^[0-9]{3}$/.test(CVV.value))
+      return "CVV must be 3 digits";
   }
 
-  return required.some(field => !field); // true = error
+  return null; 
 }
 function cleanData(obj) {
   if (obj === null || obj === undefined) return null;
@@ -430,9 +464,9 @@ async function order(){
     showNotification("Your cart is empty", "error");
     return;
   }
-  const hasError = validateCheckout();
-  if(hasError){
-    showNotification("Please fill all required fields", "error");   
+   const errorMessage = validateCheckout();
+  if (errorMessage) {
+    showNotification(errorMessage, "error");
     return;
   }
   
