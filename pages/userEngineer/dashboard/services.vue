@@ -49,14 +49,16 @@
                         <div class="flex flex-col gap-4">
                             <div>
                                 <label class="font-bold text-sm text-[#3E3E3E] block mb-2">Title</label>
-                                <input type="text" v-model="newService.title" required
+                                <input type="text" v-model="newService.title" required pattern="^[A-Za-z0-9 -]+$"
+
                                     class="font-semibold w-full text-sm text-[#3E3E3E] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border rounded-[24px] p-3 outline-none focus:border-[#C76950]"
                                     placeholder="e.g. Home Renovation" />
                             </div>
 
                             <div>
                                 <label class="font-bold text-sm text-[#3E3E3E] block mb-2">Description</label>
-                                <textarea v-model="newService.description" required rows="3"
+                                <textarea v-model="newService.description" required rows="3" pattern="^[A-Za-z0-9 -]+$"
+
                                     class="font-semibold w-full text-sm text-[#3E3E3E] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border rounded-[24px] p-3 outline-none focus:border-[#C76950] resize-none"
                                     placeholder="Describe your work"></textarea>
                             </div>

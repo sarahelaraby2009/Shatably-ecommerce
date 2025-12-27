@@ -80,7 +80,9 @@
         <!-- Specialization -->
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Specialization</label>
-          <input v-model="specialization" required
+          <input v-model="specialization" required pattern="^[A-Za-z0-9 -]+$"
+
+
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="text" placeholder="e.g. Finishing - Interior Design" />
         </div>
@@ -88,7 +90,8 @@
         <!-- Mobile Number -->
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Mobile Number</label>
-          <input v-model="mobile" required 
+          <input v-model="mobile" required pattern="^01[0-9]{9}$"
+ maxlength="11"
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="tel" placeholder="e.g. 01*********" />
         </div>
@@ -96,7 +99,8 @@
         <!-- Years of Experience -->
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Years Of Experience</label>
-          <input v-model="experience" required
+          <input v-model="experience"  min="0" max="50"
+
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="number" placeholder="e.g. 5" />
         </div>
@@ -104,7 +108,8 @@
         <!-- Bio -->
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Bio</label>
-          <textarea v-model="bio" required
+          <textarea v-model="bio" required pattern="^[A-Za-z ]+$"
+
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none resize-none" 
             rows="4" placeholder="Write a short description about your work and experience"></textarea>
         </div>
@@ -118,7 +123,7 @@
             <p class="text-gray-600 text-sm">
               <span class="text-blue-600 underline">Click</span> to upload certificate (JPG/PNG/PDF)
             </p>
-            <input 
+            <input required
               ref="certificateInput" 
               type="file" 
               accept="image/*,.pdf" 
@@ -388,7 +393,7 @@ const saveData = async () => {
   errorMessages.value = ''
 
   // Validation
-  if (!position.value || !specialization.value || !experience.value || !bio.value || !mobile.value) {
+  if (!position.value || !specialization.value || !experience.value || !bio.value || !mobile.value ||(x)) {
     errorMessages.value = "Please fill all required fields."
     return
   }

@@ -9,157 +9,120 @@
           <div class="w-full h-full bg-black/40 rounded-[16px]"></div>
         </div>
       </div>
+
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]"
-      >
-        <div
-          class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]"
-        >
-          <form
-            class="flex flex-col gap-2 w-full"
-            @submit.prevent="handleSignUp"
-          >
+        class="relative ml-[-50px] z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center px-5 py-10 gap-[50px] lg:gap-[120px] pl-[60px] lg:pl-[160px]">
+
+        <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[500px] w-[340px] p-5 shadow-lg rounded-[20px] gap-[10px]">
+
+          <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignUp">
+
             <h3 class="font-semibold text-base">sign up as :</h3>
+
             <div class="flex gap-2 justify-start items-center">
-              <div
-                class="options"
+              <div class="options"
                 @click="userRole = 'client'"
-                :class="
-                  userRole === 'client'
-                    ? 'bg-[#C76950] text-[#fefefe]'
-                    : 'bg-transparent text-[#612B1F]'
-                "
-              >
+                :class="userRole === 'client' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">
                 Client
               </div>
-              <div
-                class="options"
+
+              <div class="options"
                 @click="userRole = 'engineer'"
-                :class="
-                  userRole === 'engineer'
-                    ? 'bg-[#C76950] text-[#fefefe]'
-                    : 'bg-transparent text-[#612B1F]'
-                "
-              >
+                :class="userRole === 'engineer' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">
                 Engineer
               </div>
-              <div
-                class="options"
+
+              <div class="options"
                 @click="userRole = 'supplier'"
-                :class="
-                  userRole === 'supplier'
-                    ? 'bg-[#C76950] text-[#fefefe]'
-                    : 'bg-transparent text-[#612B1F]'
-                "
-              >
+                :class="userRole === 'supplier' ? 'bg-[#C76950] text-[#fefefe]' : 'bg-transparent text-[#612B1F]'">
                 Supplier
               </div>
             </div>
 
+            <!-- Name -->
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Your name</label>
-              <input
-                required
+              <input required pattern="^[A-Za-z]+$"
+                @invalid="(e) => e.target.setCustomValidity('Please enter Letters only')"
+                @input="(e) => e.target.setCustomValidity('')"
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                v-model="name"
-                placeholder="enter Your full name"
-              />
+                v-model="name" placeholder="enter Your full name" type="text">
             </div>
 
+            <!-- Email -->
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Email</label>
-              <input
-                required
+              <input required type="email"
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="email"
-                v-model="email"
-                placeholder="user@example.com"
-              />
+                v-model="email" placeholder="user@example.com">
             </div>
 
+            <!-- Password -->
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">Password</label>
-              <input
-                required
+              <input required type="password"
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="password"
-                v-model="password"
-                placeholder="*****"
-              />
+                v-model="password" placeholder="*****">
             </div>
 
+            <!-- Confirm Password -->
             <div class="flex flex-col gap-2 mb-2">
               <label class="font-semibold text-sm">confirm Password</label>
-              <input
+              <input required type="password"
                 @input="matchPass"
-                required
                 class="border focus:border-[#612B1F] outline-none shadow-md rounded-[20px] w-full h-10 px-3 text-sm"
-                type="password"
-                v-model="repassword"
-                placeholder="*****"
-              />
+                v-model="repassword" placeholder="*****">
             </div>
 
             <div>
-              <input required type="checkbox" /><span class="text-sm">
+              <input required type="checkbox">
+              <span class="text-sm">
                 Agree to our
-                <span class="underline cursor-pointer"
-                  >Terms and conditions</span
-                ></span
-              >
+                <span class="underline cursor-pointer">Terms and conditions</span>
+              </span>
             </div>
 
             <span class="text-red-400 text-sm">{{ errorMessage }}</span>
 
             <div class="flex items-center gap-3 my-3">
               <div class="flex-1 h-px bg-gray-300"></div>
-              <span class="text-gray-400 font-medium text-xs"
-                >or continue with</span
-              >
+              <span class="text-gray-400 font-medium text-xs">or continue with</span>
               <div class="flex-1 h-px bg-gray-300"></div>
             </div>
 
-            <div
-              @click="googleSignUp"
-              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[35px] justify-center items-center text-center gap-3"
-            >
-              <div>
-                <img src="/google.svg" class="w-5 h-5" alt="Google" />
-              </div>
+            <!-- Google -->
+            <div @click="googleSignUp"
+              class="mb-3 flex cursor-pointer border border-gray-300 rounded-[20px] h-[35px] justify-center items-center text-center gap-3">
+              <img src="/google.svg" class="w-5 h-5" alt="Google" />
               <p class="text-xs">Sign Up With Your Google Account</p>
             </div>
 
-            <div>
-              <button
-                type="submit"
-                :disabled="isLoading"
-                class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {{ isLoading ? "Loading..." : "Register" }}
-              </button>
-              <div class="text-center mt-3">
-                <span class="text-sm text-gray-500"
-                  >Already have an account?
-                </span>
-                <NuxtLink
-                  to="/signin"
-                  class="text-sm text-[#C76950] font-semibold hover:underline"
-                >
-                  Sign In
-                </NuxtLink>
-              </div>
+            <!-- Submit -->
+            <button type="submit" :disabled="isLoading"
+              class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed">
+              {{ isLoading ? "Loading..." : "Register" }}
+            </button>
+
+            <div class="text-center mt-3">
+              <span class="text-sm text-gray-500">Already have an account?</span>
+              <NuxtLink to="/signin" class="text-sm text-[#C76950] font-semibold hover:underline">
+                Sign In
+              </NuxtLink>
             </div>
+
           </form>
+
         </div>
 
         <div class="leading-[40px]">
-          <p class="font-semibold text-[30px] text-[#fefefe] leading-30 mb-5">
+          <p class="font-semibold text-[30px] text-[#fefefe] mb-5">
             Welcome to Shatably
           </p>
           <p class="text-[#fefefe] text-base">
             Make Your Dream Home A Reality with Shatbly
           </p>
         </div>
+
       </div>
     </div>
   </div>
@@ -173,15 +136,13 @@ import {
   GoogleAuthProvider,
 } from "firebase/auth";
 import { setDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
+
 useHead({
   title: "Register | MyProject",
-  meta: [
-    {
-      name: "description",
-      content: "انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم.",
-    },
-  ],
+  meta: [{ name: "description", content: "انضم إلى مجتمعنا وابدأ رحلتك مع شطبلي اليوم." }],
 });
+
+definePageMeta({ layout: "withOutNavFoot" });
 
 const email = ref("");
 const name = ref("");
@@ -193,24 +154,18 @@ const isLoading = ref(false);
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-definePageMeta({
-  layout: "withOutNavFoot",
-});
-
 const { $auth } = useNuxtApp();
 const { $db } = useNuxtApp();
 
 const matchPass = () => {
-  if (password.value !== repassword.value) {
-    errorMessage.value = "Passwords don't match";
-    return;
-  }
-  errorMessage.value = "";
+  errorMessage.value = password.value !== repassword.value
+    ? "Passwords don't match"
+    : "";
 };
 
+// GOOGLE SIGNUP
 const googleSignUp = async () => {
   errorMessage.value = "";
-
   if (!userRole.value) {
     errorMessage.value = "Please select your account type";
     return;
@@ -227,15 +182,12 @@ const googleSignUp = async () => {
 
     if (userDoc.exists()) {
       const existingRole = userDoc.data().role;
-      if (existingRole === "client") {
-        navigateTo("/");
-      } else if (existingRole === "engineer") {
-        navigateTo("/userEngineer/complete-profile");
-      } else if (existingRole === "supplier") {
-        navigateTo("/supplier");
-      }
+      if (existingRole === "client") navigateTo("/");
+      else if (existingRole === "engineer") navigateTo("/userEngineer/complete-profile");
+      else navigateTo("/supplier");
       return;
     }
+
     await setDoc(doc($db, "users", user.uid), {
       email: user.email,
       name: user.displayName,
@@ -244,7 +196,6 @@ const googleSignUp = async () => {
       createdAt: serverTimestamp(),
     });
 
-    // Create role-specific documents
     if (userRole.value === "engineer") {
       await setDoc(doc($db, "engineers", user.uid), {
         name: user.displayName,
@@ -266,22 +217,21 @@ const googleSignUp = async () => {
         certificateName: "",
       });
       navigateTo("/userEngineer/complete-profile");
+
     } else if (userRole.value === "supplier") {
-      // عند عمل Register (Email/Password أو Google)
       await setDoc(doc($db, "suppliers", user.uid), {
-        name: name.value || user.displayName,
-        email: email.value || user.email,
+        name: user.displayName,
+        email: user.email,
         rating: 0,
         products: [],
         createdAt: serverTimestamp(),
         image: user.photoURL || "",
-        profileComplete: false, // ✅ false في البداية
-        hasMembership: false, // ✅ false في البداية
+        profileComplete: false,
+        hasMembership: false,
       });
-
-      // بعد التسجيل نوديه على complete-profile
       navigateTo("/supplier/complete-profile");
-    } else if (userRole.value === "client") {
+
+    } else {
       await setDoc(doc($db, "clients", user.uid), {
         name: user.displayName,
         email: user.email,
@@ -291,6 +241,7 @@ const googleSignUp = async () => {
       });
       navigateTo("/");
     }
+
   } catch (err) {
     console.error("Google sign up error:", err);
     errorMessage.value = "Google sign up failed. Please try again.";
@@ -299,10 +250,10 @@ const googleSignUp = async () => {
   }
 };
 
+// EMAIL REGISTER
 const handleSignUp = async () => {
   errorMessage.value = "";
 
-  // Validation
   if (!emailRegex.test(email.value)) {
     errorMessage.value = "Invalid email format";
     return;
@@ -326,15 +277,9 @@ const handleSignUp = async () => {
   isLoading.value = true;
 
   try {
-    // Create Firebase Auth user
-    const userCredential = await createUserWithEmailAndPassword(
-      $auth,
-      email.value,
-      password.value
-    );
+    const userCredential = await createUserWithEmailAndPassword($auth, email.value, password.value);
     const user = userCredential.user;
 
-    // Create main user document
     await setDoc(doc($db, "users", user.uid), {
       email: email.value,
       name: name.value,
@@ -343,7 +288,6 @@ const handleSignUp = async () => {
       createdAt: serverTimestamp(),
     });
 
-    // Create role-specific documents
     if (userRole.value === "engineer") {
       await setDoc(doc($db, "engineers", user.uid), {
         name: name.value,
@@ -365,11 +309,8 @@ const handleSignUp = async () => {
         services: [],
         mobile: "",
       });
-      console.log("Engineer account created successfully");
-      // navigateTo('/userEngineer/complete-profile')
-    } else if (userRole.value === "supplier") {
-      console.log("set suppliers");
 
+    } else if (userRole.value === "supplier") {
       await setDoc(doc($db, "suppliers", user.uid), {
         name: name.value,
         email: email.value,
@@ -379,9 +320,8 @@ const handleSignUp = async () => {
         profileComplete: false,
         image: "",
       });
-      console.log("Supplier account created successfully");
-      // navigateTo('/supplier/compelete-profile')
-    } else if (userRole.value === "client") {
+
+    } else {
       await setDoc(doc($db, "clients", user.uid), {
         name: name.value,
         email: email.value,
@@ -389,23 +329,18 @@ const handleSignUp = async () => {
         favorites: [],
         createdAt: serverTimestamp(),
       });
-      console.log("Client account created successfully");
-      // navigateTo('/')
     }
+
     navigateTo("/signin");
+
   } catch (err) {
     console.error("Sign up error:", err);
-
-    if (err.code === "auth/email-already-in-use") {
-      errorMessage.value =
-        "This email is already registered. Please sign in instead.";
-    } else if (err.code === "auth/weak-password") {
-      errorMessage.value = "Password is too weak. Use at least 6 characters.";
-    } else if (err.code === "auth/invalid-email") {
-      errorMessage.value = "Invalid email address.";
-    } else {
+    if (err.code === "auth/email-already-in-use")
+      errorMessage.value = "This email is already registered. Please sign in instead.";
+    else if (err.code === "auth/weak-password")
+      errorMessage.value = "Password is too weak.";
+    else
       errorMessage.value = "Registration failed. Please try again.";
-    }
   } finally {
     isLoading.value = false;
   }
@@ -426,9 +361,8 @@ const handleSignUp = async () => {
   font-size: 0.875rem;
   transition: all 0.2s ease;
 }
-
 .options:hover {
   transform: scale(1.02);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 </style>

@@ -32,7 +32,7 @@
                     Apartment Space (in square meters)
                 </h2>
                 <div>
-                    <input required
+                    <input required pattern="^[1-9][0-9]*$"
                         class="border focus:border-[#612B1F] outline-none border-slate-300 w-full max-w-3xl rounded-[16px] h-10 px-4 text-[14px]"
                         v-model="calc" type="number" placeholder="Enter Your Space" />
                 </div>
