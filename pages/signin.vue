@@ -48,7 +48,7 @@
 
             <!-- Sign In Button -->
             <button type="submit" :disabled="isLoading"
-              class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
+              class="text-[#fefefe] w-full h-[42px] text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
               {{ isLoading ? 'Loading...' : 'Sign In' }}
             </button>
 
@@ -124,6 +124,15 @@ import {
   browserSessionPersistence 
 } from 'firebase/auth'
 import { getDoc, doc } from 'firebase/firestore'
+useHead({
+  title: 'Sign In | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'قم بتسجيل الدخول إلى حسابك للوصول إلى ميزات شطبلي المخصصة.'
+    }
+  ]
+})
 
 const { $auth, $db } = useNuxtApp()
 
@@ -149,6 +158,29 @@ const navigateUser = async (userId, role) => {
   }
 
   if (role === 'supplier') {
+    // ✅ فقد البيانات الكاملة للـ supplier
+    const supplierDoc = await getDoc(doc($db, 'suppliers', userId))
+    if (supplierDoc.exists()) {
+      const supplierData = supplierDoc.data()
+
+      // لو ما كملش الـ profile (أول مرة) روح membership
+      if (!supplierData.profileComplete) {
+        navigateTo('/supplier/membership')
+        return
+      }
+
+      // لو ما عنده membership، روح membership
+      if (!supplierData.hasMembership) {
+        navigateTo('/supplier/membership')
+        return
+      }
+
+      // لو كل شي تمام روح supplier page
+      navigateTo('/supplier')
+      return
+    }
+
+    // لو الـ doc ما موجود روح supplier
     navigateTo('/supplier')
     return
   }

@@ -2,6 +2,7 @@
     <div class="flex flex-col lg:flex-row  min-h-screen ">
         <EngineerMobileView class="block lg:hidden" />
         <EngineerSideBar class="hidden lg:block w-[500px]" />
+        
         <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
             <div class="p-6 flex flex-col lg:flex-row lg:justify-between">
                 <div>
@@ -23,7 +24,7 @@
             <div class="flex flex-col justify-center items-center">
                 <div v-if="show"
                     class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6 ">
-                    <img src="/add image.png" alt="add service" class=" w-12 mb-3" />
+                    <img src="/add.png" alt="add service" class=" w-12 mb-3" />
                     <p class="text-[18px]">Add your Portfolio here</p>
                     <button @click="openModal"
                         class="bg-[#C76950] w-full text-white px-2 py-1 rounded-xl shadow  transition">
@@ -129,9 +130,20 @@
 </template>
 
 <script setup>
+      
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+useHead({
+  title: "Engineer portfolio",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح محفظة اعمالك و حدثها.",
+    },
+    {'keywords': 'لوحة تحكم مهندس, بروفايل مهندس, إدارة مشاريع, تحديث ملف شخصي, خبرة مهندس, تخصص مهندس, خدمات مهندس, عملاء, تصميم, تطوير'},
+  ],
+});
 const { $db } = useNuxtApp();
 
 const showSecModal = ref(false);

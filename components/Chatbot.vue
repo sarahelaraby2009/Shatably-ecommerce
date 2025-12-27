@@ -10,9 +10,6 @@ const isTyping = ref(false);
 const messagesEndRef = ref(null);
 const showGreeting = ref(true);
 
-const apiKey =
-  "";
-
 const closeGreeting = () => {
   showGreeting.value = false;
 };
@@ -32,8 +29,9 @@ const toggleChat = () => {
 };
 
 watch(messages, () => {
-  if (messagesEndRef.value)
+  if (messagesEndRef.value) {
     messagesEndRef.value.scrollIntoView({ behavior: "smooth" });
+  }
 });
 
 const clearChat = () => {
@@ -42,7 +40,6 @@ const clearChat = () => {
 
 const handleLanguageSelect = (lang) => {
   language.value = lang;
-
   messages.value = [
     {
       from: "bot",
@@ -56,54 +53,64 @@ const handleLanguageSelect = (lang) => {
 
 const handleSend = async () => {
   const userText = input.value.trim();
-  if (!userText) return;
+  if (!userText || isTyping.value) return;
 
   messages.value.push({ from: "user", text: userText });
   input.value = "";
   isTyping.value = true;
 
   try {
-    const apiMessages = messages.value.map((msg) => ({
-      role: msg.from === "user" ? "user" : "assistant",
-      content: msg.text,
-    }));
+   const systemPrompt = {
+  role: "system",
+  content:
+    language.value === "ar"
+      ? "أنت مساعد ذكي متخصص في التشطيب ومواد البناء والديكور. أجب بإجابات واضحة وبسيطة ومناسبة للعميل."
+      : "You are a smart assistant specialized in finishing materials, construction, and interior design. Answer clearly and simply.",
+};
 
-    const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${apiKey}`,
-          "HTTP-Referer": window.location.href,
-          "X-Title": "Finishing Assistant",
-        },
-        body: JSON.stringify({
-          model: "x-ai/grok-4.1-fast",
-          messages: apiMessages,
-        }),
-      }
-    );
+// ناخد آخر 6 رسائل بس
+const chatHistory = messages.value
+  .filter(m => m.from === "user" || m.from === "bot")
+  .slice(-10)
+  .map(msg => ({
+    role: msg.from === "user" ? "user" : "assistant",
+    content: msg.text,
+  }));
 
-    if (!response.ok) {
-      messages.value.push({
-        from: "bot",
-        text: language.value === "ar" ? "حدث خطأ في الخادم." : "Server error.",
-      });
-    } else {
-      const data = await response.json();
-      const botFull = data?.choices?.[0]?.message?.content || "";
-      const botClean = botFull.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+const apiMessages = [systemPrompt, ...chatHistory];
 
-      messages.value.push({
-        from: "bot",
-        text:
-          botClean ||
-          (language.value === "ar"
-            ? "لم أفهم سؤالك."
-            : "I didn't understand that."),
-      });
-    }
+
+
+    const response = await $fetch("/api/chat", {
+      method: "POST",
+      body: {
+        messages: apiMessages,
+      },
+    });
+
+   let botFull = "";
+
+const message = response?.choices?.[0]?.message;
+
+if (typeof message?.content === "string") {
+  botFull = message.content;
+} else if (Array.isArray(message?.content)) {
+  botFull = message.content.map(c => c.text).join(" ");
+}
+
+    const botClean = botFull
+  .replace(/<think>[\s\S]*?<\/think>/g, "")
+  .trim();
+
+
+    messages.value.push({
+      from: "bot",
+      text:
+        botClean ||
+        (language.value === "ar"
+          ? "لم أفهم سؤالك."
+          : "I didn't understand that."),
+    });
   } catch (err) {
     console.error(err);
     messages.value.push({
@@ -133,7 +140,7 @@ const handleSend = async () => {
 
   <button @click="toggleChat" class="chat-button">
     <img
-      src="/public/chatbot 1.png"
+      src="/chatbot 1.png"
       class="chat-image"
       :class="{ 'is-floating': !isOpen }"
       alt="Chat"
@@ -206,6 +213,9 @@ const handleSend = async () => {
     </div>
   </div>
 </template>
+
+
+
 
 <style scoped>
 .chat-button {

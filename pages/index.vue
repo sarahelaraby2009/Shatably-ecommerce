@@ -1,10 +1,10 @@
 <template>
-  <div class="container lg:mx-auto">
+  <div class="container px-4 lg:px-0 lg:mx-auto">
     <div>
-      <div class="flex justify-center h-[400px] w-full mt-[20px] lg:mb-[80px] relative">
+      <div class="flex justify-center h-full lg:h-[400px] w-full mt-[20px] mb-6 lg:mb-[80px] relative">
         <Swiper :modules="modules" :slides-per-view="1" :space-between="10" :loop="true"
           :autoplay="{ delay: 3000, disableOnInteraction: false }" :pagination="{ clickable: true }" :navigation="false"
-          class="mySwiper h-[400px]">
+          class="mySwiper h-full">
           <SwiperSlide v-for="n in 7" :key="n">
             <img class="lg:w-full lg:h-full lg:object-cover object-contain" :src="`/pro-${n}.png`" loading="lazy"
               style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
@@ -13,13 +13,13 @@
       </div>
     </div>
 
-    <div class="mb-[80px]" >
+    <div class="lg:mb-[80px]" >
       <p class="font-bold text-[25px] mb-2">Our Features</p>
 
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 mx-5  mb-10">
 
         <div class="relative  h-[200px] rounded-[24px] shadow-xl flex flex-col justify-center gap-[20px] p-5 ">
-          <img class="w-[50px]" src="/calculator.png" />
+          <img class="w-[50px]" src="/Calculator.png" />
           <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
         </div>
 
@@ -42,14 +42,14 @@
 
     </div>
 
-    <div class="w-full overflow-hidden mb-[80px]">
+    <div class="w-full overflow-hidden lg:mb-[80px]">
       <div class="slider-track flex gap-10 items-center">
         <img v-for="n in 13" :key="n" :src="`/image-${n}.png`" class="h-[30px] w-auto object-contain" />
         <img v-for="n in 13" :key="'clone-' + n" :src="`/image-${n}.png`" class="h-[30px] w-auto object-contain" />
       </div>
     </div>
 
-    <div class="w-full mx-0 px-0 relative mb-[80px]">
+    <div class="w-full mx-0 px-0 relative lg:mb-[80px]">
       <div class="flex justify-center h-[500px] w-full mt-[20px] relative">
         <img class="w-full h-full object-cover" src="/hero.avif" alt="hero photo" />
 
@@ -66,7 +66,7 @@
     </div>
 
     <!-- New Arrivals Section -->
-    <div class="mb-[80px]">
+    <div class="lg:mb-[80px]">
       <p class="font-bold text-[25px]">New Arrivals</p>
       <div class="flex gap-3 cursor-pointer overflow-x-auto scrollbar-hide pb-2 m-5">
         <div class="border w-[80px] text-center border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
@@ -80,15 +80,15 @@
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
       <div class="flex gap-5 justify-center items-center">
-        <button @click="leftScrollBest"
-          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
-        <button @click="rightScrollBest"
+        <button @click="leftScrollNew"
+          class="border border-[#3E3E3E] rounded-full flex justify-center items-center text-[#3E3E3E]  text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
+        <button @click="rightScrollNew"
           class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-right" /></button>
       </div>
     </div>
 
     <!-- Best Selling Section -->
-    <div class="mb-[80px]">
+    <div class="lg:mb-[80px]">
       <p class="font-bold text-[25px]">Best Selling Products</p>
       <div class="flex gap-3 cursor-pointer overflow-x-auto scrollbar-hide pb-2 m-5">
         <div class="border w-[80px] text-center border-[#C76950] outline-none rounded-full p-2 whitespace-nowrap"
@@ -104,14 +104,14 @@
       </div>
       <div class="flex gap-5 justify-center items-center">
         <button @click="leftScrollBest"
-          class="border border-[#3E3E3E] rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
+          class="border border-[#3E3E3E] flex justify-center items-center rounded-full text-[#3E3E3E] text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-left" /></button>
         <button @click="rightScrollBest"
           class="border border-[#3E3E3E] text-[#3E3E3E] rounded-full text-[20px] w-[40px] h-[40px]"><font-awesome-icon icon="fa-solid fa-chevron-right" /></button>
       </div>
     </div>
 
     <!-- Electrical Section -->
-    <div class="mb-[80px]">
+    <div class="lg:mb-[80px]">
       <div class="flex justify-between items-center">
         <p class="font-bold text-[25px]">Electrical Products</p>
         <div>
@@ -120,8 +120,9 @@
               icon="fa-solid fa-caret-right" /></NuxtLink>
         </div>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4  mt-5 lg:gap-[30px] overflow-x-auto scroll-smooth scrollbar-hide py-4">
-        <productCard  v-for="product in electericalPro" :key="product.id" :product="product"
+      <div  class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5">
+        <productCard  class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"  v-for="product in electericalPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
 
@@ -129,7 +130,7 @@
 
     </div>
     <!-- Plumbing products -->
-    <div class="mb-[80px]">
+    <div class="lg:mb-[80px]">
       <div class="flex justify-between items-center">
         <p class="font-bold text-[25px]">Plumbing products</p>
         <NuxtLink to="/categories/0BzHvwuwBw2q5bKSDamR" class="text-[#8D8D8D] ">See more <font-awesome-icon
@@ -137,20 +138,22 @@
 
 
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 lg:gap-[30px] m-5 mt-5 overflow-x-auto scroll-smooth scrollbar-hide py-4">
-        <productCard  v-for="product in plumbPro" :key="product.id" :product="product"
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5"">
+        <productCard  class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"   v-for="product in plumbPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
     </div>
     <!-- paints -->
-    <div class="mb-[80px]">
+    <div class="lg:mb-[80px]">
       <div class="flex justify-between items-center">
         <p class="font-bold text-[25px]">Paints & Coatings</p>
         <NuxtLink to="/categories/vwmN6jB5dNzfnS5dr4Y6" class="text-[#8D8D8D] ">See more <font-awesome-icon
             icon="fa-solid fa-caret-right" /></NuxtLink>
       </div>
-      <div class="grid grid-cols-2 lg:grid-cols-4 m-5 mt-5 overflow-x-auto lg:gap-[30px] scroll-smooth scrollbar-hide py-4 ">
-        <productCard  v-for="product in paintPro" :key="product.id" :product="product"
+      <div class="flex gap-4 overflow-x-auto scrollbar-hide py-4
+         px-1 sm:px-0 lg:grid lg:grid-cols-4 lg:gap-[30px] lg:overflow-visible lg:m-5 lg:mt-5">
+        <productCard class="min-w-[200px] sm:min-w-[250px] lg:min-w-0"  v-for="product in paintPro" :key="product.id" :product="product"
           :categoryId="product.categoryId" :subId="product.subId" />
       </div>
     </div>
@@ -172,6 +175,15 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import Chatbot from '@/components/Chatbot.vue';   
+useHead({
+  title: 'Home | Shatably',
+  meta: [
+    {
+      name: 'description',
+      content: 'اكتشف أحدث المنتجات والخدمات في مجال التشطيب المنزلي مع منصتنا المتكاملة.'
+    }
+  ]
+})
 const products = ref([])
 const cats = ref([])
 const { $db } = useNuxtApp()
@@ -206,12 +218,12 @@ onMounted(async () => {
     where('bestSelling', '==', true),
     limit(10))
   const snap2 = await getDocs(q2)
-  bestSelling.value = (snap2).docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-    categoryId: doc.data().categoryId,
-  subId: doc.data().subId
-  }))
+  bestSelling.value = snap2.docs.map(d => ({
+  id: d.id,
+  ...d.data(),
+  categoryId: d.data().categoryId,
+  subId: d.data().subId
+}))
 
   const snapshot2 = await getDocs(collection($db, 'categories'))
   cats.value = snapshot2.docs.map(g => ({
@@ -285,19 +297,7 @@ const showAll = async () => {
   activeSelection.value = 'all'
 }
 
-const leftScroll = () => {
-  productContainer.value.scrollBy({
-    left: -300,
-    behavior: "smooth"
-  })
-}
 
-const rightScroll = () => {
-  productContainer.value.scrollBy({
-    left: 300,
-    behavior: "smooth"
-  })
-}
 
 const showAllBest = async () => {
   const qbest = query(collection($db, 'products'),
@@ -339,6 +339,19 @@ const leftScrollBest = () => {
 
 const rightScrollBest = () => {
   productContainerBest.value.scrollBy({
+    left: 300,
+    behavior: "smooth"
+  })
+}
+const leftScrollNew = () => {
+  productContainer.value.scrollBy({
+    left: -300,
+    behavior: "smooth"
+  })
+}
+
+const rightScrollNew = () => {
+  productContainer.value.scrollBy({
     left: 300,
     behavior: "smooth"
   })

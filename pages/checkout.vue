@@ -43,12 +43,12 @@
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">First Name</label>
-                <FormInput placeholder="First Name" v-model="firstName" />
+                <FormInput placeholder="First Name" v-model="firstName"  @input="firstName = firstName.replace(/[^a-zA-Z\u0600-\u06FF\s]/g, '')"/>
               </div>
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">Last Name</label>
-                <FormInput placeholder="Last Name" v-model="lastName" />
+                <FormInput placeholder="Last Name" v-model="lastName"  @input="firstName = firstName.replace(/[^a-zA-Z\u0600-\u06FF\s]/g, '')"/>
               </div>
 
               <div class="flex flex-col gap-1">
@@ -58,7 +58,7 @@
 
               <div class="flex flex-col gap-1">
                 <label class="text-xl text-black-600">Phone Number</label>
-                <FormInput placeholder="Phone Number" type="number" v-model="phone" />
+                <FormInput placeholder="Phone Number" type="number" v-model="phone"  @input="phone = phone.replace(/\D/g, '').slice(0, 11)"/>
               </div>
 
             </div>
@@ -120,6 +120,7 @@
                     placeholder="Enter your Card Number"
                     type="number"
                     v-model="cardNumber"
+                     @input="cardNumber = cardNumber.replace(/\D/g, '').slice(0, 16)"
                   />
                 </div>
 
@@ -140,6 +141,7 @@
                     placeholder="CVV"
                     type="number"
                     v-model="CVV"
+                    @input="CVV = CVV.replace(/\D/g, '').slice(0, 3)"
                   />
                 </div>
 
@@ -151,7 +153,7 @@
 
         <!------------------------------right side -------------------------------------------------->
         <div class="lg:col-span-1">  
-          <h2 class="taxt-[18px] lg:text-[20px] font-semibold mb-4 mt-5">Order Summary</h2>
+          <h2 class="text-[18px] lg:text-[20px] font-semibold mb-4 mt-5">Order Summary</h2>
 
           <div class="bg-white rounded-[16px] border border-gray-200 p-4 mb-4 relative">
             <checkcard2 v-for="item in cartItems" :key="item.id" :product="item"/>
@@ -161,12 +163,15 @@
               <h3 class="text-[16px] font-semibold mb-2">Discount Code</h3>
               <input 
                 type="text" 
-                placeholder="enter your discount code" 
+                placeholder="you have  discount promo code?" 
                 v-model="discountcode"
                 class="w-full px-3 py-2 border border-gray-300 rounded-[20px] outline-none focus:border-[#C76950] text-[13px] mb-2"
               />
-              <button class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
+              <!-- <button  @click="ApplyDiscount" class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
                 Apply
+              </button> -->
+              <button @click="toggleDiscount" class="px-6 py-2 bg-[#C76950] text-white rounded-[20px] hover:bg-[#AD563F] text-[14px] font-medium">
+                {{ discountRate > 0 ? "Reset" : "Apply" }}
               </button>
             </div>
 
@@ -178,7 +183,7 @@
                   <p>{{ subtotal }} LE</p>
                 </div>
                 <div class="flex justify-between">
-                  <p>Discount (5%):</p>
+                  <p>Discount</p>
                   <p>-{{ discount }} LE</p>
                 </div>
                 <div class="flex justify-between">
@@ -197,7 +202,11 @@
             </div>
 
             <!-- Place Order Button -->
-            <button @click="order" class="w-full mt-[10px] py-3 bg-[#C76950] text-white rounded-[22px] hover:bg-[#AD563F] text-[15px] font-medium">
+            <button @click="order"
+            :disabled="cartItems.length === 0"
+             class="w-full mt-[10px] py-3 bg-[#C76950] text-white rounded-[22px] 
+             hover:bg-[#AD563F] text-[15px] font-medium 
+             disabled:opacity-50 disabled:cursor-not-allowed">
               Place order
             </button>
           </div>
@@ -265,6 +274,26 @@ const city = [
   "10th of Ramadan",
   "October 6 City"
 ];
+//////////shipping cost
+const shippingRules = {
+  "Cairo": 50,
+  "Giza": 60,
+  "Alexandria": 70,
+  "Dakahlia": 80,
+  "Sharqia": 80,
+  "Kafr El Sheikh": 85,
+  "Gharbia": 85,
+  "Menoufia": 90,
+  "Beni Suef": 90,
+  "Faiyum": 95,
+  "Qena": 100,
+  "Luxor": 110,
+  "Aswan": 120,
+  "Matrouh": 100,
+  "South Sinai": 120,
+  "North Sinai": 130,
+ 
+};
 const selectedGov=ref("")
 const payment =ref("")
 const cardNumber=ref("")
@@ -295,42 +324,113 @@ const subtotal = computed(() => {
   }, 0);
   return round3(sum);
 });
+const discountcode=ref("");
+const discountRate=ref(0);
 
-const discountRate = 0.05;
+
 const discount = computed(() => {
-  return round3(subtotal.value * discountRate);
+    if (cartItems.value.length === 0) return 0;
+  return round3(subtotal.value * discountRate.value);
 });
 
 const shipping = computed(() => {
-  return round3(100);
+    if (cartItems.value.length === 0) return 0;
+  
+  return shippingRules[selectedGov.value] || 120; 
 });
 
 const total = computed(() => {
+  
+    if (cartItems.value.length === 0) return 0;
   return round3(subtotal.value - discount.value + shipping.value);
 });
+//////////////apply discount
+function toggleDiscount() {
+  //apply discount
+  if(discountRate.value >0){
+     discountRate.value = 0;
+    discountcode.value = "";
+     
+
+    showNotification("Discount removed", "success");
+    return;
+  }
+  const code = discountcode.value.trim().toLowerCase();
+
+  if (code !== "shatably") {
+    
+    showNotification("Invalid discount code", "error");
+      discountcode.value = "";
+    return;
+  }
+
+  // 🔒 check localStorage
+  const used = localStorage.getItem("used_shatably_discount");
+
+  if (used === "true") {
+    showNotification("You already used this discount code", "error");
+    return;
+  }
+
+  discountRate.value = 0.02;
+  showNotification("Discount code applied (2%)", "success");
+}
+
 /////////order colllection
 
 
 function validateCheckout() {
-  const required = [
-    firstName.value.trim(),
-    lastName.value.trim(),
-    email.value.trim(),
-    phone.value.trim(),
-    address.value.trim(),
-    selectedGov.value.trim(),
-    payment.value,
-  ];
+  // ✅ Names: letters only (Arabic & English)
+  if (!firstName.value.trim())
+    return "First name is required";
 
+  if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(firstName.value))
+    return "First name must contain letters only";
+
+  if (!lastName.value.trim())
+    return "Last name is required";
+
+  if (!/^[a-zA-Z\u0600-\u06FF\s]+$/.test(lastName.value))
+    return "Last name must contain letters only";
+
+  // ✅ Email
+  if (!email.value.trim())
+    return "Email is required";
+
+  if (!/^\S+@\S+\.\S+$/.test(email.value))
+    return "Invalid email address";
+
+  // ✅ Phone (Egypt)
+  if (!phone.value.trim())
+    return "Phone number is required";
+
+  if (!/^01[0-9]{9}$/.test(phone.value))
+    return "Invalid Egyptian phone number";
+
+  // ✅ Address & City
+  if (!address.value.trim())
+    return "Address is required";
+
+  if (!selectedGov.value.trim())
+    return "City is required";
+
+  // ✅ Payment
+  if (!payment.value)
+    return "Please select payment method";
+
+  // ✅ Card validation
   if (payment.value === "card") {
-    required.push(
-      cardNumber.value.trim(),
-      expirydate.value.trim(),
-      CVV.value.trim()
-    );
+    if (!/^[0-9]{16}$/.test(cardNumber.value))
+      return "Card number must be 16 digits";
+
+    if (!expirydate.value)
+      return "Expiry date is required";
+
+    if (!/^[0-9]{3}$/.test(CVV.value))
+      return "CVV must be 3 digits";
   }
 
-  return required.some(field => !field); // true = error
+  return null; 
 }
 function cleanData(obj) {
   if (obj === null || obj === undefined) return null;
@@ -360,9 +460,13 @@ function cleanData(obj) {
 
 
 async function order(){
-  const hasError = validateCheckout();
-  if(hasError){
-    showNotification("Please fill all required fields", "error");   
+   if (cartItems.value.length === 0) {
+    showNotification("Your cart is empty", "error");
+    return;
+  }
+   const errorMessage = validateCheckout();
+  if (errorMessage) {
+    showNotification(errorMessage, "error");
     return;
   }
   
@@ -413,6 +517,9 @@ async function order(){
     console.log("CLEANED ORDER DATA => ", cleanedOrderData);
     
     const orderRef = await addDoc(collection(db, "orders"), cleanedOrderData);
+    if (discountRate.value > 0) {
+  localStorage.setItem("used_shatably_discount", "true");
+}
     console.log("ORDER ID:", orderRef.id);
     
     showNotification("Order placed! Your Order ID is: " + orderRef.id, "success");  
