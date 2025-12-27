@@ -199,7 +199,12 @@ if (typeof message?.content === "string") {
       />
 
       <button @click="clearChat" class="p-2">
-        <Icon icon="mdi:trash-can" width="22" height="22" class="text-[#C76950]" />
+        <Icon
+          icon="mdi:trash-can"
+          width="22"
+          height="22"
+          class="text-[#C76950]"
+        />
       </button>
 
       <button @click="handleSend" :disabled="isTyping" class="p-2">
@@ -213,7 +218,6 @@ if (typeof message?.content === "string") {
 
 
 <style scoped>
-
 .chat-button {
   position: fixed;
   bottom: 1rem;
@@ -232,7 +236,6 @@ if (typeof message?.content === "string") {
   justify-content: center;
 }
 
-
 .chat-image {
   width: 5rem;
   height: 5rem;
@@ -243,14 +246,13 @@ if (typeof message?.content === "string") {
   transition: transform 0.3s ease;
 }
 
-
 .chat-image.is-floating {
   animation: float-image 2.5s ease-in-out infinite;
 }
 
-
 @keyframes float-image {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -258,20 +260,19 @@ if (typeof message?.content === "string") {
   }
 }
 
-
 .chat-button:active {
   transform: scale(0.95);
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
     transform: translateY(-10px);
   }
 }
-
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -284,22 +285,20 @@ if (typeof message?.content === "string") {
 .greeting-box {
   position: fixed;
 
- 
-  bottom: 116px;   
+  bottom: 116px;
 
-  right: 1rem;     
-  
+  right: 1rem;
+
   width: 250px;
   background: white;
   padding: 14px 16px;
   border-radius: 14px;
 
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   z-index: 60;
 
   animation: fadeIn 0.25s ease-out;
 }
-
 
 .greeting-close {
   position: absolute;
@@ -312,11 +311,10 @@ if (typeof message?.content === "string") {
   cursor: pointer;
 }
 
-
 .greeting-arrow {
   position: absolute;
   bottom: -10px;
-  right: 28px;   
+  right: 28px;
 
   width: 0;
   height: 0;
@@ -325,13 +323,17 @@ if (typeof message?.content === "string") {
   border-right: 10px solid transparent;
   border-top: 10px solid white;
 
-  filter: drop-shadow(0 -2px 2px rgba(0,0,0,0.1));
+  filter: drop-shadow(0 -2px 2px rgba(0, 0, 0, 0.1));
 }
-
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-
 </style>
