@@ -14,6 +14,16 @@ import {
 import { onAuthStateChanged } from "firebase/auth";
 import SideBar from "~/components/SideBar.vue";
 import AddProductModal from "~/components/AddProductModal.vue";
+useHead({
+  title: "Product Uploads",
+  meta: [
+    {
+      name: "description",
+      content: "قم بتحميل وإدارة منتجاتك كمورد بسهولة وفعالية.",
+    },
+    {'keywords': 'تحميل منتجات, مورد, إدارة منتجات, إضافة منتجات, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة, بيع منتجات, تسويق منتجات'},
+  ],
+});
 
 // -----------------------------------------------------------------
 const data = {

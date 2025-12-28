@@ -3,7 +3,7 @@
   <div class="bg-[#4C261C] ">
     <div class="grid grid-cols-1 lg:grid-cols-3 py-8 px-8">
       <div class="text-white flex-col items-center justify-center gap-3">
-        <div> <img class="w-[200px]" src="/logo mod.png" /> </div>
+        <div> <img class="ml-[-50px] w-[200px] lg:w-[200px]" src="/logo mod.png" /> </div>
         <h3 class="mb-3 font-semibold">Contact Us</h3>
         <h3 class="mb-3">+1 (7635) 547-12-97</h3>
         <h3>support@Shatably.com</h3>
@@ -62,11 +62,11 @@
         </div>
       </div>
 
-      <div class="flex flex-start  items-center">
+      <div class="flex flex-start  items-center ml-[30px]">
         <h4>A product of</h4>
         <div class="w-[50px] h-[43px]"> <img class="w-full" src="/logo mod.png" /> </div>
       </div>
-      <h4>© 2025 Shatably. All rights reserved</h4>
+      <h4 class="ml-[30px]">© 2025 Shatably. All rights reserved</h4>
     </div>
   </div>
 </template>

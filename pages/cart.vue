@@ -6,6 +6,15 @@ import { useNuxtApp } from "#app";
 import { collection, query,doc,  updateDoc, where, limit, getDocs, } from "firebase/firestore";
 
 import ProductCard from "~/components/productCard.vue";
+useHead({
+  title: 'Shopping Cart',
+  meta: [
+    {
+      name: 'description',
+      content: 'استعرض وادارة منتجاتك في سلة التسوق الخاصة بك بسهولة قبل إتمام عملية الشراء.'
+    }
+  ]
+})
 const { $db: db } = useNuxtApp();
 const {
   cartItems,
@@ -37,36 +46,59 @@ async function updateQuantity(id, quantity) {
 }
 ///////////////product ////
 watch(
-  ()=>cartItems.value,
-  async (items)=>{
-    if(!items.length)
-    return;
-  const firstItem=items[0].productSnapshot;
-    await loadingProducts(firstItem);
-      
+  () => cartItems.value,
+  async (items) => {
+    // 
+    if (!items || items.length === 0) return;
+
+    await loadingProducts(items);
   },
-  {immediate:true}
+  { immediate: true }
 );
-async function  loadingProducts(product){
-   try {
+async function loadingProducts(items) {
+  try {
     const productsRef = collection(db, "products");
 
-    const q = query(
-      productsRef,
-      where("brand", "==", product.brand),
-      limit(6)
-    );
+    const cartProducts = items
+      .map(i => i.productSnapshot)
+      .filter(Boolean);
 
-    const snap = await getDocs(q);
+    if (!cartProducts.length) return;
+      const cartProductIds = cartProducts.map(p => p.id);
+
+    // نطلع  (brand + category)
+    const pairs = cartProducts.map(p => ({
+      brand: p.brand || null,
+      category: p.category
+    }));
+
+    const snap = await getDocs(productsRef);
 
     recommended.value = snap.docs
-      .filter((doc) => doc.id !== product.id)
-      .map((doc) => ({ id: doc.id, ...doc.data() }));
+      .map(d => ({ id: d.id, ...d.data() }))
+   .filter(p => {
+  // نشيل المنتج لو موجود في الكارت
+  if (cartProductIds.includes(p.id)) return false;
+  
 
+  return pairs.some(cp => {
+    if (cp.brand && p.brand) {
+      return (
+        p.brand === cp.brand &&
+        p.category === cp.category
+      );
+    }
+
+    if (!cp.brand) {
+      return p.category === cp.category;
+    }
+
+    return false;
+  });
+});
   } catch (err) {
     console.log("Error loading recommended:", err);
   }
-
 }
 /////////////progressbar 
 const progress = computed(() => {
@@ -74,11 +106,13 @@ const progress = computed(() => {
 });
 ////////////////////subtotal
 const subtotal=computed(()=>{
-  return localCartItems.value.reduce(
+ const total = localCartItems.value.reduce(
      (acc, item) =>
       acc + (item.productSnapshot?.price || 0) * (item.quantity || 1),
     0
-  )
+  );
+  return Number(total.toFixed(2))
+
 });
 // 5% Discount
 // Shipping
@@ -87,7 +121,7 @@ const shipping = 100;
 // Total after discount
 
 const totalAfterDiscount = computed(() =>
-  subtotal.value  + shipping
+ Number(( subtotal.value  + shipping).toFixed(2))
 );
 </script>
 <!------------------------------------------------------------>

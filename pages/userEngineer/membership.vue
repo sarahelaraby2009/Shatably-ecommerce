@@ -16,7 +16,7 @@
           and allow clients to contact you directly.
         </p>
       </div>
-      <div class="rounded-[24px] w-[80%] shadow-lg bg-red-100 mb-12  p-3">
+      <div class="rounded-[24px] w-[130%] shadow-lg bg-red-100 mb-12  p-3">
         <h2 class="font-bold text-[20px] text-[#262626]">Important Information</h2>
         <ul class="text-[#262626] ">
           <li class="text-[16px]">• You <span class="font-semibold">cannot display your projects</span> until you
@@ -28,28 +28,28 @@
           </li>
         </ul>
       </div>
-      <div class="grid md:grid-cols-3 gap-6 mb-14  mx-auto">
-        <div class="bg-white rounded-2xl shadow p-6 text-center">
+      <div class="grid md:grid-cols-3 gap-[90px] mb-14  mx-auto">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center">
           <h3 class="font-bold  text-lg mb-2">Showcase Your Work</h3>
           <p class="text-gray-600">Display your engineering projects clearly and professionally.</p>
 
         </div>
 
-        <div class="bg-white rounded-2xl shadow p-6 text-center ">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center ">
           <h3 class="font-bold text-lg mb-2">Direct Client Contact</h3>
           <p class="text-gray-600">Clients can reach out to you directly during your active plan.</p>
 
         </div>
-        <div class="bg-white rounded-2xl shadow p-6 text-center">
+        <div class="bg-white rounded-2xl w-[300px] shadow p-6 text-center">
           <h3 class="font-bold text-lg mb-2">Public Engineer Profile</h3>
           <p class="text-gray-600">Your portfolio and skills become visible to all users.</p>
 
         </div>
 
       </div>
-      <div class="grid md:grid-cols-3 gap-6 mb-14  mx-auto">
+      <div class="grid md:grid-cols-3 gap-[90px] mb-14  mx-auto">
         <div @click="openModal('Monthly', 1, 500)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Monthly Plan</h1>
           <p class="text-gray-600 text-[15px]">1 Month Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">500EGP</p>
@@ -57,7 +57,7 @@
             Monthly</button>
         </div>
         <div @click="openModal('Quarterly', 3, 1200)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Quarterly Plan</h1>
           <p class="text-gray-600 text-[15px]">3 Months Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">1200EGP</p>
@@ -66,7 +66,7 @@
 
         </div>
         <div @click="openModal('Semi', 6, 2500)"
-          class="bg-white rounded-2xl shadow p-5 text-center border hover:shadow-xl transition cursor-pointer">
+          class="bg-white rounded-2xl shadow w-[300px] p-5 text-center border hover:shadow-xl transition cursor-pointer">
           <h1 class="text-gray-600 font-bold text-[20px]">Semi Annual Plan</h1>
           <p class="text-gray-600 text-[15px]">6 Months Access</p>
           <p class="text-[#C76950] font-bold text-[30px]">2500EGP</p>
@@ -111,24 +111,32 @@
           <div class="space-y-3">
             <div>
               <label class="text-sm font-medium text-gray-600">Card Holder</label>
-              <Input type="text" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none"
-                placeholder="e.g. Ahmed Youssef" />
+              <Input required type="text" pattern="^[A-Za-z ]+$"
+                @invalid="(e) => e.target.setCustomValidity('Please enter a valid name')"
+                @input="(e) => e.target.setCustomValidity('')"
+                class="border rounded-lg w-full p-2 mt-1 text-sm outline-none" placeholder="e.g. Ahmed Youssef" />
             </div>
 
             <div>
               <label class="text-sm font-medium text-gray-600">Card Number</label>
-              <Input type="text" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none"
-                placeholder="0000 0000 0000 0000" />
+              <Input required type="text" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none"
+                pattern="^[0-9]{16}$" inputmode="numeric" maxlength="16"
+                @invalid="(e) => e.target.setCustomValidity('Card number must be 16 digits')"
+                @input="(e) => e.target.setCustomValidity('')" placeholder="0000 0000 0000 0000" />
             </div>
 
             <div>
-              <label class="text-sm font-medium text-gray-600">Expiry Date</label>
-              <Input type="text" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none" placeholder="MM/YY" />
+              <label class="text-sm font-medium text-gray-600">Expiry
+                Date</label>
+              <Input pattern="^(0[1-9]|1[0-2])\/\d{2}$" required ref="expiryInput" v-model="expiry" @input="clearError"
+                @blur="validateExpiry" type="text" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none"
+                placeholder="MM/YY" />
             </div>
 
             <div>
               <label class="text-sm font-medium text-gray-600">CVV</label>
-              <Input type="password" class="border rounded-lg w-full p-2 mt-1 text-sm outline-none" placeholder="•••" />
+              <Input required pattern="^[0-9]+$" @input="cvvCheck" ref="cvvInput" v-model="cvv" type="password"
+                class="border rounded-lg w-full p-2 mt-1 text-sm outline-none" placeholder="•••" />
             </div>
           </div>
 
@@ -148,10 +156,23 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted } from 'vue'
 import { updateDoc, getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
-
+useHead({
+  title: 'Engineer Membership',
+  meta: [
+    {
+      name: 'description',
+      content: 'تحكم في اشتراك العضوية الخاص بك كمهندس وعرض مشاريعك للعملاء.'
+    }
+  ]
+})
+const expiry = ref('')
+const expiryInput = ref(null)
+const cvv = ref('')
+const cvvInput = ref(null)
 const { $db } = useNuxtApp()
 const auth = getAuth()
 const selectedPlan = ref('')
@@ -204,6 +225,48 @@ const completePayment = async () => {
     navigateTo('/userEngineer/dashboard')
   }, 5000)
 }
+
+const clearError = () => {
+  expiryInput.value?.setCustomValidity('')
+}
+
+
+
+const validateExpiry = () => {
+  const value = expiry.value;
+  const regex = /^(0[1-9]|1[0-2])\/(\d{2})$/;
+
+  if (!regex.test(value)) {
+    expiryInput.value.setCustomValidity("Please enter date in MM/YY format");
+    return;
+
+  }
+  const [, month, year] = value.match(regex)
+  const currentYear = new Date().getFullYear() % 100
+  const currentMonth = new Date().getMonth() + 1
+
+  if (year < currentYear || (year === currentYear && month < currentMonth)) {
+    expiryInput.value.setCustomValidity("Expiry date must be in the future");
+
+  }
+
+
+}
+
+const cvvCheck = () => {
+  const value = cvv.value;
+
+  cvvInput.value.setCustomValidity('');
+
+  if (!/^[0-9]+$/.test(value)) {
+    cvvInput.value.setCustomValidity('CVV must contain numbers only');
+    return;
+  }
+  if (cvv.value.length !== 3) {
+    cvvInput.value.setCustomValidity('CVV must be 3 numbers')
+  }
+}
+
 
 
 

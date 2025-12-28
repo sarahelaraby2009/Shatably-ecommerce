@@ -1,5 +1,15 @@
 <script setup>
 import { doc, getDoc } from "firebase/firestore";
+useHead({
+  title: "Engineer Profile",
+  meta: [
+    {
+      name: "description",
+      content: "اكتشف ملف المهندس التفصيلي، بما في ذلك خبراته، ومشاريعه، وتقييماته من العملاء.",
+    },
+    {'keywords': 'مهندس, ملف مهندس, مشاريع, تقييمات, خبرة, تخصص, خدمات, عملاء, بروفايل مهندس, تصميم, تطوير'},
+  ],
+});
 const route = useRoute();
 const { $db } = useNuxtApp();
 
@@ -29,7 +39,7 @@ onMounted(async () => {
   <div v-if="engineer">
     
     <!-- Hero Card -->
-    <div class="w-full max-w-[1240px] bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-start relative container mx-auto">
+    <div class=" mt-10 w-full max-w-[1240px] bg-white shadow rounded-2xl p-4 sm:p-6 flex flex-col md:flex-row gap-4 md:gap-6 items-center md:items-start relative container mx-auto">
 
       <img 
         :src="engineer.image" 

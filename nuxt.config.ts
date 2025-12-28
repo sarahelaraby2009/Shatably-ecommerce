@@ -1,6 +1,7 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+// nuxt.config.ts
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: '2024-11-01', // ✅ تاريخ صحيح
+
   devtools: { enabled: true },
 
   modules: ['@nuxtjs/tailwindcss'],
@@ -11,10 +12,13 @@ export default defineNuxtConfig({
   ],
 
   css: [
-    '@fortawesome/fontawesome-svg-core/styles.css'
+    '@fortawesome/fontawesome-svg-core/styles.css',
+    '~/assets/css/main.css'
   ],
 
   runtimeConfig: {
+    openrouterKey: process.env.OPENROUTER_KEY,
+    
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY,
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -26,10 +30,18 @@ export default defineNuxtConfig({
     }
   },
 
-    vue: {
+  // ✅ إضافة هذا للتأكد من عمل Rollup صح
+  vite: {
+    build: {
+      rollupOptions: {
+        external: []
+      }
+    }
+  },
+
+  vue: {
     compilerOptions: {
       whitespace: 'preserve'
     }
   }
 });
-

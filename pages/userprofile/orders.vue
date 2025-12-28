@@ -1,7 +1,7 @@
 <template>
   <div class="max-w-4xl mx-auto mb-8">
-    <h1 class="text-3xl font-bold text-gray-800 mb-2">My Orders</h1>
-    <p class="text-gray-500">Track and manage your orders</p>
+    <h1 class="font-bold text-xl">My Orders</h1>
+    <p>Track and manage your orders</p>
   </div>
 
   <!-- when no orders -->
@@ -35,6 +35,15 @@ import { ref, onMounted } from "vue";
 import { useNuxtApp } from "#app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { collection, query, where, getDocs } from "firebase/firestore";
+useHead({
+  title: 'User Orders',
+  meta: [
+    {
+      name: 'description',
+      content: 'تعقب وادارة طلباتك بسهولة من خلال صفحة الطلبات الخاصة بك.'
+    }
+  ]
+})
 
 const orders = ref([]);
 const loading = ref(true);

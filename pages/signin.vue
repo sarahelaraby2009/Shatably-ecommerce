@@ -7,7 +7,7 @@
         </div>
       </div>
       <div
-        class="relative z-10 flex flex-col-reverse lg:flex-row min-h-screen items-center gap-[50px] lg:gap-[120px] px-5 py-10 pl-[60px] lg:pl-[160px]">
+        class="relative z-10 flex flex-col-reverse ml-[-50px] lg:flex-row min-h-screen items-center gap-[50px] lg:gap-[120px] px-5 py-10 pl-[60px] lg:pl-[160px]">
         <div class="flex flex-col overflow-hidden m-5 bg-[#fefefe] lg:w-[450px] w-[350px] lg:p-6 p-5 shadow-lg rounded-[20px] gap-[5px]">
           <form class="flex flex-col gap-2 w-full" @submit.prevent="handleSignIn">
 
@@ -48,7 +48,7 @@
 
             <!-- Sign In Button -->
             <button type="submit" :disabled="isLoading"
-              class="text-[#fefefe] w-full h-10 text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
+              class="text-[#fefefe] w-full h-[42px] text-center text-sm bg-[#C76950] rounded-[20px] flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#a85740] transition-colors mb-2">
               {{ isLoading ? 'Loading...' : 'Sign In' }}
             </button>
 
@@ -124,6 +124,15 @@ import {
   browserSessionPersistence 
 } from 'firebase/auth'
 import { getDoc, doc } from 'firebase/firestore'
+useHead({
+  title: 'Sign In | MyProject',
+  meta: [
+    {
+      name: 'description',
+      content: 'قم بتسجيل الدخول إلى حسابك للوصول إلى ميزات شطبلي المخصصة.'
+    }
+  ]
+})
 
 const { $auth, $db } = useNuxtApp()
 
@@ -148,10 +157,33 @@ const navigateUser = async (userId, role) => {
     return
   }
 
-  if (role === 'supplier') {
+ if (role === 'supplier') {
+  const supplierDoc = await getDoc(doc($db, 'suppliers', userId))
+  
+  if (supplierDoc.exists()) {
+    const supplierData = supplierDoc.data()
+
+    // ✅ لو ما كملش الـ profile (أول مرة) → complete-profile
+    if (!supplierData.profileComplete) {
+      navigateTo('/supplier/complete-profile')
+      return
+    }
+
+    // ✅ لو كمل profile بس ما عنده membership → membership
+    if (!supplierData.hasMembership) {
+      navigateTo('/supplier/membership')
+      return
+    }
+
+    // ✅ لو كل شي تمام (profileComplete ✓ و hasMembership ✓) → supplier page
     navigateTo('/supplier')
     return
   }
+
+  // لو الـ doc ما موجود → complete-profile
+  navigateTo('/supplier/complete-profile')
+  return
+}
 
   if (role === 'engineer') {
     // Check if engineer profile is complete

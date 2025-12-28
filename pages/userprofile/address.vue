@@ -236,6 +236,15 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
+useHead({
+  title: 'User Address',
+  meta: [
+    {
+      name: 'description',
+      content: 'تحكم وإدارة عناوين الشحن الخاصة بك لتسهيل عمليات الشراء المستقبلية.'
+    }
+  ]
+})
 
 const { $auth, $db } = useNuxtApp();
 

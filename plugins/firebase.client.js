@@ -1,10 +1,9 @@
 // plugins/firebase.client.js
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 export default defineNuxtPlugin(() => {
-  // ✨ هنا المكان الصح نستخدم فيه process.env أو useRuntimeConfig()
   const config = useRuntimeConfig();
 
   const firebaseConfig = {
@@ -17,7 +16,9 @@ export default defineNuxtPlugin(() => {
     measurementId: config.public.firebaseMeasurementId,
   };
 
-  const app = initializeApp(firebaseConfig);
+  // ✅ أهم سطرين
+  const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+
   const auth = getAuth(app);
   const db = getFirestore(app);
 

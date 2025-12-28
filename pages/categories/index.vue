@@ -1,6 +1,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { collection, getDocs } from "firebase/firestore";
+useHead({
+  title: "Categories",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح مجموعة واسعة من الفئات لاكتشاف المنتجات التي تناسب احتياجاتك.",
+    },
+    {'keywords': 'فئات, تسوق, منتجات, شراء إلكتروني, متجر إلكتروني, تسوق عبر الإنترنت, عروض خاصة, تخفيضات, تسوق آمن, تجربة تسوق'},
+  ],
+});
 
 const { $db } = useNuxtApp();
 const categories = ref([]);
@@ -36,7 +46,7 @@ onMounted(async () => {
     <div class="flex justify-center mt-6 px-6 lg:px-10">
       <div class="w-full max-w-[1256px] h-auto">
         <img 
-          src="/assets/image 3.png"
+          src="/assets/Categories.png"
           alt="categories"
           class="w-full h-full object-cover rounded-2xl" 
         />

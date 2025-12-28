@@ -3,6 +3,16 @@ import { ref, onMounted } from "vue";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 import SideBar from "~/components/SideBar.vue";
+useHead({
+  title: "Orders Track",
+  meta: [
+    {
+      name: "description",
+      content: "تتبع طلباتك كمورد وابقَ على اطلاع دائم بحالة منتجاتك المباعة.",
+    },
+    {'keywords': 'تتبع الطلبات, مورد, منتجات, مبيعات, حالة الطلب, تجارة إلكترونية, متجر إلكتروني, تسوق عبر الإنترنت, إدارة المنتجات, تقارير المبيعات'},
+  ],
+});
 // ----------------------------------------------------
 const data = {
   feild1: "Profile",

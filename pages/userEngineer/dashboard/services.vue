@@ -2,6 +2,7 @@
     <div class="flex flex-col lg:flex-row min-h-screen">
         <EngineerMobileView class="block lg:hidden" />
         <EngineerSideBar class="hidden lg:block w-[500px]" />
+        
         <div class="flex flex-col flex-1 lg:p-10 p-4 min-h-screen">
             <div class="p-6 flex flex-col lg:flex-row lg:items-start justify-between gap-4">
                 <div class="flex-1">
@@ -24,7 +25,7 @@
                 <!-- Empty State -->
                 <div v-if="show"
                     class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6">
-                    <img src="/add image.png" alt="add service" class="w-12 mb-3" />
+                    <img src="/add.png" alt="add service" class="w-12 mb-3" />
                     <p class="text-[18px]">Add your service here</p>
                     <button @click="openModal"
                         class="bg-[#C76950] w-auto lg:w-full text-white px-2 py-1 rounded-xl shadow transition hover:bg-[#a85740]">
@@ -48,14 +49,16 @@
                         <div class="flex flex-col gap-4">
                             <div>
                                 <label class="font-bold text-sm text-[#3E3E3E] block mb-2">Title</label>
-                                <input type="text" v-model="newService.title" required
+                                <input type="text" v-model="newService.title" required pattern="^[A-Za-z0-9 -]+$"
+
                                     class="font-semibold w-full text-sm text-[#3E3E3E] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border rounded-[24px] p-3 outline-none focus:border-[#C76950]"
                                     placeholder="e.g. Home Renovation" />
                             </div>
 
                             <div>
                                 <label class="font-bold text-sm text-[#3E3E3E] block mb-2">Description</label>
-                                <textarea v-model="newService.description" required rows="3"
+                                <textarea v-model="newService.description" required rows="3" pattern="^[A-Za-z0-9 -]+$"
+
                                     class="font-semibold w-full text-sm text-[#3E3E3E] shadow-[0px_4px_12px_rgba(0,0,0,0.08)] border rounded-[24px] p-3 outline-none focus:border-[#C76950] resize-none"
                                     placeholder="Describe your work"></textarea>
                             </div>
@@ -169,9 +172,20 @@
 </template>
 
 <script setup>
+  
 import { ref, onMounted } from 'vue';
 import { getDoc, doc } from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
+useHead({
+  title: "Engineer Services",
+  meta: [
+    {
+      name: "description",
+      content: "تصفح وأدر خدماتك الهندسية لجذب المزيد من العملاء وعرض مهاراتك.",
+    },
+    {'keywords': 'engineering services, manage services, showcase services, client attraction, service portfolio, engineering projects, service management'},
+  ],
+});
 
 const showModal = ref(false);
 const showSecModal = ref(false);
