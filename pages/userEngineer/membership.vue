@@ -289,9 +289,9 @@ const completePayment = async (event) => {
     }, 2000);
 
   } catch (error) {
-    console.error("Payment update error:", error);
-    alert("Payment saved but failed to update system, please try again.");
-  }
+  console.error("Payment update error:", error);
+  alert(error.message || "Payment saved but failed to update system, please try again.");
+}
 };
 
 
