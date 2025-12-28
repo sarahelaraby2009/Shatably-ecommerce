@@ -275,7 +275,7 @@ const completePayment = async (event) => {
       membershipExpiry: endDate,
       canUploadWork:true
     });
-    userData.value.hasMembership = true
+    
 
 
     successMessage.value = "Payment Success 🎉 Membership Activated";
