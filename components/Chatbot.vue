@@ -10,6 +10,9 @@ const isTyping = ref(false);
 const messagesEndRef = ref(null);
 const showGreeting = ref(true);
 
+const apiKey =
+  "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";
+
 const closeGreeting = () => {
   showGreeting.value = false;
 };
@@ -149,13 +152,14 @@ if (typeof message?.content === "string") {
 
   <div
     v-if="isOpen"
-    class="fixed bottom-20 right-4 w-80 bg-white rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col"
+    class="fixed bottom-20 right-4 w-[90vw] max-w-sm bg-white rounded-2xl shadow-xl overflow-hidden z-50 flex flex-col"
   >
     <div class="bg-[#C76950] text-white text-center py-3 text-lg font-semibold">
       Your advisor
     </div>
 
-    <div class="p-4 h-64 overflow-y-auto space-y-3 text-sm text-gray-700">
+    <div class="p-4 h-64
+ overflow-y-auto space-y-3 text-sm text-gray-700">
       <p
         v-for="(msg, idx) in messages"
         :key="idx"
@@ -187,7 +191,7 @@ if (typeof message?.content === "string") {
       </button>
     </div>
 
-    <div v-else class="p-3 bg-gray-50 flex items-center gap-2 rounded-b-2xl">
+    <div v-else class="p-3 bg-gray-50 flex items-center gap-2 sticky bottom-0">
       <input
         type="text"
         v-model="input"
@@ -336,4 +340,16 @@ if (typeof message?.content === "string") {
     transform: translateY(0);
   }
 }
+@media (max-width: 640px) {
+  .chat-button {
+    width: 64px;
+    height: 64px;
+  }
+
+  .chat-image {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+
 </style>
