@@ -30,10 +30,18 @@ const localValue=ref(props.modelValue);
 const startEdit=()=>{
     editing.value=true
 }
-const saveEdit=()=>{
-    emit('update:modelValue',localValue.value)
-    editing.value=false
-}  
+const regex = /^[A-Za-z0-9 -]+$/
+
+const saveEdit = () => {
+  if (!regex.test(localValue.value)) {
+    alert("Only letters, numbers and spaces allowed")
+    return
+  }
+
+  emit("update:modelValue", localValue.value.trim())
+  editing.value = false
+}
+ 
 const cancelEdit=()=>{
     localValue.value=props.modelValue
     editing.value=false

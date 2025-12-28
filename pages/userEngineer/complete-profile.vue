@@ -81,7 +81,8 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Specialization</label>
           <input v-model="specialization" required pattern="^[A-Za-z0-9 -]+$"
-
+            @invalid="(e) => e.target.setCustomValidity('Please enter valid content')"
+                @input="(e) => e.target.setCustomValidity('')"
 
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="text" placeholder="e.g. Finishing - Interior Design" />
@@ -91,6 +92,8 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Mobile Number</label>
           <input v-model="mobile" required pattern="^01[0-9]{9}$"
+            @invalid="(e) => e.target.setCustomValidity('Please enter valid mobile number')"
+                @input="(e) => e.target.setCustomValidity('')"
  maxlength="11"
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none h-[50px]" 
             type="tel" placeholder="e.g. 01*********" />
@@ -109,6 +112,8 @@
         <div class="flex gap-2 flex-col mb-5">
           <label class="font-bold text-m text-[#3E3E3E]">Bio</label>
           <textarea v-model="bio" required pattern="^[A-Za-z ]+$"
+            @invalid="(e) => e.target.setCustomValidity('Please enter Letters only')"
+                @input="(e) => e.target.setCustomValidity('')"
 
             class=" text-sm text-[#3E3E3E] border rounded-[24px] p-3 outline-none resize-none" 
             rows="4" placeholder="Write a short description about your work and experience"></textarea>

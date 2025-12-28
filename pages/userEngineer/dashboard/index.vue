@@ -90,12 +90,10 @@ const data = ref({
 });
 
 onMounted(async () => {
-  // 1️⃣ لازم يكون مسجل دخول
   if (!user.value) {
     return router.push("/signin");
   }
 
-  // 2️⃣ نجيب بيانات المهندس
   const docRef = doc($db, "engineers", user.value.uid);
   const docSnap = await getDoc(docRef);
 
@@ -105,17 +103,14 @@ onMounted(async () => {
 
   const d = docSnap.data();
 
-  // 3️⃣ لازم يكون مكمّل البروفايل
   if (!d.profileComplete) {
     return router.push("/userEngineer/complete-profile");
   }
 
-  // 4️⃣ تأكيد إضافي إن البيانات الأساسية موجودة
   if (!d.position || !d.specialization || !d.yearsOfExperience || !d.bio) {
     return router.push("/userEngineer/complete-profile");
   }
 
-  // 5️⃣ تعبئة الداتا في الصفحة
   engineerName.value = d.name || "";
   engineerImage.value = d.image || "/default.png";
 
