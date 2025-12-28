@@ -3,7 +3,7 @@
         <EngineerMobileView class="block lg:hidden" />
         <EngineerSideBar class="hidden lg:block w-[500px]" />
         
-        <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
+        <div class="flex flex-col flex-1 lg:p-10 p-4 lg:m-auto  min-h-screen">
             <div class="p-6 flex flex-col lg:flex-row lg:justify-between">
                 <div>
                     <h1 class="text-2xl font-bold mb-4">Portfolio</h1>
@@ -23,7 +23,7 @@
             </div>
             <div class="flex flex-col justify-center items-center">
                 <div v-if="show"
-                    class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6 ">
+                    class="shadow-[0px_4px_12px_rgba(0,0,0,0.08)] w-auto lg:w-[500px] lg:ml-[-180px] p-6 flex flex-col justify-center items-center rounded-[24px] mt-6 ">
                     <img src="/add.png" alt="add service" class=" w-12 mb-3" />
                     <p class="text-[18px]">Add your Portfolio here</p>
                     <button @click="openModal"

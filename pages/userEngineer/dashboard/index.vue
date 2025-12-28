@@ -5,7 +5,7 @@
 
       <EngineerMobileView class="block lg:hidden" />
       
-      <div class="flex flex-col flex-1 lg:p-10 p-4  min-h-screen">
+      <div class="flex flex-col flex-1 lg:p-10 p-4 lg:m-auto  min-h-screen">
         <div class="p-4 ">
           <h1 class="text-2xl font-bold mb-4">Profile</h1>
           <p>View & Update Your Personal and Contact Information</p>
