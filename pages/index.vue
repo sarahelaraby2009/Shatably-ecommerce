@@ -18,22 +18,22 @@
 
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-10 mx-5  mb-10">
 
-        <div class="relative ml-[-20px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
+        <div class="relative ml-[-20px] lg:w-[250px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
           <img class="w-[50px]" src="/Calculator.png" />
           <p class="text-[#C76950]">Calculate your apartment size and finishing cost</p>
         </div>
 
-        <div class="relative ml-[-20px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
+        <div class="relative ml-[-20px] lg:w-[250px] lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
           <img class="w-[50px]" src="/Home.png" />
           <p class="text-[#C76950]">Get your dream home at the best price</p>
         </div>
 
-        <div class="relative ml-[-20px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
+        <div class="relative ml-[-20px] lg:w-[250px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
           <img class="w-[50px]" src="/Engineer.png" />
           <p class="text-[#C76950]">Register as an engineer to offer your services</p>
         </div>
 
-        <div class="relative ml-[-20px]  lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
+        <div class="relative ml-[-20px] lg:w-[250px] lg:h-[200px] w-[180px] rounded-[24px] shadow-xl flex flex-col justify-center lg:gap-[20px] p-5 ">
           <img class="w-[50px]" src="/User.png" />
           <p class="text-[#C76950]">Register as a supplier to grow your business more</p>
         </div>
