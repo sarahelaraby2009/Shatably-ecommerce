@@ -181,18 +181,19 @@ const handleSend = async () => {
       </button>
     </div>
 
-    <div v-else class="p-3 bg-gray-50 flex items-center gap-2 sticky bottom-0">
+    <div v-else class="p-3 bg-gray-50 flex items-center gap-2 sticky bottom-0 w-full">
       <input
         type="text"
         v-model="input"
         @keydown.enter="handleSend"
-        class="flex-grow bg-white px-3 py-2 rounded-xl border"
+        class="flex-1 min-w-0 bg-white px-3 py-2 rounded-xl border"
         :placeholder="
           language === 'ar' ? 'اكتب رسالتك...' : 'Type your message...'
         "
       />
 
-      <button @click="clearChat" class="p-2">
+      <button @click="clearChat" class="p-2 shrink-0">
+
         <Icon
           icon="mdi:trash-can"
           width="22"
@@ -201,7 +202,8 @@ const handleSend = async () => {
         />
       </button>
 
-      <button @click="handleSend" :disabled="isTyping" class="p-2">
+      <button @click="handleSend" class="p-2 shrink-0">
+
         <Icon icon="mdi:send" width="24" height="24" class="text-[#C76950]" />
       </button>
     </div>
