@@ -398,7 +398,7 @@ const saveData = async () => {
   errorMessages.value = ''
 
   // Validation
-  if (!position.value || !specialization.value || !experience.value || !bio.value || !mobile.value ||(x)) {
+  if (!position.value || !specialization.value || !experience.value || !bio.value || !mobile.value) {
     errorMessages.value = "Please fill all required fields."
     return
   }
