@@ -21,11 +21,11 @@
 
       <!-- Product Info -->
       <div class="flex-1">
-        <h3 class="text-[18px] font-semibold mb-1">
+        <h3 class="text-[14px] lg:text-[18px] font-semibold mb-1">
           {{ product.productSnapshot.name }}
         </h3>
 
-        <p class="text-[16px] font-bold text-gray-900 mb-1">
+        <p class="text-[14px] lg:text-[16px] font-bold text-gray-900 mb-1">
           {{ product.productSnapshot.price }} EGP
         </p>
 
