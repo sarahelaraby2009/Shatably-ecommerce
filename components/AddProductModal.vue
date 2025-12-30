@@ -256,7 +256,7 @@ watch(
           class="relative z-10 max-w-3xl w-[90%] md:w-[800px] mx-4"
         >
           <div
-            class="p-5 rounded-[24px] bg-white shadow-lg flex flex-col gap-5"
+            class="p-5 rounded-[24px] bg-white shadow-lg flex flex-col gap-5 max-h-[90vh] overflow-y-auto"
           >
             <div class="flex items-center justify-between">
               <h3 class="text-lg font-bold text-[#3E3E3E]">

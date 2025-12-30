@@ -8,16 +8,23 @@ const { $db } = useNuxtApp();
 
 const categoryId = route.params.id;  
 const subcategories = ref([]);
-const headerImage = ref("/assets/image 4.png"); // Default image
+const categoryName = ref(""); // إضافة متغير لاسم الـ category
+const headerImage = ref("/assets/image 4.png");
 const loading = ref(true);
 const error = ref(null);
 
 onMounted(async () => {
   try {
-    // Fetch the category document to get the header image
+    // Fetch the category document to get the header image AND name
     const categoryDoc = await getDoc(doc($db, "categories", categoryId));
-    if (categoryDoc.exists() && categoryDoc.data().header) {
-      headerImage.value = categoryDoc.data().header;
+    if (categoryDoc.exists()) {
+      const data = categoryDoc.data();
+      if (data.header) {
+        headerImage.value = data.header;
+      }
+      if (data.name) {
+        categoryName.value = data.name; // حفظ اسم الـ category
+      }
     }
 
     // Fetch subcategories
@@ -61,7 +68,7 @@ onMounted(async () => {
         class="text-[12px]"
       />
       <NuxtLink to="#" class="text-[#C76950] font-semibold">
-        SubCategories
+        {{ categoryName || 'SubCategories' }}
       </NuxtLink>
     </div>
 
