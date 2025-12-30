@@ -25,6 +25,8 @@ const categoryId = route.params.id;
 const subId = route.params.subId;
 
 const products = ref([]);
+const categoryName = ref(""); // اسم الـ category
+const subcategoryName = ref(""); // اسم الـ subcategory
 const headerImage = ref("/assets/Categories.png");
 const loading = ref(true);
 const error = ref(null);
@@ -98,14 +100,28 @@ onMounted(async () => {
   }
 
   try {
+    // جلب اسم الـ category
+    const categoryDoc = await getDoc(doc($db, "categories", categoryId));
+    if (categoryDoc.exists() && categoryDoc.data().name) {
+      categoryName.value = categoryDoc.data().name;
+    }
+
+    // جلب اسم الـ subcategory والـ header
     const subcategoryDoc = await getDoc(
       doc($db, "categories", categoryId, "subcategories", subId)
     );
 
-    if (subcategoryDoc.exists() && subcategoryDoc.data().header) {
-      headerImage.value = subcategoryDoc.data().header;
+    if (subcategoryDoc.exists()) {
+      const subData = subcategoryDoc.data();
+      if (subData.name) {
+        subcategoryName.value = subData.name;
+      }
+      if (subData.header) {
+        headerImage.value = subData.header;
+      }
     }
 
+    // جلب المنتجات
     const productsRef = collection(
       doc(collection($db, "categories"), categoryId),
       "subcategories",
@@ -139,10 +155,16 @@ onMounted(async () => {
       </NuxtLink>
       <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-[10px] md:text-[12px]" />
       <NuxtLink to="/categories" class="text-gray-600 hover:text-[#C76950]">
-        Category
+        Categories
       </NuxtLink>
       <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-[10px] md:text-[12px]" />
-      <span class="text-[#C76950] font-semibold"> Products </span>
+      <NuxtLink :to="`/categories/${categoryId}`" class="text-gray-600 hover:text-[#C76950]">
+        {{ categoryName || 'Category' }}
+      </NuxtLink>
+      <font-awesome-icon :icon="['fas', 'chevron-right']" class="text-[10px] md:text-[12px]" />
+      <span class="text-[#C76950] font-semibold">
+        {{ subcategoryName || 'Products' }}
+      </span>
     </div>
 
     <!-- Header Image -->
