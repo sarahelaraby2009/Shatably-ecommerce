@@ -116,7 +116,7 @@ const subtotal=computed(()=>{
 });
 // 5% Discount
 // Shipping
-const shipping = 100;
+const shipping = 0
 
 // Total after discount
 
