@@ -6,13 +6,18 @@
 
 This project was developed as a **team effort** as part of the **ITI graduation program**.  
 Shatably is a responsive e-commerce frontend built with **Nuxt 4 / Vue 3**.  
-It demonstrates a complete shopping flow including product listing, product details, cart functionality, authentication, and role-based dashboards, with Firebase used for authentication and data management.
+It demonstrates a complete shopping flow including product listing, product details, cart functionality, authentication, role-based dashboards, ... and a basic **AI assistant** integrated into the UI to support user navigation and product discovery.
+
+
 
 ---
 
 ## Team
 - **Sarah Elaraby** — Team Lead & Frontend Developer  
-- **Other contributors** — Backend & supporting features
+- **Fatma Mostafa** — Category-Subcategory-Products-Product details & supplier flow
+- **Nouran Galil** — components - engineers galerry - engineer portfolio page & user flow
+- **Salma Mohamed** — components - chechout page - cart page - search bar .
+- **Marina Adel** — Ai Assistant and components.
 
 ---
 
@@ -32,17 +37,17 @@ It demonstrates a complete shopping flow including product listing, product deta
 🔗 https://shatably-ecommerce-vcqp.vercel.app/
 
 ## Screenshots
-<img src="docs/images/heroSection.png" width="32%" />
-<img src="docs/images/homePage.png" width="32%" />
-<img src="docs/images/product.png" width="32%" />
-<img src="docs/images/dashboard.png" width="32%" />
+<img src="docs/images/heroSection.PNG" width="32%" />
+<img src="docs/images/homePage.PNG" width="32%" />
+<img src="docs/images/product.PNG" width="32%" />
+<img src="docs/images/dashboard.PNG" width="32%" />
+
 
 ---
 
 ## Tech Stack
 - **Framework:** Nuxt 4 + Vue 3  
-- **Styling:** Tailwind CSS  
-- **State Management:** Pinia  
+- **Styling:** Tailwind CSS   
 - **Auth / Backend:** Firebase (Authentication & Firestore / Realtime DB)  
 - **UI & UX:** Swiper, Lottie, FontAwesome, Iconify  
 - **Build Tools:** npm / pnpm / yarn  
@@ -119,5 +124,6 @@ Shatably-ecommerce/
 ---
 
 ## License
-This project is open source and available under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
+
 
